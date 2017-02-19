@@ -5,7 +5,10 @@
         "FlexFundsDB": "./dbs/flexfunds",
 
         "InteractiveBrokerActivityModel": "./models/generated/ib_activity",
+        "InteractiveBrokerCashReportModel": "./models/generated/ib_cash_report",
+        "InteractiveBrokerNavModel": "./models/generated/ib_nav",
 
+        "CommonService": "./services/common",
         "FileService": "./services/file",
         "InteractiveBrokerService": "./services/ib",
 

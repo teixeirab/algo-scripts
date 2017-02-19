@@ -17,6 +17,5 @@ module.exports = function(Configs, Sequelize) {
     };
     var params = getSequezlieParams(Configs, false);
     var flexFundsDB = new Sequelize(Configs.db, Configs.user, Configs.password, params);
-
     return flexFundsDB;
 };

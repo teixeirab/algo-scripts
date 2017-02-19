@@ -1,7 +1,16 @@
 'use strict';
+const moment = require('moment')
 
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('ib_activity', {
+    trade_id: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true,
+      validate: {
+        notEmpty: true
+      }
+    },
     type: {
       type: Sequelize.STRING,
       allowNull: true
@@ -94,12 +103,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: "DOUBLE",
       allowNull: true
     },
-    trade_id: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      defaultValue: "",
-      primaryKey: true
-    },
     tax_basis_election: {
       type: Sequelize.STRING,
       allowNull: true
@@ -142,9 +145,18 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     dt_added: {
       type: Sequelize.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
-    tableName: 'ib_activity'
+    tableName: 'ib_activity',
+    setterMethods: {
+      trade_date: function(value) {
+        this.setDataValue('trade_date', moment(value, 'YYYYMMDD').toDate())
+      },
+      settle_date: function(value) {
+        this.setDataValue('settle_date', moment(value, 'YYYYMMDD').toDate())
+      }
+    }
   });
 };

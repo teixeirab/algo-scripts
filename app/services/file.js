@@ -101,6 +101,10 @@ module.exports = function() {
     return deferred.promise
   }
 
+  this.getMappings = function() {
+    return this.xlsxToCsvObject('./tests/data/mapping.xlsx', 'Sheet1')
+  }
+
   return this;
 };
 

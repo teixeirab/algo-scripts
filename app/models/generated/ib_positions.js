@@ -1,63 +1,65 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('ib_positions', {
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('ib_positions', {
     id: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: false,
-      primaryKey: true,
+      // primaryKey: true,
       autoIncrement: true
     },
     type: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     account_id: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
     },
     con_id: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
     },
     security_id: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     symbol: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     bb_ticker: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     bb_global_id: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     security_description: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     asset_type: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     currency: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     base_currency: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     quantity: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: true
     },
     quantity_in_base: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: true
     },
     cost_price: {
@@ -93,7 +95,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     report_date: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: true
     },
     settled_quantity: {
@@ -105,11 +107,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     master_account_id: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     van: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     accrued_int: {
@@ -117,12 +119,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     originating_order_id: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     dt_added: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
     tableName: 'ib_positions'

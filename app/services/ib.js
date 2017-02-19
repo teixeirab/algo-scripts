@@ -5,11 +5,57 @@ var moment = require('moment');
 var _ = require('lodash');
 const Promise = require('bluebird')
 
-module.exports = function(FileService, InteractiveBrokerActivityModel) {
+module.exports = function(
+  FileService,
+  CommonService,
+  InteractiveBrokerActivityModel,
+  InteractiveBrokerNavModel,
+  InteractiveBrokerCashReportModel
+) {
+
   var that = this;
 
   const modelMappings = {
-    ib_activity: InteractiveBrokerActivityModel
+    ib_activity: InteractiveBrokerActivityModel,
+    ib_cash_report: InteractiveBrokerCashReportModel,
+    ib_nav: InteractiveBrokerNavModel
+  }
+
+  this.nameInfoListExtractConfigs = function(path, fromDate) {
+    return {
+      ib_activity: {
+        path: path,
+        startLine: 1,
+        fromDate: fromDate,
+        dateFormat: 'YYYYMMDD',
+        pattern: '*_Activity_+(${dateStr}).csv',
+        extractFn: this.extractActivityFileNameInfo
+      },
+      ib_cash_report: {
+        path: path,
+        startLine: 1,
+        fromDate: fromDate,
+        dateFormat: 'YYYYMMDD',
+        pattern: '*_CashReport_+(${dateStr}).csv',
+        extractFn: this.extractCashReportFileNameInfo,
+        assignDataFn: (data, nameInfo) => {
+          data['period'] = nameInfo.date
+          return data
+        }
+      },
+      ib_nav: {
+        path: path,
+        startLine: 1,
+        fromDate: fromDate,
+        dateFormat: 'YYYYMMDD',
+        pattern: '*_NAV_+(${dateStr}).csv',
+        extractFn: this.extractNavFileNameInfo,
+        assignDataFn: (data, nameInfo) => {
+          data['period'] = nameInfo.date
+          return data
+        }
+      }
+    }
   }
 
   this.extractActivityFileNameInfo = function(path) {
@@ -24,82 +70,74 @@ module.exports = function(FileService, InteractiveBrokerActivityModel) {
       path: path,
       accountId: accountId,
       type: type,
-      date: moment(date, 'YYYYMMDD').toDate()
+      date: moment(date, 'YYYYMMDD').toDate(),
+      source: 'Interactive Brokers',
+      table: 'ib_activity'
     }
   }
 
-  this.findActivityFiles = function(path, fromDate) {
-    const deferred = Promise.pending()
-    let dateStr = ''
-    for (var m = moment(fromDate); m.diff(new Date(), 'days') <= 0; m.add(1, 'days')) {
-      if (dateStr !== '') {
-        dateStr += '|'
-      }
-      dateStr += m.format('YYYYMMDD')
+  this.extractCashReportFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const accountId = infos[0]
+    const type = infos[1]
+    const date = infos[2]
+    return {
+      path: path,
+      accountId: accountId,
+      type: type,
+      date: moment(date, 'YYYYMMDD').toDate(),
+      source: 'Interactive Brokers',
+      table: 'ib_cash_report'
     }
-    let pattern = `*_Activity_+(${dateStr})`
-    const extension = '.csv'
-    FileService
-      .findFiles(pattern + extension, path)
-      .then((files) => {
-        let nameInfoList = files.map((path) => {
-          let nameInfo = this.extractActivityFileNameInfo(path)
-          if (nameInfo) {
-            nameInfo.startLine = 1
-          }
-          return nameInfo
-        })
+  }
 
-        deferred.resolve(nameInfoList)
-      })
-    return deferred.promise
+  this.extractNavFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const accountId = infos[0]
+    const type = infos[1]
+    const date = infos[2]
+    return {
+      path: path,
+      accountId: accountId,
+      type: type,
+      date: moment(date, 'YYYYMMDD').toDate(),
+      source: 'Interactive Brokers',
+      table: 'ib_nav'
+    }
+  }
+
+  this.getFileNameInfoList = function(table, path, fromDate) {
+    const extractConfigs = this.nameInfoListExtractConfigs(path, fromDate)[table]
+    return CommonService.getFileNameInfoList(
+      extractConfigs.path,
+      extractConfigs.startLine,
+      extractConfigs.fromDate,
+      extractConfigs.dateFormat,
+      extractConfigs.pattern,
+      extractConfigs.extractFn,
+      extractConfigs.assignDataFn
+    )
   }
 
   this.update = function(nameInfoList) {
-    const deferred = Promise.pending()
-    FileService
-      .xlsxToCsvObject('./tests/data/mapping.xlsx', 'Sheet1')
-      .then((csvObject) => {
-        const mappings = csvObject
-        async.eachSeries(nameInfoList, (nameInfo, cb) => {
-          const sourceMappings = _.filter(mappings, (mapping) => {
-            return mapping.table === nameInfo.table
-          })
-          FileService.readFile(nameInfo.path, nameInfo.startLine).then((csvObject) => {
-            let dbMappings = {}
-            csvObject.forEach((row) => {
-              let dbMapping = {}
-              Object.keys(row).forEach((reportField) => {
-                sourceMappings.forEach((mapping) => {
-                  if (mapping.report_field === reportField) {
-                    dbMapping[mapping.table] = dbMapping[mapping.table] || {}
-                    dbMapping[mapping.table][mapping.database_field] = row[reportField]
-                  }
-                })
-              })
-              Object.keys(dbMapping).forEach((table) => {
-                dbMappings[table] = dbMappings[table] || []
-                dbMappings[table].push(dbMapping[table])
-              })
-            })
-            console.log(dbMappings)
-            Object.keys(dbMappings).forEach((table) => {
-              const model = modelMappings[table]
-              async.eachSeries(dbMappings[table], (row, _cb) => {
-                model.create(row).then((persistedObj) => {
-                  _cb()
-                })
-              }, cb)
-            })
-          })
-        }, (err) => {
-          if(err) {
-            return deferred.reject(err)
-          }
-          deferred.resolve()
-        })
+    return CommonService.syncToDatabase(nameInfoList, modelMappings)
+  }
+
+  this.findAndSync = function(table, path, fromDate, limit) {
+    return this
+      .getFileNameInfoList(table, path, fromDate)
+      .then((nameInfoList) => {
+        if(limit) {
+          nameInfoList.splice(limit, nameInfoList.length)
+        }
+        return this.update(nameInfoList)
       })
-    return deferred.promise
   }
 
   return this;

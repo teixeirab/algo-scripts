@@ -1,34 +1,39 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('ib_cash_report', {
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('ib_cash_report', {
     id: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
+      // autoIncrement: true,
+      // allowNull: false
+    },
+    period: {
+      type: Sequelize.DATE,
       allowNull: false,
       primaryKey: true
     },
-    period: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     account_id: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    currency: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    base_summary: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
     },
     label: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
+      allowNull: false,
+      primaryKey: true
+    },
+    currency: {
+      type: Sequelize.STRING,
+      allowNull: true,
+      primaryKey: true
+    },
+    base_summary: {
+      type: Sequelize.STRING,
+      allowNull: true,
+      primaryKey: true
+    },
+    type: {
+      type: Sequelize.STRING,
       allowNull: true
     },
     total: {
@@ -44,12 +49,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     ibukl: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: true
     },
     dt_added: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
     tableName: 'ib_cash_report'

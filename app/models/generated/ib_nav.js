@@ -1,26 +1,28 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('ib_nav', {
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('ib_nav', {
     id: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
+      // allowNull: false,
+      // primaryKey: true
+    },
+    period: {
+      type: Sequelize.DATE,
       allowNull: false,
       primaryKey: true
     },
-    period: {
-      type: DataTypes.DATE,
-      allowNull: false
+    account_id: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
     },
     type: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    account_id: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     base_currency: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     cash: {
@@ -84,8 +86,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     dt_added: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
     tableName: 'ib_nav'

@@ -1,3 +1,5 @@
+'use strict'
+
 var async = require('async');
 var assert = require('assert');
 var helper = require('../helper');
@@ -5,25 +7,28 @@ var moment = require('moment');
 var _ = require('lodash');
 
 describe('service tests', function() {
-  var fileService, interactiveBrokerService;
+  let fileService,
+      interactiveBrokerService,
+      interactiveBrokerActivityModel,
+      interactiveBrokerCashReportModel,
+      interactiveBrokerNavModel,
+      db;
   beforeEach(function(done) {
-    app.summon.resolve({}, function(FileService, InteractiveBrokerService) {
-      fileService = FileService;
-      interactiveBrokerService = InteractiveBrokerService
-    });
-    app.summon.resolve({}, function(FlexFundsDB) {
-      async.parallel([
-        function(cb) {
-          FlexFundsDB.sync({
-            logging: false,
-            force: true
-          }).then(function() {
-            cb();
-          });
-        }
-      ], function() {
-        done();
-      })
+    app.summon.resolve(function(
+      FlexFundsDB,
+      FileService,
+      InteractiveBrokerService,
+      InteractiveBrokerActivityModel,
+      InteractiveBrokerNavModel,
+      InteractiveBrokerCashReportModel) {
+
+        fileService = FileService
+        interactiveBrokerService = InteractiveBrokerService
+        interactiveBrokerActivityModel = InteractiveBrokerActivityModel
+        interactiveBrokerCashReportModel = InteractiveBrokerCashReportModel
+        interactiveBrokerNavModel = InteractiveBrokerNavModel
+        db = FlexFundsDB
+        done()
     });
   });
   describe('read data source files', function () {
@@ -68,6 +73,14 @@ describe('service tests', function() {
     });
   });
   describe('read and save to database based on mappings', function () {
+    beforeEach(function (done) {
+      db.sync({
+        // logging: console.log,
+        force: true
+      }).then(function() {
+        done();
+      });
+    });
     describe('interactive broker', function () {
       it('look for data files with a period later or equal than specified', function (done) {
         //extract the info from the file names
@@ -76,7 +89,7 @@ describe('service tests', function() {
           .findFiles('*_Activity_+(20170215|20170216).csv', './tests/data/ib/')
           .then((files) => {
             const nameInfoList = fileService.extractFileListNameInfo(files, interactiveBrokerService.extractActivityFileNameInfo)
-            assert.equal(nameInfoList.length, 30)
+            assert.equal(nameInfoList.length, 27)
             assert.equal(nameInfoList[0].path, './tests/data/ib/U1161356_Activity_20170215.csv')
             assert.equal(nameInfoList[0].accountId, 'U1161356')
             assert.equal(nameInfoList[0].type, 'Activity')
@@ -88,40 +101,123 @@ describe('service tests', function() {
         it('look for data files with a period later or equal than specified', function (done) {
           const path = './tests/data/ib/'
           interactiveBrokerService
-            .findActivityFiles(path, '2017-02-15')
+            .getFileNameInfoList('ib_activity', path, '2017-02-15')
             .then((nameInfoList) => {
-              assert.equal(nameInfoList.length, 30)
+              assert.equal(nameInfoList.length, 27)
               assert.equal(nameInfoList[0].path, './tests/data/ib/U1161356_Activity_20170215.csv')
               assert.equal(nameInfoList[0].accountId, 'U1161356')
               assert.equal(nameInfoList[0].type, 'Activity')
               assert.equal(nameInfoList[0].date.toISOString(), '2017-02-14T16:00:00.000Z')
+              assert.equal(nameInfoList[0].source, 'Interactive Brokers')
+              assert.equal(nameInfoList[0].table, 'ib_activity')
               done();
             })
         });
-        it('find and save to database', function (done) {
-          const nameInfoList = [
-            {
-              path: './tests/data/ib/U1891163_Activity_20170216.csv',
-              accountId: 'U1891163',
-              type: 'Activity',
-              date: moment('2017-02-16').toDate(),
-              startLine: 1,
-              source: 'Interactive Brokers',
-              table: 'ib_activity'
-            }
-          ]
-          interactiveBrokerService.update(nameInfoList).then(() => {
-            done();
-          })
+        describe('find and save to database', function () {
+          it('#update', function (done) {
+            const nameInfoList = [
+              {
+                path: './tests/data/ib/U1891163_Activity_20170216.csv',
+                accountId: 'U1891163',
+                type: 'Activity',
+                date: moment('2017-02-16').toDate(),
+                startLine: 1,
+                source: 'Interactive Brokers',
+                table: 'ib_activity'
+              }
+            ]
+            interactiveBrokerService.update(nameInfoList).then(() => {
+              interactiveBrokerActivityModel.findAll().then((models) => {
+                assert.equal(models[0].trade_date.toISOString(), '2017-02-15T16:00:00.000Z')
+                assert.equal(models[0].settle_date.toISOString(), '2017-02-16T16:00:00.000Z')
+                assert.equal(models.length, 11)
+                done();
+              })
+            })
+          });
+          it('#findAndSync', function (done) {
+            interactiveBrokerService
+              .findAndSync('ib_activity', './tests/data/ib/', '2017-02-16', 10)
+              .then(() => {
+                interactiveBrokerActivityModel.findAll().then((models) => {
+                  assert.equal(models.length, 3)
+                  assert.equal(models[0].trade_date.toISOString(), '2017-02-15T16:00:00.000Z')
+                  assert.equal(models[0].settle_date.toISOString(), '2017-02-21T16:00:00.000Z')
+                  assert.equal(models.length, 3)
+                  done();
+                })
+              })
+          });
         });
       });
-      it('cash report', function (done) {
-
-        done();
+      describe('cash report', function (done) {
+        it('look for data files with a period later or equal than specified', function (done) {
+          const path = './tests/data/ib/'
+          interactiveBrokerService
+            .getFileNameInfoList('ib_cash_report', path, '2017-02-15')
+            .then((nameInfoList) => {
+              assert.equal(nameInfoList.length, 30)
+              assert.equal(nameInfoList[0].path, './tests/data/ib/U1161356_CashReport_20170215.csv')
+              assert.equal(nameInfoList[0].accountId, 'U1161356')
+              assert.equal(nameInfoList[0].type, 'CashReport')
+              assert.equal(nameInfoList[0].date.toISOString(), '2017-02-14T16:00:00.000Z')
+              assert.equal(nameInfoList[0].source, 'Interactive Brokers')
+              assert.equal(nameInfoList[0].table, 'ib_cash_report')
+              assert(nameInfoList[0].assignDataFn)
+              done();
+            })
+        });
+        describe('find and save to database', function (done) {
+          it('#update', function (done) {
+            const nameInfoList = [
+              {
+                path: './tests/data/ib/U1161356_CashReport_20170215.csv',
+                accountId: 'U1161356',
+                type: 'CashReport',
+                date: moment('2017-02-15').toDate(),
+                startLine: 1,
+                source: 'Interactive Brokers',
+                table: 'ib_cash_report',
+                assignDataFn: function(data, nameInfo) {
+                  data['period'] = nameInfo.date
+                  return data
+                }
+              }
+            ]
+            interactiveBrokerService.update(nameInfoList).then(() => {
+              interactiveBrokerCashReportModel.findAll().then((models) => {
+                assert.equal(models.length, 15)
+                assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
+                assert.equal(models[0].account_id, 'U1161356')
+                done();
+              })
+            })
+          });
+          it('#findAndSync', function (done) {
+            interactiveBrokerService.findAndSync('ib_cash_report', './tests/data/ib/', '2017-02-15', 1).then(() => {
+              interactiveBrokerCashReportModel.findAll().then((models) => {
+                assert.equal(models.length, 15)
+                assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
+                assert.equal(models[0].account_id, 'U1161356')
+                done();
+              })
+            })
+          });
+        });
       });
-      it('nav', function (done) {
-
-        done();
+      describe('nav', function (done) {
+        describe('find and save to db', function () {
+          it('#findAndSync', function (done) {
+            interactiveBrokerService.findAndSync('ib_nav', './tests/data/ib/', '2017-02-15', 1).then(() => {
+              interactiveBrokerNavModel.findAll().then((models) => {
+                assert.equal(models.length, 2)
+                assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
+                assert.equal(models[0].account_id, 'U1161356')
+                done();
+              })
+            })
+          });
+        });
       });
       it('position', function (done) {
 
