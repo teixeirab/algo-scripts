@@ -1,0 +1,100 @@
+/* $Id */
+
+#chartContainer {
+    width: 90%;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+ul.chart {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+}
+
+.chart li {
+    font-size: 11px;
+    position: absolute;
+    background: #ccc;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    list-style: none;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    color: #fff;
+    overflow: hidden;
+}
+
+.chart li:hover { font-weight: bold; }
+.chart li.softDollars { background: #663300 url(https://www.interactivebrokers.com/reporting/images/chart_bar_brown.gif) repeat-y top left; }
+.chart li.ibgnote { background: #ff00ff url(https://www.interactivebrokers.com/reporting/images/chart_bar_majenta.gif) repeat-y top left; }
+.chart li.cmdty { background: #6600ff url(https://www.interactivebrokers.com/reporting/images/chart_bar_purple.gif) repeat-y top left; }
+.chart li.stk { background: #3300ff url(https://www.interactivebrokers.com/reporting/images/chart_bar_blue.gif) repeat-y top left; }
+.chart li.opt { background: #00ffff url(https://www.interactivebrokers.com/reporting/images/chart_bar_lt_blue.gif) repeat-y top left; }
+.chart li.cash { background: #00ff00 url(https://www.interactivebrokers.com/reporting/images/chart_bar_green.gif) repeat-y top left; }
+.chart li.slb, li.fxForwards { background: #ccff00 url(https://www.interactivebrokers.com/reporting/images/chart_bar_lt_green.gif) repeat-y top left; }
+.chart li.fund { background: #ffcc00 url(https://www.interactivebrokers.com/reporting/images/chart_bar_yellow.gif) repeat-y top left; }
+.chart li.bond { background: #ff9900 url(https://www.interactivebrokers.com/reporting/images/chart_bar_orange.gif) repeat-y top left; }
+.chart li.accruals { background: #ff0000 url(https://www.interactivebrokers.com/reporting/images/chart_bar_red.gif) repeat-y top left; }
+.chart li.spacer { background-color: #fff; }
+.chart li.spacerLeft { background-color: #fff; border-left: 1px solid #333; }
+.chart li.spacerRight { background-color: #fff; border-right: 1px solid #333; }
+
+.chart li.yAxisLabel {
+    left: -40px;
+    width: 40px;
+    height: 11px;
+    text-align: right;
+    color: #000;
+    border: none;
+    background-color: #fff;
+}
+
+ul.xAxisLabel {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.xAxisLabel li {
+    position: absolute;
+    list-style: none;
+    text-align: center;
+    overflow: visible;
+}
+
+ul.legend {
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 0;
+    height: 20px;
+}
+
+.legend li {
+    position: absolute;
+    list-style: none;
+    height: 15px;
+}
+
+.legend li.softDollarsLegend { background: #663300; border: 1px solid #333; }
+.legend li.ibgnoteLegend { background-color: #ff00ff; border: 1px solid #333; }
+.legend li.cmdtyLegend { background-color: #6600ff; border: 1px solid #333; }
+.legend li.stkLegend { background-color: #3300ff; border: 1px solid #333; }
+.legend li.optLegend { background-color: #00ffff; border: 1px solid #333; }
+.legend li.cashLegend { background-color: #00ff00; border: 1px solid #333; }
+.legend li.slbLegend, li.fxForwardsLegend { background-color: #ccff00; border: 1px solid #333; }
+.legend li.fundLegend { background-color: #ffcc00; border: 1px solid #333; }
+.legend li.bondLegend { background-color: #ff9900; border: 1px solid #333; }
+.legend li.accrualsLegend { background-color: #ff0000; border: 1px solid #333; }
+
+.chartTitle {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}

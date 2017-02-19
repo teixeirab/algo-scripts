@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+app/config/dev.js
+app/config/prod.js
+app/config/local.js
+*.log
+*.csv
+logs
+.tags
+docker-compose.yml
+id_rsa
+tmp
+jenkins

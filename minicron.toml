@@ -1,0 +1,81 @@
+# Example config file
+
+# Global options
+verbose = true
+debug = false # Useful for debugging
+
+# Client options
+[client]
+  [client.server]
+  scheme = "http" # [http, https]
+  host = "0.0.0.0"
+  port = 9292
+  path = "/"
+  connect_timeout = 5
+  inactivity_timeout = 5
+  # CLI options
+  [client.cli]
+  mode = "line" # [line, char]
+  dry_run = false
+
+# Server options
+[server]
+host = "0.0.0.0"
+port = 9292
+path = "/"
+pid_file = "/tmp/minicron.pid"
+timezone = "Beijing"
+  [server.session]
+  name = "minicron.session"
+  domain = "127.0.0.1"
+  path = "/"
+  ttl = 86400
+  secret = "change_me"
+  [server.database]
+  type = "sqlite" # [mysql, postgresql, sqlite]
+  # The options below are for mysql and postgresql only
+  # host = "127.0.0.1"
+  # database = "minicron"
+  # username = "minicron"
+  # password = "password"
+  [server.ssh]
+  connect_timeout = 10
+
+# Alerting options
+[alerts]
+  [alerts.email]
+  enabled = true
+  from = "dataupdater@fundpie.com.cn" # "Your Name <from@example.com>" syntax is also supported
+  to = "fundpie@gmail.com"
+    [alerts.email.smtp]
+    address = "smtp.exmail.qq.com" # "smtp.gmail.com" for gmail
+    port = 25  # 587 for gmail
+    domain = "fundpie.com.cn"
+    user_name = "dataupdater@fundpie.com.cn"
+    password = "Pie123"
+    authentication = "plain"
+    enable_starttls_auto = true
+
+  [alerts.sms]
+  enabled = false
+  # from = "+442222222222"
+  # to = "+443333333333"
+    [alerts.sms.twilio]
+    # account_sid = "YOUR_TWILIO_ACCOUNT_SID"
+    # auth_token = "YOUR_TWILIO_AUTH_TOKEN"
+
+  [alerts.pagerduty]
+  enabled = false
+  # service_key = "YOUR_PAGERDUTY_SERVICE_KEY"
+
+  [alerts.aws_sns]
+  enabled = false
+  # secret_access_key = "YOUR_SECRET_ACCESS_KEY"
+  # access_key_id = "YOUR_ACCESS_KEY_ID"
+  # region = "AWS_REGION"
+  # topic_arn = "YOUR_SNS_TOPIC_ARN"
+
+  [alerts.slack]
+  enabled = false
+  #webhook_url = "YOUR_SLACK_WEBHOOK_URL"
+  #channel = "#YOUR_SLACK_CHANNEL"

@@ -1,0 +1,29 @@
+{
+    "dependency": {
+        "Configs": "./config",
+
+        "FlexFundsDB": "./dbs/flexfunds",
+
+        "InteractiveBrokerActivityModel": "./models/generated/ib_activity",
+
+        "FileService": "./services/file",
+        "InteractiveBrokerService": "./services/ib",
+
+        "Sequelize": {
+    			"path": "sequelize",
+    			"shim": true
+    		},
+        "_": {
+            "path": "lodash",
+            "shim": true
+        },
+        "moment": {
+            "path": "moment",
+            "shim": true
+        },
+        "colors": {
+            "path": "colors",
+            "shim": true
+        }
+    }
+}
