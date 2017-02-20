@@ -10,7 +10,7 @@ module.exports = function(Configs, FileService) {
   var that = this;
 
   this.getMappings = function() {
-    return FileService.xlsxToCsvObject(Configs.mappingFilePath, 'Sheet1')
+    return FileService.readFile({path: Configs.mappingFilePath, sheet: 'Sheet1'})
   }
 
   this.getDBMappings = function(mappings, nameInfo) {
@@ -18,7 +18,7 @@ module.exports = function(Configs, FileService) {
     const sourceMappings = _.filter(mappings, (mapping) => {
       return mapping.table === nameInfo.table
     })
-    FileService.readFile(nameInfo.path, nameInfo.startLine).then((csvObject) => {
+    FileService.readFile(nameInfo).then((csvObject) => {
       // console.log(nameInfo.path, csvObject)
       let dbMappings = {}
       csvObject.forEach((row) => {
@@ -49,25 +49,10 @@ module.exports = function(Configs, FileService) {
         async.eachSeries(nameInfoList, (nameInfo, cb) => {
           this.getDBMappings(mappings, nameInfo).then((dbMappings) => {
             Object.keys(dbMappings).forEach((table) => {
-              const model = modelMappings[table]
-              async.eachSeries(dbMappings[table], (row, _cb) => {
-                if (nameInfo.assignDataFn) {
-                  row = nameInfo.assignDataFn(row, nameInfo)
-                }
-                model.create(row).then((persistedObj) => {
-                  _cb()
-                }).catch((err) => {
-                  if (Configs.sequelizeErrorLog) {
-                    // console.log(err)
-                    if(err.errors) {
-                      console.error(`sequelize error: ${err.errors[0].message}  field: ${err.errors[0].path}  table: ${nameInfo.table}`)
-                    }else {
-                      console.error(err)
-                    }
-                  }
-                  _cb()
-                })
-              }, cb)
+              const model = modelMappings[table], rows = dbMappings[table]
+              this.saveRows(model, rows, nameInfo).then(() => {
+                cb()
+              })
             })
           })
         }, (err) => {
@@ -77,6 +62,31 @@ module.exports = function(Configs, FileService) {
           deferred.resolve()
         })
       })
+    return deferred.promise
+  }
+
+  this.saveRows = function(model, rows, nameInfo) {
+    const deferred = Promise.pending()
+    async.eachSeries(rows, (row, cb) => {
+      if (nameInfo.assignDataFn) {
+        row = nameInfo.assignDataFn(row, nameInfo)
+      }
+      model.create(row).then((persistedObj) => {
+        cb()
+      }).catch((err) => {
+        if (Configs.sequelizeErrorLog) {
+          // console.log(err)
+          if(err.errors) {
+            console.error(`sequelize error: ${err.errors[0].message}  field: ${err.errors[0].path}  table: ${nameInfo.table}`)
+          }else {
+            console.error(err)
+          }
+        }
+        cb()
+      })
+    }, () => {
+      deferred.resolve()
+    })
     return deferred.promise
   }
 

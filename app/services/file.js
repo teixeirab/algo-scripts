@@ -31,14 +31,14 @@ module.exports = function() {
     return nameInfoList
   }
 
-  this.readFile = function(filePath, startLine) {
-    const parts = filePath.split('.')
+  this.readFile = function(nameInfo) {
+    const parts = nameInfo.path.split('.')
     const deferred = Promise.pending()
     let extension = parts[parts.length - 1]
     if(extension === 'csv') {
-      fs.createReadStream(filePath)
+      fs.createReadStream(nameInfo.path)
         .pipe(split(/(\r?\n)/))
-        .pipe(startAt(startLine))
+        .pipe(startAt(nameInfo.startLine))
         .pipe(csv.parse({
           relax_column_count: true,
           columns: true
@@ -51,8 +51,8 @@ module.exports = function() {
     }
     let workbook;
     if(extension === 'xlsx' || extension === 'xls') {
-      workbook = XLSX.readFile(filePath);
-      deferred.resolve(workbook);
+      workbook = XLSX.readFile(nameInfo.path);
+      return this.xlsxToCsvObject(workbook, nameInfo)
     }
     return deferred.promise;
   };
@@ -88,22 +88,17 @@ module.exports = function() {
     return this.csvStringToObject(csvStr, startLine)
   }
 
-  this.xlsxToCsvObject = function(filePath, sheetName, startLine) {
-    const deferred = Promise.pending()
-    this.readFile(filePath)
-        .then((workbook) => {
-          const sheet = workbook.Sheets[sheetName]
-          this.sheetToCsvObject(sheet, startLine)
-              .then((csvObj) => {
-                deferred.resolve(csvObj)
-              })
-        })
-    return deferred.promise
+  this.xlsxToCsvObject = function(workbook, nameInfo) {
+    const sheet = workbook.Sheets[nameInfo.sheet]
+    return this.sheetToCsvObject(sheet, nameInfo.startLine)
   }
 
-  this.getMappings = function() {
-    return this.xlsxToCsvObject('./tests/data/mapping.xlsx', 'Sheet1')
-  }
+  // this.getMappings = function() {
+  //   return this.readFile({
+  //     path: './tests/data/mapping.xlsx',
+  //     sheet: 'Sheet1'
+  //   })
+  // }
 
   return this;
 };
