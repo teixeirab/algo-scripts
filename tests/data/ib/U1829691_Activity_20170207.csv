@@ -1,0 +1,5 @@
+H,U1829691,Activity,20170208,03:56:35,20170207,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1829691,,,,,,,,USD,USD,20170207,,20170207,WITH,0,0,-7199.27,0,0,0,-7199.27,-7199.27,,,DISBURSEMENT INITIATED BY carlos Andon,1,,,,,,0,
+D,U1829691,,,,,,,,USD,USD,20170207,,20170207,INTACC,0,0,7.8,0,0,0,7.8,7.8,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,5,

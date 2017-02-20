@@ -1,0 +1,4 @@
+H,U1829691,Activity,20170209,04:11:56,20170208,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1829691,,,,,,,,USD,USD,20170208,,20170208,INTACC,0,0,7.77,0,0,0,7.77,7.77,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,4,

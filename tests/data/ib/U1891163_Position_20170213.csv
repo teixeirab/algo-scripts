@@ -1,0 +1,5 @@
+H,U1891163,Position,20170214,04:16:32,20170213,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,Quantity,QuantityInBase,CostPrice,CostBasis,CostBasisInBase,MarketPrice,MarketValue,MarketValueInBase,OpenDateTime,FxRateToBase,ReportDate,SettledQuantity,SettledQuantityInBase,MasterAccountID,Van,AccruedInt,OriginatingOrderID,
+D,U1891163,97589595,,CLH7,CLH7,BBG0028FBLW9,CL MAR17,FUT,USD,USD,17,0,53.52730118,909964.12,909964.12,52.93,899810,899810,,1,20170213,0,0,,,0,,
+D,U1891163,,,,,,,CASH,USD,USD,105797.3254884,105797.3254884,0,0,0,0,0,0,,1,20170213,116377.3254884,116377.3254884,,,0,,
+T,5,

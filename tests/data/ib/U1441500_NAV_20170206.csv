@@ -1,0 +1,4 @@
+H,U1441500,NAV,20170207,04:08:14,20170206,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1441500,EUR,389480.15059875,0,0,0,0,0,1525051.882096,0,0,0,36762.9639291,0,0,1951294.99662385,0.19706263,
+T,4,

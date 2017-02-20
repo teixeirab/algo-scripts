@@ -1,0 +1,4 @@
+H,U1891163,NAV,20170202,04:08:04,20170201,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1891163,USD,122375.5654884,0,0,0,0,0,0,0,0,0,0,0,0,122375.5654884,11.517217148,
+T,4,

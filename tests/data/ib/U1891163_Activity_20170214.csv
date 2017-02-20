@@ -1,0 +1,5 @@
+H,U1891163,Activity,20170215,04:14:57,20170214,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1891163,97589595,,CLH7,CLH7,BBG0028FBLW9,CL MAR17,FUT,USD,USD,20170214,,20170214,ADJ,0,0,4590,0,0,0,4590,4590,,,Position MTM,1,,,,,,0,
+D,U1891163,,,,,,,,USD,USD,20170214,,20170214,OFEE,0,0,-2.85,0,0,0,-2.85,-2.85,,,"EXPOSURE FEE, OIL FOR 20170213 FOR FEB 2017",1,,,,,,0,
+T,5,

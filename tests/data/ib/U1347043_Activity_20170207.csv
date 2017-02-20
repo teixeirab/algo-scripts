@@ -1,0 +1,5 @@
+H,U1347043,Activity,20170208,03:56:40,20170207,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1347043,,,,,,,,USD,USD,20170207,,20170207,WITH,0,0,-1309.39,0,0,0,-1309.39,-1309.39,,,DISBURSEMENT INITIATED BY Carlos Andon,1,,,,,,0,
+D,U1347043,,,,,,,,USD,USD,20170207,,20170207,INTACC,0,0,-2.32,0,0,0,-2.32,-2.32,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,5,

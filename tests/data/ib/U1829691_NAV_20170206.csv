@@ -1,0 +1,4 @@
+H,U1829691,NAV,20170207,04:08:08,20170206,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1829691,USD,1764692.9578,0,0,0,0,0,0,0,0,0,39,0,0,1764731.9578,0.001325998,
+T,4,

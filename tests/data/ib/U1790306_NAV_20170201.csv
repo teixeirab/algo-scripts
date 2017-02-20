@@ -1,0 +1,4 @@
+H,U1790306,NAV,20170202,04:08:12,20170201,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1790306,USD,-23702.61561577,0,53961,0,0,0,0,0,0,0,-70.02,0,0,30188.36438423,3.637214478,
+T,4,

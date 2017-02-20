@@ -1,0 +1,5 @@
+H,U1891163,Activity,20170131,04:03:15,20170130,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1891163,97589595,,CLH7,CLH7,BBG0028FBLW9,CL MAR17,FUT,USD,USD,20170130,,20170130,ADJ,0,0,-5400,0,0,0,-5400,-5400,,,Position MTM,1,,,,,,0,
+D,U1891163,,,,,,,,USD,USD,20170130,,20170130,DEP,0,0,42000,0,0,0,42000,42000,,,CASH RECEIPTS / ELECTRONIC FUND TRANSFERS,1,,,,,,0,
+T,5,

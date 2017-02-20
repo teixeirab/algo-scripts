@@ -1,0 +1,5 @@
+H,U1281274,Position,20170206,03:58:29,20170203,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,Quantity,QuantityInBase,CostPrice,CostBasis,CostBasisInBase,MarketPrice,MarketValue,MarketValueInBase,OpenDateTime,FxRateToBase,ReportDate,SettledQuantity,SettledQuantityInBase,MasterAccountID,Van,AccruedInt,OriginatingOrderID,
+D,U1281274,,,,,,,CASH,EUR,EUR,29.32028768,29.32028768,0,0,0,0,0,0,,1,20170203,29.32028768,29.32028768,,,0,,
+D,U1281274,,,,,,,CASH,USD,EUR,0.00004412,0.00004091,0,0,0,0,0,0,,0.92716,20170203,0.00004412,0.00004091,,,0,,
+T,5,

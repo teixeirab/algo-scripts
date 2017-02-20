@@ -1,0 +1,4 @@
+H,U1248167,NAV,20170131,04:03:21,20170130,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1248167,USD,88.694436,0,0,0,0,0,0,0,0,0,0,0,0,88.694436,0.002249346,
+T,4,

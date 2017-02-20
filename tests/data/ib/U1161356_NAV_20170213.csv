@@ -1,0 +1,4 @@
+H,U1161356,NAV,20170214,04:16:41,20170213,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1161356,USD,-3635972.47732598,0,5528338,0,0,0,8952.5,0,0,0,-1768.51,16508.43,0,1916057.94267402,0.824745685,
+T,4,

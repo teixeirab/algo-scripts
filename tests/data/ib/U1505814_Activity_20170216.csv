@@ -1,0 +1,5 @@
+H,U1505814,Activity,20170217,04:11:42,20170216,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1505814,,,,,,,,CAD,USD,20170216,,20170216,INTACC,0,0,-12.44,0,0,0,-12.44,-9.5169732,,,INTEREST ACCRUAL POSTING,0.76503,,,,,,0,
+D,U1505814,,,,,,,,USD,USD,20170216,,20170216,INTACC,0,0,-1.89,0,0,0,-1.89,-1.89,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,5,

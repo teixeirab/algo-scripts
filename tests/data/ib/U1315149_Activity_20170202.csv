@@ -1,0 +1,4 @@
+H,U1315149,Activity,20170203,03:59:25,20170202,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1315149,,,,,,,,EUR,EUR,20170202,,20170202,INTACC,0,0,-14.32,0,0,0,-14.32,-14.32,,,INTEREST ACCRUAL POSTING,1,,,,,U1315149,0,
+T,4,

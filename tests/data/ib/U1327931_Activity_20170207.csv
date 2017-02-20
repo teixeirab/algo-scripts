@@ -1,0 +1,4 @@
+H,U1327931,Activity,20170208,03:56:41,20170207,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1327931,,,,,,,,EUR,EUR,20170207,,20170208,WITH,0,0,-717.09,0,0,0,-717.09,-717.09,,,DISBURSEMENT INITIATED BY Carlos Andon,1,,,,,U1327931,0,
+T,4,

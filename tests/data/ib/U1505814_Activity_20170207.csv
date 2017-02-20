@@ -1,0 +1,6 @@
+H,U1505814,Activity,20170208,03:56:39,20170207,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1505814,,,,,,,,USD,USD,20170207,,20170207,WITH,0,0,-6155.7,0,0,0,-6155.7,-6155.7,,,DISBURSEMENT INITIATED BY Carlos Andon,1,,,,,,0,
+D,U1505814,,,,,,,,CAD,USD,20170207,,20170207,INTACC,0,0,-12.44,0,0,0,-12.44,-9.4341228,,,INTEREST ACCRUAL POSTING,0.75837,,,,,,0,
+D,U1505814,,,,,,,,USD,USD,20170207,,20170207,INTACC,0,0,-1.45,0,0,0,-1.45,-1.45,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,6,

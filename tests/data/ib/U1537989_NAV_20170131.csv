@@ -1,0 +1,4 @@
+H,U1537989,NAV,20170201,04:01:29,20170131,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1537989,USD,-5750062.667501,0,0,0,0,0,7810741.07,0,0,0,100206.12,21250,0,2182134.522499,0.020699617,
+T,4,

@@ -1,0 +1,4 @@
+H,U1645727,NAV,20170202,04:08:07,20170201,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1645727,USD,-178445.8835008,0,769018.57,0,0,0,0,0,0,0,-108.56,799.01,0,591263.1364992,0.246161723,
+T,4,

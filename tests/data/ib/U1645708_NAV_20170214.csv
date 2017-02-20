@@ -1,0 +1,4 @@
+H,U1645708,NAV,20170215,04:15:02,20170214,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1645708,USD,384303.33452385,0,6355114.6,0,0,9232,0,0,0,0,0,1406.41,0,6750056.34452385,0.149254972,
+T,4,

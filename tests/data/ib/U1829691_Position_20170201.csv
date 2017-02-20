@@ -1,0 +1,5 @@
+H,U1829691,Position,20170202,04:08:03,20170201,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,Quantity,QuantityInBase,CostPrice,CostBasis,CostBasisInBase,MarketPrice,MarketValue,MarketValueInBase,OpenDateTime,FxRateToBase,ReportDate,SettledQuantity,SettledQuantityInBase,MasterAccountID,Van,AccruedInt,OriginatingOrderID,
+D,U1829691,,,,,,,CASH,USD,USD,1764536.9778,1764536.9778,0,0,0,0,0,0,,1,20170201,1764536.9778,1764536.9778,,,0,,
+D,U1829691,,,,,,,INTACC,USD,USD,155.98,155.98,0,0,0,0,0,0,,1,20170201,0,0,,,0,,
+T,5,

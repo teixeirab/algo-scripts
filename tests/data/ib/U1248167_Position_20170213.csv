@@ -1,0 +1,5 @@
+H,U1248167,Position,20170214,04:16:40,20170213,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,Quantity,QuantityInBase,CostPrice,CostBasis,CostBasisInBase,MarketPrice,MarketValue,MarketValueInBase,OpenDateTime,FxRateToBase,ReportDate,SettledQuantity,SettledQuantityInBase,MasterAccountID,Van,AccruedInt,OriginatingOrderID,
+D,U1248167,,,,,,,CASH,EUR,USD,-6.65,-7.047005,0,0,0,0,0,0,,1.0597,20170213,-6.65,-7.047005,,,0,,
+D,U1248167,,,,,,,CASH,USD,USD,92.807276,92.807276,0,0,0,0,0,0,,1,20170213,92.807276,92.807276,,,0,,
+T,5,

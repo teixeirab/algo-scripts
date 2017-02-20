@@ -1,0 +1,6 @@
+H,U1161356,Activity,20170209,04:12:03,20170208,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1161356,,,,,,,,USD,USD,20170208,,20170208,OFEE,0,0,-1.1,0,0,0,-1.1,-1.1,,,"EXPOSURE FEE, EQUITY FOR 20170207 FOR FEB 2017",1,,,,,U1161356,0,
+D,U1161356,,,,,,,,USD,USD,20170208,,20170208,INTACC,0,0,-147.91,0,0,0,-147.91,-147.91,,,INTEREST ACCRUAL POSTING,1,,,,,U1161356,0,
+D,U1161356,158060541,90273A207,LMLP,LMLP,BBG006Q16552,ETRACS MNTH PAY 2XL WF MLP,STK,USD,USD,20170208,,20170208,DIVACC,2000,0.008,16,0,0,-4.8,11.2,11.2,,,DIVIDEND ACCRUAL POSTING,1,,,,,U1161356,0,
+T,6,

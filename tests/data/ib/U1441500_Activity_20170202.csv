@@ -1,0 +1,6 @@
+H,U1441500,Activity,20170203,03:59:24,20170202,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1441500,132757575,,ECH7,ECH7,BBG004Z4J664,EUR 13MAR17,FUT,USD,EUR,20170202,,20170202,ADJ,0,0,-1450,0,0,0,-1450,-1347.804,,,Position MTM,0.92952,,,,,,0,
+D,U1441500,,,,,,,,USD,EUR,20170202,,20170202,WITH,0,0,-206348.06,0,0,0,-206348.06,-191804.6487312,,,DISBURSEMENT INITIATED BY Carlos Andon,0.92952,,,,,,0,
+D,U1441500,,,,,,,,EUR,EUR,20170202,,20170202,INTACC,0,0,-4.8,0,0,0,-4.8,-4.8,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,6,

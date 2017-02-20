@@ -1,0 +1,4 @@
+H,U1347043,NAV,20170207,04:08:14,20170206,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1347043,USD,61546.28111448,0,279329.7,0,0,0,0,0,0,0,-16.94375,0,0,340859.03736448,0.106885798,
+T,4,

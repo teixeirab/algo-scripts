@@ -1,0 +1,4 @@
+H,U1505814,NAV,20170203,03:59:24,20170202,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1505814,USD,-134118.50237722,0,2518674.5473095,0,0,38398,0,0,0,0,-304.726344,958.42,0,2423607.73858828,2.466845075,
+T,4,

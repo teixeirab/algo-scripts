@@ -1,0 +1,4 @@
+H,U1891163,Position,20170217,04:11:34,20170216,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,Quantity,QuantityInBase,CostPrice,CostBasis,CostBasisInBase,MarketPrice,MarketValue,MarketValueInBase,OpenDateTime,FxRateToBase,ReportDate,SettledQuantity,SettledQuantityInBase,MasterAccountID,Van,AccruedInt,OriginatingOrderID,
+D,U1891163,,,,,,,CASH,USD,USD,103454.7854884,103454.7854884,0,0,0,0,0,0,,1,20170216,108724.7854884,108724.7854884,,,0,,
+T,4,

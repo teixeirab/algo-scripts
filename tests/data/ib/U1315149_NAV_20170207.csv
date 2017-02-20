@@ -1,0 +1,4 @@
+H,U1315149,NAV,20170208,03:56:41,20170207,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1315149,EUR,47631.25572145,0,0,0,0,0,0,0,0,0,-86.12,0,0,47545.13572145,-0.033673899,
+T,4,

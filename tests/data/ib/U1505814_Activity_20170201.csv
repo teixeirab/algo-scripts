@@ -1,0 +1,5 @@
+H,U1505814,Activity,20170202,04:08:09,20170201,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1505814,,,,,,,,CAD,USD,20170201,,20170201,INTACC,0,0,-12.41,0,0,0,-12.41,-9.5092866,,,INTEREST ACCRUAL POSTING,0.76626,,,,,,0,
+D,U1505814,101321040,58039P107,MUX,MUX,BBG000BW6CN8,MCEWEN MINING INC,STK,USD,USD,20170201,,20170201,DIVACC,219380,0.005,1096.9,0,0,-141.76,955.14,955.14,,,DIVIDEND ACCRUAL POSTING,1,,,,,,0,
+T,5,

@@ -1,0 +1,5 @@
+H,U1161356,Activity,20170202,04:08:12,20170201,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1161356,,,,,,,,USD,USD,20170201,,20170201,OFEE,0,0,-1.64,0,0,0,-1.64,-1.64,,,"EXPOSURE FEE, EQUITY FOR 20170131 FOR JAN 2017",1,,,,,U1161356,0,
+D,U1161356,,,,,,,,USD,USD,20170201,,20170201,INTACC,0,0,-129.43,0,0,0,-129.43,-129.43,,,INTEREST ACCRUAL POSTING,1,,,,,U1161356,0,
+T,5,

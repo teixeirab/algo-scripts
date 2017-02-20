@@ -1,0 +1,4 @@
+H,U1537989,Activity,20170217,04:11:41,20170216,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1537989,,,,,,,,USD,USD,20170216,,20170216,INTACC,0,0,-173.01,0,0,0,-173.01,-173.01,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,4,

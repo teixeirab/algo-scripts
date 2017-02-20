@@ -1,0 +1,4 @@
+H,U1375993,Activity,20170217,04:11:43,20170216,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1375993,,,,,,,,USD,USD,20170216,,20170216,INTACC,0,0,-53.62,0,0,0,-53.62,-53.62,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,4,

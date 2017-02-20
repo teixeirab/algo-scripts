@@ -1,0 +1,7 @@
+H,U1441500,Activity,20170131,04:03:20,20170130,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1441500,,,,,,,,EUR,EUR,20170129,,20170130,DEP,0,0,398668.06,0,0,0,398668.06,398668.06,,,CASH RECEIPTS / ELECTRONIC FUND TRANSFERS,1,,,,,,0,
+D,U1441500,132757575,,ECH7,ECH7,BBG004Z4J664,EUR 13MAR17,FUT,USD,EUR,20170130,,20170130,ADJ,0,0,-650,0,0,0,-650,-607.711,,,Position MTM,0.93494,,,,,,0,
+D,U1441500,,,,,,,,EUR,EUR,20170130,,20170130,INTACC,0,0,-1.86,0,0,0,-1.86,-1.86,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+D,U1441500,,,,,,,,USD,EUR,20170130,,20170130,INTACC,0,0,-7.05,0,0,0,-7.05,-6.591327,,,INTEREST ACCRUAL POSTING,0.93494,,,,,,0,
+T,7,

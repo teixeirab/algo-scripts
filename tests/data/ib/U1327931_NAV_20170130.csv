@@ -1,0 +1,4 @@
+H,U1327931,NAV,20170131,04:03:20,20170130,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1327931,EUR,32560.33349179,0,0,0,0,0,0,0,0,0,0,0,0,32560.33349179,-0.000010615,
+T,4,

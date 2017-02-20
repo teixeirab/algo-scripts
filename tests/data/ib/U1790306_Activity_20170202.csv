@@ -1,0 +1,4 @@
+H,U1790306,Activity,20170203,03:59:26,20170202,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1790306,,,,,,,,USD,USD,20170202,,20170202,INTACC,0,0,-2.08,0,0,0,-2.08,-2.08,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+T,4,

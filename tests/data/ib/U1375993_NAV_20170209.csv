@@ -1,0 +1,4 @@
+H,U1375993,NAV,20170210,04:13:51,20170209,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1375993,USD,-686087.56,0,0,0,0,0,1522971.58,0,0,0,31228.76,0,0,868112.78,-2.221152201,
+T,4,

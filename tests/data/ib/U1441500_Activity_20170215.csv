@@ -1,0 +1,6 @@
+H,U1441500,Activity,20170216,04:16:52,20170215,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1441500,132757575,,ECH7,ECH7,BBG004Z4J664,EUR 13MAR17,FUT,USD,EUR,20170215,,20170215,ADJ,0,0,2337.5,0,0,0,2337.5,2205.174125,,,Position MTM,0.94339,,,,,,0,
+D,U1441500,,,,,,,,EUR,EUR,20170215,,20170215,INTACC,0,0,-1.55,0,0,0,-1.55,-1.55,,,INTEREST ACCRUAL POSTING,1,,,,,,0,
+D,U1441500,,,,,,,,USD,EUR,20170215,,20170215,INTACC,0,0,-6.79,0,0,0,-6.79,-6.4056181,,,INTEREST ACCRUAL POSTING,0.94339,,,,,,0,
+T,6,

@@ -1,0 +1,7 @@
+H,U1315149,Activity,20170131,04:03:20,20170130,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1315149,,,,,,,,USD,EUR,20170130,,20170130,WITH,0,0,-184487.5,0,0,0,-184487.5,-172484.74325,,,DISBURSEMENT INITIATED BY jose c gonzalez,0.93494,,,,,U1315149,0,
+D,U1315149,,,,,,,,USD,EUR,20170130,,20170130,OFEE,0,0,-10,0,0,0,-10,-9.3494,,,WITHDRAWAL FEE FOR JAN 2017,0.93494,,,,,U1315149,0,
+D,U1315149,,,,,,,,EUR,EUR,20170130,,20170130,INTACC,0,0,-43.23,0,0,0,-43.23,-43.23,,,INTEREST ACCRUAL POSTING,1,,,,,U1315149,0,
+D,U1315149,,,,,,,,USD,EUR,20170130,,20170130,INTACC,0,0,2.34,0,0,0,2.34,2.1877596,,,INTEREST ACCRUAL POSTING,0.93494,,,,,U1315149,0,
+T,7,

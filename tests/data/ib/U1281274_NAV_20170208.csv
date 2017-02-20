@@ -1,0 +1,4 @@
+H,U1281274,NAV,20170209,04:12:02,20170208,1.94,
+Type,AccountID,BaseCurrency,Cash,CashCollateral,Stocks,SecuritiesBorrowed,SecuritiesLent,Options,Bonds,Commodities,Funds,Notes,Accruals,DividendAccruals,SoftDollars,Totals,TWR,
+D,U1281274,EUR,29.32032892,0,0,0,0,0,0,0,0,0,0,0,0,29.32032892,-0.000000212,
+T,4,

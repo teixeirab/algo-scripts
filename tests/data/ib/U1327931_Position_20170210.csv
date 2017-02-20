@@ -1,0 +1,5 @@
+H,U1327931,Position,20170213,04:14:06,20170210,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,Quantity,QuantityInBase,CostPrice,CostBasis,CostBasisInBase,MarketPrice,MarketValue,MarketValueInBase,OpenDateTime,FxRateToBase,ReportDate,SettledQuantity,SettledQuantityInBase,MasterAccountID,Van,AccruedInt,OriginatingOrderID,
+D,U1327931,,,,,,,CASH,EUR,EUR,31856.7071481,31856.7071481,0,0,0,0,0,0,,1,20170210,31856.7071481,31856.7071481,,U1327931,0,,
+D,U1327931,,,,,,,CASH,USD,EUR,-14.40055651,-13.53349901,0,0,0,0,0,0,,0.93979,20170210,-14.40055651,-13.53349901,,U1327931,0,,
+T,5,

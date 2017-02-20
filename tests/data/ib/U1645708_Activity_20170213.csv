@@ -1,0 +1,4 @@
+H,U1645708,Activity,20170214,04:16:36,20170213,1.94,
+Type,AccountID,ConID,SecurityID,Symbol,BBTicker,BBGlobalID,SecurityDescription,AssetType,Currency,BaseCurrency,TradeDate,TradeTime,SettleDate,TransactionType,Quantity,UnitPrice,GrossAmount,SECFee,Commission,Tax,Net,NetInBase,TradeID,TaxBasisElection,Description,FxRateToBase,ContraPartyName,ClrFirmID,Exchange,MasterAccountID,Van,AwayBrokerCommission,OrderID
+D,U1645708,75911465,46132L107,VBF,VBF,BBG000DPTFZ6,INVESCO BOND FUND,STK,USD,USD,20170213,,20170213,DIVACC,11400,0.069,786.6,0,0,-117.99,668.61,668.61,,,DIVIDEND ACCRUAL POSTING,1,,,,,,0,
+T,4,
