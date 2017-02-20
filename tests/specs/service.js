@@ -224,20 +224,20 @@ describe('service tests', function() {
         done();
       });
     });
-    xdescribe('theorem', function () {
+    describe.only('theorem', function () {
       describe('weekly', function () {
         it('sync row based sheet', function (done) {
           const nameInfoList = [
-            {
-              path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
-              seriesNumber: '95',
-              type: 'Weekly',
-              date: moment('2017-02-10').toDate(),
-              startLine: 0,
-              source: 'Theorem',
-              table: 'theorem_balance_sheet',
-              sheet: 'Balance Sheet'
-            },
+            // {
+            //   path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
+            //   seriesNumber: '95',
+            //   type: 'Weekly',
+            //   date: moment('2017-02-10').toDate(),
+            //   startLine: 0,
+            //   source: 'Theorem',
+            //   table: 'theorem_balance_sheet',
+            //   sheet: 'Balance Sheet'
+            // },
             {
               path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
               seriesNumber: '95',
@@ -246,7 +246,8 @@ describe('service tests', function() {
               startLine: 0,
               source: 'Theorem',
               table: 'theorem_income_statement',
-              sheet: 'Income Statement'
+              sheet: 'Income Statement',
+              transpose: true
             }
           ]
           interactiveBrokerService.update(nameInfoList).then(() => {

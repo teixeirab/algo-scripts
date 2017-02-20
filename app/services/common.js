@@ -19,7 +19,6 @@ module.exports = function(Configs, FileService) {
       return mapping.table === nameInfo.table
     })
     FileService.readFile(nameInfo).then((csvObject) => {
-      // console.log(nameInfo.path, csvObject)
       let dbMappings = {}
       csvObject.forEach((row) => {
         let dbMapping = {}
