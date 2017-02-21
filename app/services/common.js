@@ -24,7 +24,7 @@ module.exports = function(Configs, FileService) {
         let dbMapping = {}
         Object.keys(row).forEach((reportField) => {
           sourceMappings.forEach((mapping) => {
-            if (mapping.report_field === reportField) {
+            if (mapping.report_field.replace(/_/g, '') === reportField.replace(/_/g, '')) {
               dbMapping[mapping.table] = dbMapping[mapping.table] || {}
               dbMapping[mapping.table][mapping.database_field] = row[reportField]
             }

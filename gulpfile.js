@@ -18,6 +18,9 @@ gulp.task('enableDBLog', function() {
 });
 gulp.task('testConfig', function() {
     process.env.NODE_ENV = 'test';
+    if(argv.seqerr) {
+      process.env.SEQ_ERR = true;
+    }
 });
 gulp.task('globalConfig', function() {
     var mode = argv.mode;

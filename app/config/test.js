@@ -2,6 +2,6 @@ module.exports = {
   dbHost: 'localhost',
   dialect: 'sqlite',
   mappingFilePath: './tests/data/mapping.xlsx',
-  // sequelizeErrorLog: true
+  sequelizeErrorLog: process.env.SEQ_ERR
   // dbLogging: console.log
 }

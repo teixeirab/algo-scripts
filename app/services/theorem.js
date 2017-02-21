@@ -8,19 +8,16 @@ const Promise = require('bluebird')
 module.exports = function(
   FileService,
   CommonService,
-  InteractiveBrokerActivityModel,
-  InteractiveBrokerNavModel,
-  InteractiveBrokerCashReportModel
+  TheoremIncomeStatementModel,
+  TheoremBalanceSheetModel
 ) {
 
   var that = this;
 
   const modelMappings = {
-    ib_activity: InteractiveBrokerActivityModel,
-    ib_cash_report: InteractiveBrokerCashReportModel,
-    ib_nav: InteractiveBrokerNavModel
+    theorem_income_statement: TheoremIncomeStatementModel,
+    theorem_balance_sheet: TheoremBalanceSheetModel
   }
-
   this.nameInfoListExtractConfigs = function(path, fromDate) {
     return {
       theorem_balance_sheet: {

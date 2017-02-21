@@ -65,7 +65,7 @@ module.exports = function() {
 
   const transposeFn = m => m[0].map((x,i) => m.map(x => x[i]))
 
-  this.csvStringToObject = function(csvStr, startLine, transpose) {
+  this.csvStringToObject = function(csvStr, startLine, transpose, onlyRow) {
     const deferred = Promise.pending()
     let stream = new Readable
     stream.push(csvStr)
@@ -91,15 +91,27 @@ module.exports = function() {
           return deferred.reject(err);
         }
         data = transposeFn(data)
-        csv.parse([['d','c'],[1,2]], {
-          relax_column_count: true,
-          columns: true
-        }, function(err, data){
-          if(err) {
-            return deferred.reject(err);
-          }
-          console.log(data)
-          deferred.resolve(data)
+        csv.transform(data, function(row) {
+          row = row.map((col) => {
+            col.replace(/\\/g, "\\\\")
+               .replace(/\n/g, "\\n")
+            return '"' + col + '"'
+          })
+          return row.join(',');
+        }, function(err, output) {
+          output = output.join('\n')
+          csv.parse(output, {
+            relax_column_count: true,
+            columns: true
+          }, function(err, data){
+            if(err) {
+              return deferred.reject(err);
+            }
+            if(onlyRow > 0) {
+              data = [data[onlyRow - 1]]
+            }
+            deferred.resolve(data)
+          })
         })
       }))
     }
@@ -122,22 +134,15 @@ module.exports = function() {
     return deferred.promise;
   }
 
-  this.sheetToCsvObject = function(sheet, startLine, transpose) {
+  this.sheetToCsvObject = function(sheet, startLine, transpose, onlyRow) {
     const csvStr = this.sheetToCsv(sheet)
-    return this.csvStringToObject(csvStr, startLine, transpose)
+    return this.csvStringToObject(csvStr, startLine, transpose, onlyRow)
   }
 
   this.xlsxToCsvObject = function(workbook, nameInfo) {
     const sheet = workbook.Sheets[nameInfo.sheet]
-    return this.sheetToCsvObject(sheet, nameInfo.startLine, nameInfo.transpose)
+    return this.sheetToCsvObject(sheet, nameInfo.startLine, nameInfo.transpose, nameInfo.row)
   }
-
-  // this.getMappings = function() {
-  //   return this.readFile({
-  //     path: './tests/data/mapping.xlsx',
-  //     sheet: 'Sheet1'
-  //   })
-  // }
 
   return this;
 };

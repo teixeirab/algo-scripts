@@ -12,6 +12,9 @@ describe('service tests', function() {
       interactiveBrokerActivityModel,
       interactiveBrokerCashReportModel,
       interactiveBrokerNavModel,
+      theoremService,
+      theoremIncomeStatementModel,
+      theoremBalanceSheetModel,
       db;
   beforeEach(function(done) {
     app.summon.resolve(function(
@@ -20,6 +23,9 @@ describe('service tests', function() {
       InteractiveBrokerService,
       InteractiveBrokerActivityModel,
       InteractiveBrokerNavModel,
+      TheoremIncomeStatementModel,
+      TheoremBalanceSheetModel,
+      TheoremService,
       InteractiveBrokerCashReportModel) {
 
         fileService = FileService
@@ -27,6 +33,9 @@ describe('service tests', function() {
         interactiveBrokerActivityModel = InteractiveBrokerActivityModel
         interactiveBrokerCashReportModel = InteractiveBrokerCashReportModel
         interactiveBrokerNavModel = InteractiveBrokerNavModel
+        theoremIncomeStatementModel = TheoremIncomeStatementModel
+        theoremBalanceSheetModel = TheoremBalanceSheetModel
+        theoremService = TheoremService
         db = FlexFundsDB
         done()
     });
@@ -224,9 +233,9 @@ describe('service tests', function() {
         done();
       });
     });
-    describe.only('theorem', function () {
+    describe('theorem', function () {
       describe('weekly', function () {
-        it('sync row based sheet', function (done) {
+        it('income statement', function (done) {
           const nameInfoList = [
             // {
             //   path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
@@ -247,14 +256,63 @@ describe('service tests', function() {
               source: 'Theorem',
               table: 'theorem_income_statement',
               sheet: 'Income Statement',
-              transpose: true
+              transpose: true,
+              row: 1,
+              assignDataFn: (data, nameInfo) => {
+                data['period'] = nameInfo.date
+                data['series_number'] = nameInfo.seriesNumber
+                data['type'] = nameInfo.type
+                return data
+              }
             }
           ]
-          interactiveBrokerService.update(nameInfoList).then(() => {
-            interactiveBrokerActivityModel.findAll().then((models) => {
-              assert.equal(models[0].trade_date.toISOString(), '2017-02-15T16:00:00.000Z')
-              assert.equal(models[0].settle_date.toISOString(), '2017-02-16T16:00:00.000Z')
-              assert.equal(models.length, 11)
+          theoremService.update(nameInfoList).then(() => {
+            theoremIncomeStatementModel.findAll().then((models) => {
+              assert.equal(models[0].period.toISOString(), '2017-02-09T16:00:00.000Z')
+              assert.equal(models[0].series_number, 95)
+              assert.equal(models[0].audit_fees, -40.81)
+              assert.equal(models[0].price_dissemination_fees, -23.01)
+              assert.equal(models[0].trustee_corporate_fees, -63.26)
+              assert.equal(models[0].transfer_agent_fees, -40.81)
+              assert.equal(models[0].external_expense_offset, 167.91)
+              assert.equal(models[0].type, 'Weekly')
+              done();
+            })
+          })
+        });
+        it('balance sheet', function (done) {
+          const nameInfoList = [
+            {
+              path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
+              seriesNumber: '95',
+              type: 'Weekly',
+              date: moment('2017-02-10').toDate(),
+              startLine: 0,
+              source: 'Theorem',
+              table: 'theorem_balance_sheet',
+              sheet: 'Balance Sheet',
+              transpose: true,
+              row: 2,
+              assignDataFn: (data, nameInfo) => {
+                data['period'] = nameInfo.date
+                data['series_number'] = nameInfo.seriesNumber
+                data['type'] = nameInfo.type
+                return data
+              }
+            }
+          ]
+          theoremService.update(nameInfoList).then(() => {
+            theoremBalanceSheetModel.findAll().then((models) => {
+              assert.equal(models[0].total_liabilities, -0.01)
+              assert.equal(models[0].series_number, 95)
+              assert.equal(models[0].audit_fees_payable, 252.12)
+              assert.equal(models[0].inventory_costs_payable, 300)
+              assert.equal(models[0].price_dissemination_fees_payable, 141.37)
+              assert.equal(models[0].transfer_agent_fees_payable, 252.12)
+              assert.equal(models[0].trustee_agent_fees_payable, 390.78)
+              assert.equal(models[0].external_expense_offset_accrued, '-1,536.40')
+              assert.equal(models[0].accounting_fees_payable, 200)
+              assert.equal(models[0].type, 'Weekly')
               done();
             })
           })
