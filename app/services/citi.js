@@ -8,14 +8,13 @@ const Promise = require('bluebird')
 module.exports = function(
   FileService,
   CommonService,
-  CitiAllTransactionsModel,
+  CitiAllTransactionsModel
 ) {
 
   var that = this;
 
   const modelMappings = {
-    theorem_income_statement: TheoremIncomeStatementModel,
-    theorem_balance_sheet: TheoremBalanceSheetModel
+    citi_all_transactions: CitiAllTransactionsModel
   }
   this.nameInfoListExtractConfigs = function(path, fromDate) {
     return {
@@ -58,6 +57,24 @@ module.exports = function(
       source: 'Interactive Brokers',
       table: 'ib_cash_report'
     }
+  }
+
+  this.csvPostProcess = function(csvObject) {
+    let prevRow
+    const columns = [
+      'Actual Branch Name',
+      'Account ID',
+      'Account Name'
+    ]
+    csvObject.forEach((row) => {
+      columns.forEach((col) => {
+        if((_.isEmpty(row[col])) && !_.isEmpty(prevRow[col])) {
+          row[col] = prevRow[col]
+        }
+      })
+      prevRow = row
+    })
+    return csvObject
   }
 
   this.update = function(nameInfoList) {
