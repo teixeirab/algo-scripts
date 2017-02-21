@@ -33,28 +33,16 @@ module.exports = function() {
 
   this.readFile = function(nameInfo) {
     const parts = nameInfo.path.split('.')
-    const deferred = Promise.pending()
     let extension = parts[parts.length - 1]
     if(extension === 'csv') {
-      fs.createReadStream(nameInfo.path)
-        .pipe(split(/(\r?\n)/))
-        .pipe(startAt(nameInfo.startLine))
-        .pipe(csv.parse({
-          relax_column_count: true,
-          columns: true
-        }, function(err, data){
-          if(err) {
-            return deferred.reject(err);
-          }
-          deferred.resolve(data)
-        }))
+      const stream = this.setStartLineInStream(fs.createReadStream(nameInfo.path), nameInfo.startLine)
+      return this.streamToObject(stream, nameInfo)
     }
     let workbook;
     if(extension === 'xlsx' || extension === 'xls') {
       workbook = XLSX.readFile(nameInfo.path);
       return this.xlsxToCsvObject(workbook, nameInfo)
     }
-    return deferred.promise;
   };
 
   this.sheetToCsv = function(sheet) {
@@ -63,19 +51,25 @@ module.exports = function() {
     return csvStr;
   }
 
+  this.setStartLineInStream = function(stream, startLine) {
+    return stream.pipe(split(/(\r?\n)/))
+                 .pipe(startAt(startLine))
+  }
+
   const transposeFn = m => m[0].map((x,i) => m.map(x => x[i]))
 
-  this.csvStringToObject = function(csvStr, startLine, transpose, onlyRow) {
-    const deferred = Promise.pending()
+  this.csvStringToObject = function(csvStr, nameInfo) {
     let stream = new Readable
     stream.push(csvStr)
     stream.push(null)
-    const pipe = stream
-      .pipe(split(/(\r?\n)/))
-      .pipe(startAt(startLine))
+    let pipe = this.setStartLineInStream(stream, nameInfo.startLine)
+    return this.streamToObject(pipe, nameInfo)
+  }
 
-    if(!transpose) {
-      pipe.pipe(csv.parse({
+  this.streamToObject = function(stream, nameInfo) {
+    const deferred = Promise.pending()
+    if(!nameInfo.transpose) {
+      stream.pipe(csv.parse({
         relax_column_count: true,
         columns: true
       }, function(err, data){
@@ -85,7 +79,7 @@ module.exports = function() {
         deferred.resolve(data)
       }))
     }else {
-      pipe.pipe(csv.parse({
+      stream.pipe(csv.parse({
       }, function(err, data){
         if(err) {
           return deferred.reject(err);
@@ -107,8 +101,8 @@ module.exports = function() {
             if(err) {
               return deferred.reject(err);
             }
-            if(onlyRow > 0) {
-              data = [data[onlyRow - 1]]
+            if(nameInfo.row > 0) {
+              data = [data[nameInfo.row - 1]]
             }
             deferred.resolve(data)
           })
@@ -118,30 +112,30 @@ module.exports = function() {
     return deferred.promise;
   }
 
-  this.transposeCsv = function(csvStr) {
-    const deferred = Promise.pending()
-    let stream = new Readable
-    stream.push(csvStr)
-    stream.push(null)
-    stream
-      .pipe(csv.parse({
-      }, function(err, data){
-        if(err) {
-          return deferred.reject(err);
-        }
-        deferred.resolve(data)
-      }))
-    return deferred.promise;
-  }
+  // this.transposeCsv = function(csvStr) {
+  //   const deferred = Promise.pending()
+  //   let stream = new Readable
+  //   stream.push(csvStr)
+  //   stream.push(null)
+  //   stream
+  //     .pipe(csv.parse({
+  //     }, function(err, data){
+  //       if(err) {
+  //         return deferred.reject(err);
+  //       }
+  //       deferred.resolve(data)
+  //     }))
+  //   return deferred.promise;
+  // }
 
-  this.sheetToCsvObject = function(sheet, startLine, transpose, onlyRow) {
+  this.sheetToCsvObject = function(sheet, nameInfo) {
     const csvStr = this.sheetToCsv(sheet)
-    return this.csvStringToObject(csvStr, startLine, transpose, onlyRow)
+    return this.csvStringToObject(csvStr, nameInfo)
   }
 
   this.xlsxToCsvObject = function(workbook, nameInfo) {
     const sheet = workbook.Sheets[nameInfo.sheet]
-    return this.sheetToCsvObject(sheet, nameInfo.startLine, nameInfo.transpose, nameInfo.row)
+    return this.sheetToCsvObject(sheet, nameInfo)
   }
 
   return this;

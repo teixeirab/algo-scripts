@@ -237,16 +237,6 @@ describe('service tests', function() {
       describe('weekly', function () {
         it('income statement', function (done) {
           const nameInfoList = [
-            // {
-            //   path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
-            //   seriesNumber: '95',
-            //   type: 'Weekly',
-            //   date: moment('2017-02-10').toDate(),
-            //   startLine: 0,
-            //   source: 'Theorem',
-            //   table: 'theorem_balance_sheet',
-            //   sheet: 'Balance Sheet'
-            // },
             {
               path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
               seriesNumber: '95',
@@ -317,6 +307,34 @@ describe('service tests', function() {
             })
           })
         });
+      });
+    });
+    xdescribe('citibank', function () {
+      it('all transactions', function (done) {
+        const nameInfoList = [
+          {
+            path: './tests/data/Citibank/all_transactions.CSV',
+            type: 'AllTransactions',
+            source: 'Citibank',
+            table: 'all_transactions',
+            sheet: 'Balance Sheet'
+          }
+        ]
+        theoremService.update(nameInfoList).then(() => {
+          theoremBalanceSheetModel.findAll().then((models) => {
+            assert.equal(models[0].total_liabilities, -0.01)
+            assert.equal(models[0].series_number, 95)
+            assert.equal(models[0].audit_fees_payable, 252.12)
+            assert.equal(models[0].inventory_costs_payable, 300)
+            assert.equal(models[0].price_dissemination_fees_payable, 141.37)
+            assert.equal(models[0].transfer_agent_fees_payable, 252.12)
+            assert.equal(models[0].trustee_agent_fees_payable, 390.78)
+            assert.equal(models[0].external_expense_offset_accrued, '-1,536.40')
+            assert.equal(models[0].accounting_fees_payable, 200)
+            assert.equal(models[0].type, 'Weekly')
+            done();
+          })
+        })
       });
     });
   });
