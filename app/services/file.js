@@ -33,7 +33,7 @@ module.exports = function() {
 
   this.readFile = function(nameInfo) {
     const parts = nameInfo.path.split('.')
-    let extension = parts[parts.length - 1]
+    let extension = parts[parts.length - 1].toLowerCase()
     if(extension === 'csv') {
       const stream = this.setStartLineInStream(fs.createReadStream(nameInfo.path), nameInfo.startLine)
       return this.streamToObject(stream, nameInfo)

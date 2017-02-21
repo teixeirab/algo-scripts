@@ -316,8 +316,7 @@ describe('service tests', function() {
             path: './tests/data/Citibank/all_transactions.CSV',
             type: 'AllTransactions',
             source: 'Citibank',
-            table: 'all_transactions',
-            sheet: 'Balance Sheet'
+            table: 'citi_all_transactions'
           }
         ]
         theoremService.update(nameInfoList).then(() => {

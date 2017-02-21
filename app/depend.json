@@ -9,6 +9,7 @@
         "InteractiveBrokerNavModel": "./models/generated/ib_nav",
         "TheoremIncomeStatementModel": "./models/generated/theorem_income_statement",
         "TheoremBalanceSheetModel": "./models/generated/theorem_balance_sheet",
+        "CitiAllTransactionsModel": "./models/generated/citi_all_transactions",
 
         "CommonService": "./services/common",
         "FileService": "./services/file",
