@@ -5,7 +5,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
     client_reference: {
       type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: "",
       primaryKey: true
     },
     account_id: {
@@ -74,7 +73,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     counterparty_id: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
     legal_confirm: {
       type: Sequelize.INTEGER(11),
@@ -88,11 +87,13 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     wire_amount: {
       type: "DOUBLE",
-      allowNull: false
+      allowNull: false,
+      defaultValue: "0"
     },
     dt_added: {
       type: Sequelize.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
     tableName: 'citi_all_transactions'

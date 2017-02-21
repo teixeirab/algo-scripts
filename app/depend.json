@@ -15,6 +15,7 @@
         "FileService": "./services/file",
         "InteractiveBrokerService": "./services/ib",
         "TheoremService": "./services/theorem",
+        "CitiService": "./services/citi",
 
         "Sequelize": {
     			"path": "sequelize",

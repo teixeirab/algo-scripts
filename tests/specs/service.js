@@ -7,44 +7,30 @@ var moment = require('moment');
 var _ = require('lodash');
 
 describe('service tests', function() {
-  let fileService,
-      interactiveBrokerService,
-      interactiveBrokerActivityModel,
-      interactiveBrokerCashReportModel,
-      interactiveBrokerNavModel,
-      theoremService,
-      theoremIncomeStatementModel,
-      theoremBalanceSheetModel,
-      db;
+  let vars = [
+    'FileService',
+    'InteractiveBrokerService',
+    'TheoremService',
+    'CitiService',
+    'InteractiveBrokerActivityModel',
+    'InteractiveBrokerCashReportModel',
+    'InteractiveBrokerNavModel',
+    'CitiAllTransactionsModel',
+    'TheoremIncomeStatementModel',
+    'TheoremBalanceSheetModel',
+    'FlexFundsDB'
+  ]
   beforeEach(function(done) {
-    app.summon.resolve(function(
-      FlexFundsDB,
-      FileService,
-      InteractiveBrokerService,
-      InteractiveBrokerActivityModel,
-      InteractiveBrokerNavModel,
-      TheoremIncomeStatementModel,
-      TheoremBalanceSheetModel,
-      TheoremService,
-      InteractiveBrokerCashReportModel) {
-
-        fileService = FileService
-        interactiveBrokerService = InteractiveBrokerService
-        interactiveBrokerActivityModel = InteractiveBrokerActivityModel
-        interactiveBrokerCashReportModel = InteractiveBrokerCashReportModel
-        interactiveBrokerNavModel = InteractiveBrokerNavModel
-        theoremIncomeStatementModel = TheoremIncomeStatementModel
-        theoremBalanceSheetModel = TheoremBalanceSheetModel
-        theoremService = TheoremService
-        db = FlexFundsDB
-        done()
-    });
+    vars.forEach((dep) => {
+      vars[dep] = app.summon.get(dep)
+    })
+    done()
   });
   describe('read data source files', function () {
     it('read csv', function (done) {
       const filePath = './tests/data/ib/U1161356_Activity_20170130.csv';
       const startLine = 1;
-      fileService.readFile({path: filePath, startLine}).then((data) => {
+      vars['FileService'].readFile({path: filePath, startLine}).then((data) => {
         assert(data[0].Type, 'D')
         assert(data[0].AccountID, 'U1161356')
         assert(data[0].TradeDate, '20170130')
@@ -53,7 +39,7 @@ describe('service tests', function() {
     });
     xit('read xlsx', function (done) {
       const filePath = './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_16_Financials.xlsx';
-      fileService.readFile({path: filePath}).then((workbook) => {
+      vars['FileService'].readFile({path: filePath}).then((workbook) => {
         const sheetNames = Object.keys(workbook.Sheets)
         assert.equal(sheetNames[0], 'Balance Sheet')
         assert.equal(sheetNames[1], 'Income Statement')
@@ -64,7 +50,7 @@ describe('service tests', function() {
     });
     xit('read xls', function (done) {
       const filePath = './tests/data/Pershing/Series_XX_History_02-09-2017.xls';
-      fileService.readFile({path: filePath}).then((workbook) => {
+      vars['FileService'].readFile({path: filePath}).then((workbook) => {
         const sheetNames = Object.keys(workbook.Sheets)
         assert.equal(sheetNames[0], 'History')
         assert(workbook.Sheets[sheetNames[0]])
@@ -74,7 +60,7 @@ describe('service tests', function() {
     it('convert xls/xlsx sheet to csv, set start line, and then to json', function (done) {
       const filePath = './tests/data/Pershing/Series_XX_History_02-09-2017.xls';
       const startLine = 2
-      fileService.readFile({path: filePath, sheet: 'History', startLine}).then((csvObject) => {
+      vars['FileService'].readFile({path: filePath, sheet: 'History', startLine}).then((csvObject) => {
         assert.equal(Object.keys(csvObject[0]).length, 15)
         assert.equal(csvObject.length, 481)
         done()
@@ -83,7 +69,7 @@ describe('service tests', function() {
   });
   describe('read and save to database based on mappings', function () {
     beforeEach(function (done) {
-      db.sync({
+      vars['FlexFundsDB'].sync({
         // logging: console.log,
         force: true
       }).then(function() {
@@ -94,10 +80,10 @@ describe('service tests', function() {
       it('look for data files with a period later or equal than specified', function (done) {
         //extract the info from the file names
         //account_id / report type / period
-        fileService
+        vars['FileService']
           .findFiles('*_Activity_+(20170215|20170216).csv', './tests/data/ib/')
           .then((files) => {
-            const nameInfoList = fileService.extractFileListNameInfo(files, interactiveBrokerService.extractActivityFileNameInfo)
+            const nameInfoList = vars['FileService'].extractFileListNameInfo(files, vars['InteractiveBrokerService'].extractActivityFileNameInfo)
             assert.equal(nameInfoList.length, 27)
             assert.equal(nameInfoList[0].path, './tests/data/ib/U1161356_Activity_20170215.csv')
             assert.equal(nameInfoList[0].accountId, 'U1161356')
@@ -109,7 +95,7 @@ describe('service tests', function() {
       describe('activity', function () {
         it('look for data files with a period later or equal than specified', function (done) {
           const path = './tests/data/ib/'
-          interactiveBrokerService
+          vars['InteractiveBrokerService']
             .getFileNameInfoList('ib_activity', path, '2017-02-15')
             .then((nameInfoList) => {
               assert.equal(nameInfoList.length, 27)
@@ -135,8 +121,8 @@ describe('service tests', function() {
                 table: 'ib_activity'
               }
             ]
-            interactiveBrokerService.update(nameInfoList).then(() => {
-              interactiveBrokerActivityModel.findAll().then((models) => {
+            vars['InteractiveBrokerService'].update(nameInfoList).then(() => {
+              vars['InteractiveBrokerActivityModel'].findAll().then((models) => {
                 assert.equal(models[0].trade_date.toISOString(), '2017-02-15T16:00:00.000Z')
                 assert.equal(models[0].settle_date.toISOString(), '2017-02-16T16:00:00.000Z')
                 assert.equal(models.length, 11)
@@ -145,10 +131,10 @@ describe('service tests', function() {
             })
           });
           it('#findAndSync', function (done) {
-            interactiveBrokerService
+            vars['InteractiveBrokerService']
               .findAndSync('ib_activity', './tests/data/ib/', '2017-02-16', 10)
               .then(() => {
-                interactiveBrokerActivityModel.findAll().then((models) => {
+                vars['InteractiveBrokerActivityModel'].findAll().then((models) => {
                   assert.equal(models.length, 3)
                   assert.equal(models[0].trade_date.toISOString(), '2017-02-15T16:00:00.000Z')
                   assert.equal(models[0].settle_date.toISOString(), '2017-02-21T16:00:00.000Z')
@@ -162,7 +148,7 @@ describe('service tests', function() {
       describe('cash report', function (done) {
         it('look for data files with a period later or equal than specified', function (done) {
           const path = './tests/data/ib/'
-          interactiveBrokerService
+          vars['InteractiveBrokerService']
             .getFileNameInfoList('ib_cash_report', path, '2017-02-15')
             .then((nameInfoList) => {
               assert.equal(nameInfoList.length, 30)
@@ -193,8 +179,8 @@ describe('service tests', function() {
                 }
               }
             ]
-            interactiveBrokerService.update(nameInfoList).then(() => {
-              interactiveBrokerCashReportModel.findAll().then((models) => {
+            vars['InteractiveBrokerService'].update(nameInfoList).then(() => {
+              vars['InteractiveBrokerCashReportModel'].findAll().then((models) => {
                 assert.equal(models.length, 15)
                 assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
                 assert.equal(models[0].account_id, 'U1161356')
@@ -203,8 +189,8 @@ describe('service tests', function() {
             })
           });
           it('#findAndSync', function (done) {
-            interactiveBrokerService.findAndSync('ib_cash_report', './tests/data/ib/', '2017-02-15', 1).then(() => {
-              interactiveBrokerCashReportModel.findAll().then((models) => {
+            vars['InteractiveBrokerService'].findAndSync('ib_cash_report', './tests/data/ib/', '2017-02-15', 1).then(() => {
+              vars['InteractiveBrokerCashReportModel'].findAll().then((models) => {
                 assert.equal(models.length, 15)
                 assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
                 assert.equal(models[0].account_id, 'U1161356')
@@ -217,8 +203,8 @@ describe('service tests', function() {
       describe('nav', function (done) {
         describe('find and save to db', function () {
           it('#findAndSync', function (done) {
-            interactiveBrokerService.findAndSync('ib_nav', './tests/data/ib/', '2017-02-15', 1).then(() => {
-              interactiveBrokerNavModel.findAll().then((models) => {
+            vars['InteractiveBrokerService'].findAndSync('ib_nav', './tests/data/ib/', '2017-02-15', 1).then(() => {
+              vars['InteractiveBrokerNavModel'].findAll().then((models) => {
                 assert.equal(models.length, 2)
                 assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
                 assert.equal(models[0].account_id, 'U1161356')
@@ -256,8 +242,8 @@ describe('service tests', function() {
               }
             }
           ]
-          theoremService.update(nameInfoList).then(() => {
-            theoremIncomeStatementModel.findAll().then((models) => {
+          vars['TheoremService'].update(nameInfoList).then(() => {
+            vars['TheoremIncomeStatementModel'].findAll().then((models) => {
               assert.equal(models[0].period.toISOString(), '2017-02-09T16:00:00.000Z')
               assert.equal(models[0].series_number, 95)
               assert.equal(models[0].audit_fees, -40.81)
@@ -291,8 +277,8 @@ describe('service tests', function() {
               }
             }
           ]
-          theoremService.update(nameInfoList).then(() => {
-            theoremBalanceSheetModel.findAll().then((models) => {
+          vars['TheoremService'].update(nameInfoList).then(() => {
+            vars['TheoremBalanceSheetModel'].findAll().then((models) => {
               assert.equal(models[0].total_liabilities, -0.01)
               assert.equal(models[0].series_number, 95)
               assert.equal(models[0].audit_fees_payable, 252.12)
@@ -309,28 +295,42 @@ describe('service tests', function() {
         });
       });
     });
-    xdescribe('citibank', function () {
+    describe('citibank', function () {
       it('all transactions', function (done) {
         const nameInfoList = [
           {
             path: './tests/data/Citibank/all_transactions.CSV',
             type: 'AllTransactions',
             source: 'Citibank',
-            table: 'citi_all_transactions'
+            table: 'citi_all_transactions',
+            csvPostProcess: vars['CitiService'].csvPostProcess
           }
         ]
-        theoremService.update(nameInfoList).then(() => {
-          theoremBalanceSheetModel.findAll().then((models) => {
-            assert.equal(models[0].total_liabilities, -0.01)
-            assert.equal(models[0].series_number, 95)
-            assert.equal(models[0].audit_fees_payable, 252.12)
-            assert.equal(models[0].inventory_costs_payable, 300)
-            assert.equal(models[0].price_dissemination_fees_payable, 141.37)
-            assert.equal(models[0].transfer_agent_fees_payable, 252.12)
-            assert.equal(models[0].trustee_agent_fees_payable, 390.78)
-            assert.equal(models[0].external_expense_offset_accrued, '-1,536.40')
-            assert.equal(models[0].accounting_fees_payable, 200)
-            assert.equal(models[0].type, 'Weekly')
+        vars['CitiService'].update(nameInfoList).then(() => {
+          vars['CitiAllTransactionsModel'].findAll().then((models) => {
+            assert.equal(models.length, 20)
+            assert.equal(models[0].client_reference, 'AH21085811481166')
+            assert.equal(models[0].account_id, 'XXXXX')
+            assert.equal(models[0].trade_date.toISOString(), '2017-01-29T16:00:00.000Z')
+            assert.equal(models[0].settlement_date.toISOString(), '2017-02-01T16:00:00.000Z')
+            assert.equal(models[0].transaction_type, 'DVP')
+            assert.equal(models[0].sec_id_type, 'LOCAL')
+            assert.equal(models[0].sec_id, '96008822')
+            assert.equal(models[0].isin, 'XXXX')
+            assert.equal(models[0].issue_name, 'XXXXSTRUC')
+            assert.equal(models[0].issue_name, 'XXXXSTRUC')
+            assert.equal(models[0].quantity, '600000')
+            assert.equal(models[0].settled_quantity, 600000)
+            assert.equal(models[0].currency, 'USD')
+            assert.equal(models[0].setltement_amount, 600000)
+            assert.equal(models[0].asd, '2/2/2017')
+            assert.equal(models[0].counterparty, 'CEDEL 83320')
+            assert.equal(models[0].settlement_location, 'O/A EUROCLEAR                  *')
+            assert.equal(models[0].position_held, 'HELD AT DEPOSITORY')
+            assert.equal(models[0].counterparty_id, null)
+            assert.equal(models[0].legal_confirm, 0)
+            assert.equal(models[0].wire_confirm, 0)
+            assert.equal(models[0].wire_amount, 0)
             done();
           })
         })

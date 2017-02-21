@@ -68,6 +68,19 @@ module.exports = function() {
 
   this.streamToObject = function(stream, nameInfo) {
     const deferred = Promise.pending()
+
+    this.processCsvStream(stream, nameInfo).then((csvObject) => {
+      if(nameInfo.csvPostProcess) {
+        csvObject = nameInfo.csvPostProcess(csvObject)
+        // console.log(csvObject)
+      }
+      deferred.resolve(csvObject)
+    })
+    return deferred.promise;
+  }
+
+  this.processCsvStream = function(stream, nameInfo) {
+    const deferred = Promise.pending()
     if(!nameInfo.transpose) {
       stream.pipe(csv.parse({
         relax_column_count: true,
