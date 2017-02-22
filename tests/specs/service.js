@@ -318,7 +318,6 @@ describe('service tests', function() {
             assert.equal(models[0].sec_id, '96008822')
             assert.equal(models[0].isin, 'XXXX')
             assert.equal(models[0].issue_name, 'XXXXSTRUC')
-            assert.equal(models[0].issue_name, 'XXXXSTRUC')
             assert.equal(models[0].quantity, '600000')
             assert.equal(models[0].settled_quantity, 600000)
             assert.equal(models[0].currency, 'USD')
