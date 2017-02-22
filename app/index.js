@@ -1,86 +1,48 @@
 'use strict';
 
-const argv = require('yargs').argv
-const moment = require('moment')
-const _ = require('lodash')
-const glob = require("glob")
-const csv = require('csv')
-const XLSX = require('xlsx')
-const fs = require('fs')
-var split = require('split');
-var through = require('through2');
 const dependConfigs = require('./depend.json')
-let app = {}
 const summon = require('summonjs')({
-    configs: dependConfigs
+  configs: dependConfigs
 })
+let app = { summon }
 
-app.summon = summon
-
-function startAt (nthLine) {
-  var i = 0;
-  nthLine = nthLine || 0;
-  var stream = through(function (chunk, enc, next) {
-    if (i>=nthLine) this.push(chunk);
-    if (chunk.toString().match(/(\r?\n)/)) i++;
-    next();
+const argv = require('yargs')
+  .option('table', {
+    alias: 't',
+    describe: 'mysql table to update',
+    demand: true
   })
-  return stream;
-}
-
-function readFile (filePath, callback) {
-  var parts = filePath.split('.')
-  let extension = parts[parts.length - 1]
-  if(extension === 'csv') {
-    fs.createReadStream(filePath)
-      .pipe(split(/(\r?\n)/))
-      .pipe(startAt(1))
-      .pipe(csv.parse({
-        relax_column_count: true,
-        // relax: 2,
-        columns: true,
-        // from: 1
-      }, function(err, data){
-        callback(err, data);
-      }))
-  }
-  let workbook;
-  console.log(extension)
-  if(extension === 'xlsx' || extension === 'xls') {
-    console.log('test')
-    workbook = XLSX.readFile(filePath);
-    callback(undefined, workbook);
-  }
-}
-
-function getMappings (callback) {
-  const filePath = './data/mapping.xlsx'
-  readFile(filePath, (err, data) => {
-    callback(err, data)
+  .option('path', {
+    alias: 'p',
+    describe: 'path of the data source files',
+    demand: true
   })
+  .option('from', {
+    alias: 'f',
+    describe: '',
+    demand: true
+  })
+  .argv
+
+const serviceMappings = {
+  'pershing_trades': 'PershingService',
+  'pershing_positions' 'PershingService',
+  'theorem_income_statement_monthly': 'TheoremService',
+  'theorem_balance_sheet_monthly': 'TheoremService',
+  'theorem_balance_sheet_weekly': 'TheoremService',
+  'theorem_income_statement_weekly': 'TheoremService',
+  'ib_positions': 'InteractiveBrokerService',
+  'ib_nav': 'InteractiveBrokerService',
+  'ib_cash_report': 'InteractiveBrokerService',
+  'ib_activity': 'InteractiveBrokerService'
 }
 
 app.run = function() {
-  var fileName = argv.fileName
-  var filePath = argv.filePath
-  var ScraperService = app.summon.get('ScraperService')
-  glob('./tests/data/ib/*_Activity_*.csv', function(err, files) {
-    readFile(files[files.length - 1], (err, data) => {
-      getMappings((err, data) => {
-        let result = XLSX.utils.sheet_to_csv(data.Sheets['Sheet1'], {raw: true});
-        console.log(err, result)
-      })
-    })
-    // const XLSX = require('xlsx');
-    // let workbook = XLSX.readFile(files[files.length - 1]);
-    // console.log(workbook)
-  })
-
-  // if(argv.updater){
-  //     if(argv.updater === 'fundAssetAllocation'){
-  //         ScraperService.updateFundAssetAllocation()
-  //     }
-  // }
+  const service = serviceMappings[argv.table]
+  if (!service) {
+    console.error(`No data conversion service found for ${argv.table}`)
+    process.exit(1)
+  }
 };
 
 module.exports = app;
