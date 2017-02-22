@@ -1,37 +1,36 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('pershing_positions', {
-    id: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('pershing_positions', {
     period: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Sequelize.DATE,
+      allowNull: false,
+      primaryKey: true
     },
     security_id: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    cusip: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
     },
     account_number: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
+    },
+    cusip: {
+      type: Sequelize.STRING,
       allowNull: true
     },
     account_name: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     description: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     asset_classification: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     quantity: {
@@ -43,11 +42,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     price_as_of_date: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       allowNull: true
     },
     timezone: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     change_price_amount: {
@@ -67,7 +66,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     last_activity_date: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       allowNull: true
     },
     accrued_interest: {
@@ -75,20 +74,21 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     disposition_method: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     dividend_reinvestment: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     market: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     dt_added: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
     tableName: 'pershing_positions'

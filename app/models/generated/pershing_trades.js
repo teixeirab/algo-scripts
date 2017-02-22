@@ -1,46 +1,51 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('pershing_trades', {
-    id: {
-      type: DataTypes.STRING,
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('pershing_trades', {
+    account: {
+      type: Sequelize.TEXT,
       allowNull: false,
       primaryKey: true
     },
-    account: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    account_nickname: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
     date: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    trade_date: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    security_id: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: Sequelize.DATE,
+      allowNull: false,
+      primaryKey: true
     },
     cusip: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true
+    trade_date: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      primaryKey: true
     },
     net_amount: {
       type: "DOUBLE",
+      allowNull: false,
+      primaryKey: true
+    },
+    price: {
+      type: "DOUBLE",
+      allowNull: false,
+      primaryKey: true
+    },
+    account_nickname: {
+      type: Sequelize.TEXT,
+      allowNull: true
+    },
+    security_id: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
+    description: {
+      type: Sequelize.TEXT,
       allowNull: true
     },
     settlement_date: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       allowNull: true
     },
     quantity: {
@@ -60,16 +65,17 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     account_type: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     details: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     dt_added: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
     tableName: 'pershing_trades'

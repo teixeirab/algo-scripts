@@ -19,12 +19,16 @@ module.exports = function(Configs, FileService) {
       return mapping.table === nameInfo.table
     })
     FileService.readFile(nameInfo).then((csvObject) => {
-      let dbMappings = {}
+      let dbMappings = {}, matched = false
+      if(!csvObject || csvObject.length === 0) {
+        return deferred.reject({msg: `no records parsed from file: ${nameInfo.path}`})
+      }
       csvObject.forEach((row) => {
         let dbMapping = {}
         Object.keys(row).forEach((reportField) => {
           sourceMappings.forEach((mapping) => {
             if (mapping.report_field.replace(/_/g, '') === reportField.replace(/_/g, '')) {
+              matched = true
               dbMapping[mapping.table] = dbMapping[mapping.table] || {}
               dbMapping[mapping.table][mapping.database_field] = row[reportField]
             }
@@ -35,6 +39,9 @@ module.exports = function(Configs, FileService) {
           dbMappings[table].push(dbMapping[table])
         })
       })
+      if (!matched) {
+        return deferred.reject({msg: `no matched fields from the mappings, file: ${nameInfo.path}`})
+      }
       deferred.resolve(dbMappings)
     })
     return deferred.promise
@@ -53,6 +60,15 @@ module.exports = function(Configs, FileService) {
                 cb()
               })
             })
+          }).catch((err) => {
+            if (Configs.sequelizeErrorLog) {
+              if(err) {
+                console.error(err.msg)
+              }else {
+                console.error(err)
+              }
+            }
+            cb()
           })
         }, (err) => {
           if(err) {

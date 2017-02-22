@@ -12,6 +12,7 @@ describe('service tests', function() {
     'InteractiveBrokerService',
     'TheoremService',
     'CitiService',
+    'PershingService',
     'InteractiveBrokerActivityModel',
     'InteractiveBrokerCashReportModel',
     'InteractiveBrokerNavModel',
@@ -19,6 +20,8 @@ describe('service tests', function() {
     'CitiAllTransactionsModel',
     'TheoremIncomeStatementModel',
     'TheoremBalanceSheetModel',
+    'PershingPositionsModel',
+    'PershingTradesModel',
     'FlexFundsDB'
   ]
   beforeEach(function(done) {
@@ -473,6 +476,36 @@ describe('service tests', function() {
             done();
           })
         })
+      });
+    });
+    describe('pershing', function () {
+      describe('positions', function () {
+        it('#findAndSync', function (done) {
+          vars['PershingService'].findAndSync('pershing_positions', './tests/data/Pershing/', '2017-02-08', 1).then(() => {
+            vars['PershingPositionsModel'].findAll().then((models) => {
+              assert.equal(models.length, 12)
+              assert.equal(models[0].security_id, 'CASH')
+              assert.equal(models[0].account_number, 'PXXXXXXX')
+              assert.equal(models[0].cusip, 'EUR999995')
+              assert.equal(models[0].account_name, 'IA CAPITAL - NETALPHA')
+              assert.equal(models[0].description, 'EURO CURRENCY')
+              assert.equal(models[0].asset_classification, 'CASH, MONEY FUNDS, BANK DEPOSITS')
+              assert.equal(models[0].quantity, 0)
+              assert.equal(models[0].price, 1.07)
+              assert.equal(models[0].timezone, 'ET')
+              assert.equal(models[0].change_price_amount, 0)
+              assert.equal(models[0].change_price, '0.00%')
+              assert.equal(models[0].market_value, 0)
+              assert.equal(models[0].market_value_change, 0)
+              assert.equal(models[0].last_activity_date.toISOString(), '2017-02-07T16:00:00.000Z')
+              assert.equal(models[0].accrued_interest, 0)
+              assert.equal(models[0].disposition_method, 'N/A')
+              assert.equal(models[0].dividend_reinvestment, 'Payout In Cash')
+              assert.equal(models[0].market, 'NASD')
+              done();
+            })
+          })
+        });
       });
     });
   });

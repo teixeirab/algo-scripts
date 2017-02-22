@@ -11,12 +11,15 @@
         "TheoremIncomeStatementModel": "./models/generated/theorem_income_statement",
         "TheoremBalanceSheetModel": "./models/generated/theorem_balance_sheet",
         "CitiAllTransactionsModel": "./models/generated/citi_all_transactions",
+        "PershingPositionsModel": "./models/generated/pershing_positions",
+        "PershingTradesModel": "./models/generated/pershing_trades",
 
         "CommonService": "./services/common",
         "FileService": "./services/file",
         "InteractiveBrokerService": "./services/ib",
         "TheoremService": "./services/theorem",
         "CitiService": "./services/citi",
+        "PershingService": "./services/pershing",
 
         "Sequelize": {
     			"path": "sequelize",
