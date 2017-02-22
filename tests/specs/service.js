@@ -2,7 +2,6 @@
 
 var async = require('async');
 var assert = require('assert');
-var helper = require('../helper');
 var moment = require('moment');
 var _ = require('lodash');
 

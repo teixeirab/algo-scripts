@@ -6,27 +6,9 @@ const summon = require('summonjs')({
 })
 let app = { summon }
 
-const argv = require('yargs')
-  .option('table', {
-    alias: 't',
-    describe: 'mysql table to update',
-    demand: true
-  })
-  .option('path', {
-    alias: 'p',
-    describe: 'path of the data source files',
-    demand: true
-  })
-  .option('from', {
-    alias: 'f',
-    describe: '',
-    demand: true
-  })
-  .argv
-
 const serviceMappings = {
   'pershing_trades': 'PershingService',
-  'pershing_positions' 'PershingService',
+  'pershing_positions': 'PershingService',
   'theorem_income_statement_monthly': 'TheoremService',
   'theorem_balance_sheet_monthly': 'TheoremService',
   'theorem_balance_sheet_weekly': 'TheoremService',
@@ -38,11 +20,31 @@ const serviceMappings = {
 }
 
 app.run = function() {
-  const service = serviceMappings[argv.table]
-  if (!service) {
-    console.error(`No data conversion service found for ${argv.table}`)
-    process.exit(1)
+  if(process.env.NODE_ENV === 'test') {
+    return
   }
+  const argv = require('yargs')
+    .option('table', {
+      alias: 't',
+      describe: 'mysql table to update',
+      demand: true
+    })
+    .option('path', {
+      alias: 'p',
+      describe: 'path of the data source files',
+      demand: true
+    })
+    .option('from', {
+      alias: 'f',
+      describe: '',
+      demand: true
+    })
+    .argv
+  // const service = serviceMappings[argv.table]
+  // if (!service) {
+  //   console.error(`No data conversion service found for ${argv.table}`)
+  //   process.exit(1)
+  // }
 };
 
 module.exports = app;
