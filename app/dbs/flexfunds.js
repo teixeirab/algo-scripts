@@ -10,9 +10,9 @@ module.exports = function(Configs, Sequelize) {
                 timestamps: timestamps || false
             }
         };
-        // if(Configs.dialect === 'mysql') {
-        //     params.timezone = '+08:00';
-        // }
+        if(Configs.dialect === 'mysql') {
+            params.timezone = '-05:00';
+        }
         return params;
     };
     var params = getSequezlieParams(Configs, false);
