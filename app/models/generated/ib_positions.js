@@ -2,12 +2,6 @@
 
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('ib_positions', {
-    id: {
-      type: Sequelize.INTEGER(11),
-      allowNull: false,
-      // primaryKey: true,
-      autoIncrement: true
-    },
     type: {
       type: Sequelize.STRING,
       allowNull: true
@@ -19,6 +13,11 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     con_id: {
       type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
+    },
+    report_date: {
+      type: Sequelize.INTEGER(11),
       allowNull: false,
       primaryKey: true
     },
@@ -92,10 +91,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     fx_rate_to_base: {
       type: "DOUBLE",
-      allowNull: true
-    },
-    report_date: {
-      type: Sequelize.INTEGER(11),
       allowNull: true
     },
     settled_quantity: {

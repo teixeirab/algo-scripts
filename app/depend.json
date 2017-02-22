@@ -7,6 +7,7 @@
         "InteractiveBrokerActivityModel": "./models/generated/ib_activity",
         "InteractiveBrokerCashReportModel": "./models/generated/ib_cash_report",
         "InteractiveBrokerNavModel": "./models/generated/ib_nav",
+        "InteractiveBrokerPositionsModel": "./models/generated/ib_positions",
         "TheoremIncomeStatementModel": "./models/generated/theorem_income_statement",
         "TheoremBalanceSheetModel": "./models/generated/theorem_balance_sheet",
         "CitiAllTransactionsModel": "./models/generated/citi_all_transactions",

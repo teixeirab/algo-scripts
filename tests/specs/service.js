@@ -15,6 +15,7 @@ describe('service tests', function() {
     'InteractiveBrokerActivityModel',
     'InteractiveBrokerCashReportModel',
     'InteractiveBrokerNavModel',
+    'InteractiveBrokerPositionsModel',
     'CitiAllTransactionsModel',
     'TheoremIncomeStatementModel',
     'TheoremBalanceSheetModel',
@@ -214,9 +215,44 @@ describe('service tests', function() {
           });
         });
       });
-      it('position', function (done) {
-
-        done();
+      describe('position', function () {
+        describe('find and save to db', function () {
+          it('#findAndSync', function (done) {
+            vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-02-15', 1).then(() => {
+              vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
+                assert.equal(models.length, 8)
+                assert.equal(models[0].type, 'D')
+                assert.equal(models[0].account_id, 'U1161356')
+                assert.equal(models[0].con_id, '85004379')
+                assert.equal(models[0].report_date, 20170215)
+                assert.equal(models[0].security_id, '361860208')
+                assert.equal(models[0].symbol, 'ALLY PRA')
+                assert.equal(models[0].bb_ticker, '')
+                assert.equal(models[0].bb_global_id, '')
+                assert.equal(models[0].security_description, 'GMAC CAPITAL TRUST I')
+                assert.equal(models[0].asset_type, 'STK')
+                assert.equal(models[0].currency, 'USD')
+                assert.equal(models[0].base_currency, 'USD')
+                assert.equal(models[0].quantity, 37000)
+                assert.equal(models[0].quantity_in_base, 0)
+                assert.equal(models[0].cost_price, 25.13264372)
+                assert.equal(models[0].cost_basis, 929907.817475)
+                assert.equal(models[0].cost_basis_in_base, 929907.817475)
+                assert.equal(models[0].market_price, 25.8)
+                assert.equal(models[0].market_value, 954600)
+                assert.equal(models[0].market_value_in_base, 954600)
+                assert.equal(models[0].open_date_time, '')
+                assert.equal(models[0].fx_rate_to_base, 1)
+                assert.equal(models[0].settled_quantity, 0)
+                assert.equal(models[0].settled_quantity_in_base, 0)
+                assert.equal(models[0].master_account_id, '')
+                assert.equal(models[0].van, 'U1161356')
+                assert.equal(models[0].accrued_int, 0)
+                done();
+              })
+            })
+          });
+        });
       });
     });
     describe('theorem', function () {

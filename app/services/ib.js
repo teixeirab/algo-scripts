@@ -10,6 +10,7 @@ module.exports = function(
   CommonService,
   InteractiveBrokerActivityModel,
   InteractiveBrokerNavModel,
+  InteractiveBrokerPositionsModel,
   InteractiveBrokerCashReportModel
 ) {
 
@@ -18,6 +19,7 @@ module.exports = function(
   const modelMappings = {
     ib_activity: InteractiveBrokerActivityModel,
     ib_cash_report: InteractiveBrokerCashReportModel,
+    ib_positions: InteractiveBrokerPositionsModel,
     ib_nav: InteractiveBrokerNavModel
   }
 
@@ -54,6 +56,14 @@ module.exports = function(
           data['period'] = nameInfo.date
           return data
         }
+      },
+      ib_positions: {
+        path: path,
+        startLine: 1,
+        fromDate: fromDate,
+        dateFormat: 'YYYYMMDD',
+        pattern: '*_Position_+(${dateStr}).csv',
+        extractFn: this.extractPositionFileNameInfo
       }
     }
   }
@@ -109,6 +119,24 @@ module.exports = function(
       date: moment(date, 'YYYYMMDD').toDate(),
       source: 'Interactive Brokers',
       table: 'ib_nav'
+    }
+  }
+
+  this.extractPositionFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const accountId = infos[0]
+    const type = infos[1]
+    const date = infos[2]
+    return {
+      path: path,
+      accountId: accountId,
+      type: type,
+      date: moment(date, 'YYYYMMDD').toDate(),
+      source: 'Interactive Brokers',
+      table: 'ib_positions'
     }
   }
 
