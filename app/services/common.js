@@ -91,14 +91,23 @@ module.exports = function(Configs, FileService) {
 
   this.getFileNameInfoList = function(path, startLine, fromDate, dateFormat, pattern, nameInfoExtractFn, assignDataFn) {
     const deferred = Promise.pending()
-    let dateStr = ''
-    for (var m = moment(fromDate); m.diff(new Date(), 'days') <= 0; m.add(1, 'days')) {
-      if (dateStr !== '') {
-        dateStr += '|'
-      }
-      dateStr += m.format(dateFormat)
+    let dateFormats = [], dateStrs = []
+    if (!Array.isArray(dateFormat)) {
+      dateFormats.push(dateFormat)
+    }else {
+      dateFormats = dateFormat
     }
-    pattern = template(pattern, {dateStr})
+    dateFormats.forEach((df) => {
+      let dateStr = ''
+      for (var m = moment(fromDate); m.diff(new Date(), 'days') <= 0; m.add(1, 'days')) {
+        if (dateStr !== '') {
+          dateStr += '|'
+        }
+        dateStr += m.format(df)
+      }
+      dateStrs.push(dateStr)
+    })
+    pattern = template(pattern, {date: dateStrs})
     FileService
       .findFiles(pattern, path)
       .then((files) => {

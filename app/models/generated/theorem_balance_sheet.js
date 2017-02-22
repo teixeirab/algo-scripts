@@ -2,9 +2,6 @@
 
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('theorem_balance_sheet', {
-    id: {
-      type: Sequelize.STRING
-    },
     period: {
       type: Sequelize.DATE,
       allowNull: false,
@@ -153,7 +150,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     accounting_fees_payable: {
       type: Sequelize.DECIMAL,
-      allowNull: false
+      allowNull: true
     },
     dt_added: {
       type: Sequelize.DATE,

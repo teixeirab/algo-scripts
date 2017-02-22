@@ -257,77 +257,181 @@ describe('service tests', function() {
     });
     describe('theorem', function () {
       describe('weekly', function () {
-        it('income statement', function (done) {
-          const nameInfoList = [
-            {
-              path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
-              seriesNumber: '95',
-              type: 'Weekly',
-              date: moment('2017-02-10').toDate(),
-              startLine: 0,
-              source: 'Theorem',
-              table: 'theorem_income_statement',
-              sheet: 'Income Statement',
-              transpose: true,
-              row: 1,
-              assignDataFn: (data, nameInfo) => {
-                data['period'] = nameInfo.date
-                data['series_number'] = nameInfo.seriesNumber
-                data['type'] = nameInfo.type
-                return data
+        describe('income statement', function () {
+          it('#update', function (done) {
+            const nameInfoList = [
+              {
+                path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
+                seriesNumber: '95',
+                type: 'Weekly',
+                date: moment('2017-02-10').toDate(),
+                startLine: 0,
+                source: 'Theorem',
+                table: 'theorem_income_statement',
+                sheet: 'Income Statement',
+                transpose: true,
+                row: 1,
+                assignDataFn: (data, nameInfo) => {
+                  data['period'] = nameInfo.date
+                  data['series_number'] = nameInfo.seriesNumber
+                  data['type'] = nameInfo.type
+                  return data
+                }
               }
-            }
-          ]
-          vars['TheoremService'].update(nameInfoList).then(() => {
-            vars['TheoremIncomeStatementModel'].findAll().then((models) => {
-              assert.equal(models[0].period.toISOString(), '2017-02-09T16:00:00.000Z')
-              assert.equal(models[0].series_number, 95)
-              assert.equal(models[0].audit_fees, -40.81)
-              assert.equal(models[0].price_dissemination_fees, -23.01)
-              assert.equal(models[0].trustee_corporate_fees, -63.26)
-              assert.equal(models[0].transfer_agent_fees, -40.81)
-              assert.equal(models[0].external_expense_offset, 167.91)
-              assert.equal(models[0].type, 'Weekly')
-              done();
+            ]
+            vars['TheoremService'].update(nameInfoList).then(() => {
+              vars['TheoremIncomeStatementModel'].findAll().then((models) => {
+                assert.equal(models[0].period.toISOString(), '2017-02-09T16:00:00.000Z')
+                assert.equal(models[0].series_number, 95)
+                assert.equal(models[0].audit_fees, -40.81)
+                assert.equal(models[0].price_dissemination_fees, -23.01)
+                assert.equal(models[0].trustee_corporate_fees, -63.26)
+                assert.equal(models[0].transfer_agent_fees, -40.81)
+                assert.equal(models[0].external_expense_offset, 167.91)
+                assert.equal(models[0].type, 'Weekly')
+                done();
+              })
             })
-          })
+          });
+          it('#findAndSync', function (done) {
+            vars['TheoremService'].findAndSync('theorem_income_statement_weekly', './tests/data/theorem/', '2017-02-10', 1).then(() => {
+              vars['TheoremIncomeStatementModel'].findAll().then((models) => {
+                assert.equal(models.length, 1)
+                assert.equal(models[0].series_number, 16)
+                assert.equal(models[0].type, 'Weekly')
+                assert.equal(models[0].portfolio_income, '12,013.25')
+                assert.equal(models[0].manager_fees, '-1,101.45')
+                assert.equal(models[0].audit_fees, -40.81)
+                assert.equal(models[0].price_dissemination_fees, -23.01)
+                assert.equal(models[0].trustee_corporate_fees, -68.36)
+                assert.equal(models[0].transfer_agent_fees, -38.36)
+                assert.equal(models[0].arranger_fees, -220.29)
+                assert.equal(models[0].listing_agent_fees, -40.81)
+                done();
+              })
+            })
+          });
         });
-        it('balance sheet', function (done) {
-          const nameInfoList = [
-            {
-              path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
-              seriesNumber: '95',
-              type: 'Weekly',
-              date: moment('2017-02-10').toDate(),
-              startLine: 0,
-              source: 'Theorem',
-              table: 'theorem_balance_sheet',
-              sheet: 'Balance Sheet',
-              transpose: true,
-              row: 2,
-              assignDataFn: (data, nameInfo) => {
-                data['period'] = nameInfo.date
-                data['series_number'] = nameInfo.seriesNumber
-                data['type'] = nameInfo.type
-                return data
+        describe('balance sheet', function () {
+          it('#update', function (done) {
+            const nameInfoList = [
+              {
+                path: './tests/data/theorem/weekly_reports/2017_02_10/20170210_Series_95_Financials.xlsx',
+                seriesNumber: '95',
+                type: 'Weekly',
+                date: moment('2017-02-10').toDate(),
+                startLine: 0,
+                source: 'Theorem',
+                table: 'theorem_balance_sheet',
+                sheet: 'Balance Sheet',
+                transpose: true,
+                row: 2,
+                assignDataFn: (data, nameInfo) => {
+                  data['period'] = nameInfo.date
+                  data['series_number'] = nameInfo.seriesNumber
+                  data['type'] = nameInfo.type
+                  return data
+                }
               }
-            }
-          ]
-          vars['TheoremService'].update(nameInfoList).then(() => {
-            vars['TheoremBalanceSheetModel'].findAll().then((models) => {
-              assert.equal(models[0].total_liabilities, -0.01)
-              assert.equal(models[0].series_number, 95)
-              assert.equal(models[0].audit_fees_payable, 252.12)
-              assert.equal(models[0].inventory_costs_payable, 300)
-              assert.equal(models[0].price_dissemination_fees_payable, 141.37)
-              assert.equal(models[0].transfer_agent_fees_payable, 252.12)
-              assert.equal(models[0].trustee_agent_fees_payable, 390.78)
-              assert.equal(models[0].external_expense_offset_accrued, '-1,536.40')
-              assert.equal(models[0].accounting_fees_payable, 200)
-              assert.equal(models[0].type, 'Weekly')
-              done();
+            ]
+            vars['TheoremService'].update(nameInfoList).then(() => {
+              vars['TheoremBalanceSheetModel'].findAll().then((models) => {
+                assert.equal(models[0].total_liabilities, -0.01)
+                assert.equal(models[0].series_number, 95)
+                assert.equal(models[0].audit_fees_payable, 252.12)
+                assert.equal(models[0].inventory_costs_payable, 300)
+                assert.equal(models[0].price_dissemination_fees_payable, 141.37)
+                assert.equal(models[0].transfer_agent_fees_payable, 252.12)
+                assert.equal(models[0].trustee_agent_fees_payable, 390.78)
+                assert.equal(models[0].external_expense_offset_accrued, '-1,536.40')
+                assert.equal(models[0].accounting_fees_payable, 200)
+                assert.equal(models[0].type, 'Weekly')
+                done();
+              })
             })
-          })
+          });
+          it('#findAndSync', function (done) {
+            vars['TheoremService'].findAndSync('theorem_balance_sheet_weekly', './tests/data/theorem/', '2017-02-10', 1).then(() => {
+              vars['TheoremBalanceSheetModel'].findAll().then((models) => {
+                assert.equal(models.length, 1)
+                assert.equal(models[0].series_number, 16)
+                assert.equal(models[0].type, 'Weekly')
+                assert.equal(models[0].total_assets, '3,828,841.83')
+                assert.equal(models[0].total_liabilities, '3,687.11')
+                assert.equal(models[0].total_equity, '3,825,154.71')
+                assert.equal(models[0].number_of_units_held, '40,170.00')
+                assert.equal(models[0].nav_per_unit, 95.2242)
+                assert.equal(models[0].operating_fees_payable, 616.6)
+                assert.equal(models[0].management_fees_payable, '3,070.52')
+                assert.equal(models[0].investments_long, '3,828,841.83')
+                assert.equal(models[0].annual_series_fees_payable, null)
+                assert.equal(models[0].arranger_fees_payable, 554.99)
+                assert.equal(models[0].audit_fees_payable, 82.18)
+                assert.equal(models[0].inventory_costs_payable, 0.01)
+                assert.equal(models[0].price_dissemination_fees_payable, 46.05)
+                assert.equal(models[0].transfer_agent_fees_payable, 65.94)
+                assert.equal(models[0].trustee_agent_fees_payable, 137.66)
+                assert.equal(models[0].external_expense_offset_accrued, null)
+                assert.equal(models[0].extraordinary_expenses_payable, null)
+                assert.equal(models[0].manager_fees_payable, '2,515.53')
+                done();
+              })
+            })
+          });
+        });
+      });
+      describe('monthly', function () {
+        describe('balance sheet', function () {
+          it('#findAndSync', function (done) {
+            vars['TheoremService'].findAndSync('theorem_balance_sheet_monthly', './tests/data/theorem/', '2017-01-01', 1).then(() => {
+              vars['TheoremBalanceSheetModel'].findAll().then((models) => {
+                assert.equal(models.length, 1)
+                assert.equal(models[0].series_number, 11)
+                assert.equal(models[0].type, 'Monthly')
+                assert.equal(models[0].total_assets, '30,136,881.00')
+                assert.equal(models[0].total_liabilities, 0)
+                assert.equal(models[0].total_equity, '30,136,881.00')
+                assert.equal(models[0].number_of_units_held, '244,920.00')
+                assert.equal(models[0].nav_per_unit, 123.0479)
+                assert.equal(models[0].operating_fees_payable, '11,618.22')
+                assert.equal(models[0].management_fees_payable, '138,430.80')
+                assert.equal(models[0].investments_long, '30,136,881.00')
+                assert.equal(models[0].debt_instruments, '30,136,881.00')
+                assert.equal(models[0].arranger_fees_payable, '138,430.80')
+                assert.equal(models[0].audit_fees_payable, '2,934.70')
+                assert.equal(models[0].price_dissemination_fees_payable, '1,605.21')
+                assert.equal(models[0].transfer_agent_fees_payable, '2,676.26')
+                assert.equal(models[0].trustee_agent_fees_payable, '4,402.06')
+                assert.equal(models[0].external_expense_offset_accrued, '-150,049.03')
+                done();
+              })
+            })
+          });
+        });
+        describe('income statement', function () {
+          it('#findAndSync', function (done) {
+            vars['TheoremService'].findAndSync('theorem_income_statement_monthly', './tests/data/theorem/', '2017-01-01', 1).then(() => {
+              vars['TheoremIncomeStatementModel'].findAll().then((models) => {
+                assert.equal(models.length, 1)
+                assert.equal(models[0].series_number, 11)
+                assert.equal(models[0].type, 'Monthly')
+                assert.equal(models[0].loan_interest_income, null)
+                assert.equal(models[0].loan_interest_income_received, null)
+                assert.equal(models[0].dividend, null)
+                assert.equal(models[0].portfolio_income, null)
+                assert.equal(models[0].stcg, null)
+                assert.equal(models[0].unrealized_gain, '68,706.00')
+                assert.equal(models[0].manager_fees, null)
+                assert.equal(models[0].audit_fees, -179.97)
+                assert.equal(models[0].price_dissemination_fees, -100)
+                assert.equal(models[0].trustee_corporate_fees, -269.95)
+                assert.equal(models[0].transfer_agent_fees, -169.86)
+                assert.equal(models[0].arranger_fees, '-8,789.92')
+                assert.equal(models[0].external_expense_offset, '9,509.70')
+                done();
+              })
+            })
+          });
         });
       });
     });

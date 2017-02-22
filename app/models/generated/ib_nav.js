@@ -17,11 +17,12 @@ module.exports = function(FlexFundsDB, Sequelize) {
       allowNull: false,
       primaryKey: true
     },
-    type: {
-      type: Sequelize.STRING,
-      allowNull: true
-    },
     base_currency: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
+    },
+    type: {
       type: Sequelize.STRING,
       allowNull: true
     },

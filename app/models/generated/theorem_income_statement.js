@@ -2,11 +2,6 @@
 
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('theorem_income_statement', {
-    id: {
-      type: Sequelize.STRING,
-      // allowNull: false,
-      // primaryKey: true
-    },
     period: {
       type: Sequelize.DATE,
       allowNull: false,

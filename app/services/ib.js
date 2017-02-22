@@ -29,16 +29,16 @@ module.exports = function(
         path: path,
         startLine: 1,
         fromDate: fromDate,
-        dateFormat: 'YYYYMMDD',
-        pattern: '*_Activity_+(${dateStr}).csv',
+        dateFormat: ['YYYYMMDD'],
+        pattern: '*_Activity_+(${date[0]}).csv',
         extractFn: this.extractActivityFileNameInfo
       },
       ib_cash_report: {
         path: path,
         startLine: 1,
         fromDate: fromDate,
-        dateFormat: 'YYYYMMDD',
-        pattern: '*_CashReport_+(${dateStr}).csv',
+        dateFormat: ['YYYYMMDD'],
+        pattern: '*_CashReport_+(${date[0]}).csv',
         extractFn: this.extractCashReportFileNameInfo,
         assignDataFn: (data, nameInfo) => {
           data['period'] = nameInfo.date
@@ -49,8 +49,8 @@ module.exports = function(
         path: path,
         startLine: 1,
         fromDate: fromDate,
-        dateFormat: 'YYYYMMDD',
-        pattern: '*_NAV_+(${dateStr}).csv',
+        dateFormat: ['YYYYMMDD'],
+        pattern: '*_NAV_+(${date[0]}).csv',
         extractFn: this.extractNavFileNameInfo,
         assignDataFn: (data, nameInfo) => {
           data['period'] = nameInfo.date
@@ -61,8 +61,8 @@ module.exports = function(
         path: path,
         startLine: 1,
         fromDate: fromDate,
-        dateFormat: 'YYYYMMDD',
-        pattern: '*_Position_+(${dateStr}).csv',
+        dateFormat: ['YYYYMMDD'],
+        pattern: '*_Position_+(${date[0]}).csv',
         extractFn: this.extractPositionFileNameInfo
       }
     }
