@@ -8,13 +8,15 @@ const Promise = require('bluebird')
 module.exports = function(
   FileService,
   CommonService,
-  PershingPositionsModel
+  PershingPositionsModel,
+  PershingTradesModel
 ) {
 
   var that = this;
 
   const modelMappings = {
-    pershing_positions: PershingPositionsModel
+    pershing_positions: PershingPositionsModel,
+    pershing_trades: PershingTradesModel,
   }
 
   this.nameInfoListExtractConfigs = function(path, fromDate) {
@@ -33,11 +35,15 @@ module.exports = function(
       },
       pershing_trades: {
         path: path,
-        startLine: 1,
+        startLine: 2,
         fromDate: fromDate,
         dateFormat: ['MM-DD-YYYY'],
         pattern: 'Series_*_History_+(${date[0]}).xls',
-        extractFn: this.extractTradesFileNameInfo
+        extractFn: this.extractTradesFileNameInfo,
+        assignDataFn: (data, nameInfo) => {
+          data['period'] = nameInfo.date
+          return data
+        }
       }
     }
   }
@@ -69,6 +75,7 @@ module.exports = function(
     return {
       path: path,
       seriesNumber: seriesNumber,
+      sheet: 'History',
       date: moment(date, 'MM-DD-YYYY').toDate(),
       source: 'Pershing',
       table: 'pershing_trades'

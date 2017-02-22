@@ -61,6 +61,7 @@ module.exports = function(Configs, FileService) {
               })
             })
           }).catch((err) => {
+            console.log(err)
             if (Configs.sequelizeErrorLog) {
               if(err) {
                 console.error(err.msg)

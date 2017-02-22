@@ -507,6 +507,29 @@ describe('service tests', function() {
           })
         });
       });
+      describe('trades', function () {
+        it('#findAndSync', function (done) {
+          vars['PershingService'].findAndSync('pershing_trades', './tests/data/Pershing/', '2017-02-08', 1).then(() => {
+            vars['PershingTradesModel'].findAll().then((models) => {
+              assert.equal(models.length, 475)
+              assert.equal(models[0].account, 'JXXXXXX')
+              assert.equal(models[0].date.toISOString(), '2017-02-08T16:00:00.000Z')
+              assert.equal(models[0].cusip, 'G30855103')
+              assert.equal(models[0].net_amount, -300000)
+              assert.equal(models[0].price, 124.772)
+              assert.equal(models[0].account_nickname, '')
+              assert.equal(models[0].security_id, '')
+              assert.equal(models[0].description, 'BUY 0.0000 SHARES OF G30855103 @ 124.77200ISIN# KYG308551038')
+              assert.equal(models[0].quantity, 0)
+              assert.equal(models[0].principal, -300000)
+              assert.equal(models[0].commission_fees, 0)
+              assert.equal(models[0].account_type, 'CASH')
+              assert.equal(models[0].details, 'CI SOUTHERN CONEFUND CLASS A (USD)PENDING')
+              done();
+            })
+          })
+        });
+      });
     });
   });
 });
