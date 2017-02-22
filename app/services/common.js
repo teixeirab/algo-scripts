@@ -15,6 +15,9 @@ module.exports = function(Configs, FileService) {
 
   this.getDBMappings = function(mappings, nameInfo) {
     const deferred = Promise.pending()
+    if (!nameInfo.path) {
+      return deferred.reject({msg: 'undefined path in nameInfo'})
+    }
     const sourceMappings = _.filter(mappings, (mapping) => {
       return mapping.table === nameInfo.table
     })
