@@ -22,18 +22,11 @@
         "CitiService": "./services/citi",
         "PershingService": "./services/pershing",
 
+        "utils": "./utils",
         "Sequelize": {
     			"path": "sequelize",
     			"shim": true
     		},
-        "_": {
-            "path": "lodash",
-            "shim": true
-        },
-        "moment": {
-            "path": "moment",
-            "shim": true
-        },
         "colors": {
             "path": "colors",
             "shim": true

@@ -6,7 +6,7 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const template = require('backtick-template');
 
-module.exports = function(Configs, FileService) {
+module.exports = function(Configs, utils, FileService) {
   var that = this;
 
   this.getMappings = function() {
@@ -99,14 +99,7 @@ module.exports = function(Configs, FileService) {
       model.create(row).then((persistedObj) => {
         cb()
       }).catch((err) => {
-        if (Configs.sequelizeErrorLog) {
-          // console.log(err)
-          if(err.errors) {
-            console.error(`sequelize error: ${err.errors[0].message}  field: ${err.errors[0].path}  table: ${nameInfo.table}`)
-          }else {
-            console.error(err)
-          }
-        }
+        utils.logError(err)
         cb()
       })
     }, () => {
