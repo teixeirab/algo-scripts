@@ -1,0 +1,13 @@
+version: '2'
+services:
+  fundpie-dataupdater-share:
+    build:
+      context: .
+      args:
+        http_proxy: 'http://topsolver.biz:13128'
+    environment:
+      NODE_ENV: dev
+    ports:
+      - "8000:8080"
+    #entrypoint:
+    #  - ./entrypoint.sh

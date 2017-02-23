@@ -6,7 +6,6 @@ app/config/local.js
 *.log
 logs
 .tags
-docker-compose.yml
 id_rsa
 tmp
 jenkins
