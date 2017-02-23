@@ -7,6 +7,8 @@ RUN apt-get update
 RUN apt-get install vim -y
 RUN apt-get -y install g++
 RUN apt-get install build-essential -y
+RUN apt-get install python-software-properties -y
+RUN apt-get install rsync -y
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
@@ -48,9 +50,7 @@ RUN npm install -g gulp
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app
-RUN apt-get install python-software-properties -y
 RUN npm install
-RUN apt-get install rsync -y
 ADD . /usr/src/app
 
 # RUN crontab schedules
