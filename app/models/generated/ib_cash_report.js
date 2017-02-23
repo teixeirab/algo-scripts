@@ -2,35 +2,30 @@
 
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('ib_cash_report', {
-    id: {
-      type: Sequelize.STRING,
-      // autoIncrement: true,
-      // allowNull: false
-    },
     period: {
       type: Sequelize.DATE,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     account_id: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     label: {
       type: Sequelize.TEXT,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     currency: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     base_summary: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     type: {
       type: Sequelize.STRING,

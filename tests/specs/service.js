@@ -3,6 +3,7 @@
 var async = require('async');
 var assert = require('assert');
 var moment = require('moment');
+var helper = require('../../tests/helper')
 var _ = require('lodash');
 
 describe('service tests', function() {
@@ -17,6 +18,7 @@ describe('service tests', function() {
     'InteractiveBrokerNavModel',
     'InteractiveBrokerPositionsModel',
     'CitiAllTransactionsModel',
+    'CitiUnsettledTransactionsModel',
     'TheoremIncomeStatementModel',
     'TheoremBalanceSheetModel',
     'PershingPositionsModel',
@@ -476,6 +478,156 @@ describe('service tests', function() {
           })
         })
       });
+      describe('unsettled transactions', function () {
+        it('#findAndSync', function (done) {
+          vars['CitiService'].findAndSync('citi_unsettled_transactions', './tests/data/Citibank/', null).then(() => {
+            vars['CitiUnsettledTransactionsModel'].findAll().then((models) => {
+              assert.equal(models.length, 5)
+              assert.equal(models[0].client_reference, 'AH21086504963212')
+              assert.equal(models[0].account_number, 'XXXXX')
+              assert.equal(models[0].settlement_date.toISOString(), '2017-02-08T16:00:00.000Z')
+              assert.equal(models[0].txn_type, 'RVP')
+              assert.equal(models[0].custodian_reference, '56054827626')
+              assert.equal(models[0].sec_id_type, 'LOCAL')
+              assert.equal(models[0].sec_id, 'XXX')
+              assert.equal(models[0].isin, 'XXX')
+              assert.equal(models[0].issue_name, 'STRUC')
+              assert.equal(models[0].quantity, 140000)
+              assert.equal(models[0].settled_quantity, 0)
+              assert.equal(models[0].currency, 'USD')
+              assert.equal(models[0].settlement_amount, 148162)
+              assert.equal(models[0].trade_date.toISOString(), '2017-02-05T16:00:00.000Z')
+              assert.equal(models[0].counterparty_ec, 'EUROCLEAR 97375')
+              assert.equal(models[0].counterparty_id, null)
+              assert.equal(models[0].legal_confirm, null)
+              done();
+            })
+          })
+        });
+        it('should update or delete unsettled records based on data source file', function (done) {
+          async.waterfall([
+            (cb) => {
+              helper.batchCreateInstances([
+                ['CitiUnsettledTransactionsModel',
+                [
+                  {
+                    client_reference: 'AH21086504963212',
+                    account_number: 'test1',
+                    settlement_date: moment('2017-02-09').toDate(),
+                    txn_type: 'RVP',
+                    custodian_reference: '56054827626',
+                    sec_id_type: 'LOCAL',
+                    sec_id: 'XXX',
+                    isin: 'XXX',
+                    issue_name: 'STRUC',
+                    quantity: 140000,
+                    settled_quantity: 0,
+                    currency: 'USD',
+                    settlement_amount: 148162,
+                    trade_date: moment('2017-02-06').toDate(),
+                    counterparty_ec: 'EUROCLEAR 97375',
+                    counterparty_id: 1,
+                    legal_confirm: 1
+                  },
+                  {
+                    client_reference: 'settledOrcancelled',
+                    account_number: 'test1',
+                    settlement_date: moment('2017-02-09').toDate(),
+                    txn_type: 'RVP',
+                    custodian_reference: '56054827626',
+                    sec_id_type: 'LOCAL',
+                    sec_id: 'XXX',
+                    isin: 'XXX',
+                    issue_name: 'STRUC',
+                    quantity: 140000,
+                    settled_quantity: 0,
+                    currency: 'USD',
+                    settlement_amount: 148162,
+                    trade_date: moment('2017-02-06').toDate(),
+                    counterparty_ec: 'EUROCLEAR 97375',
+                    counterparty_id: 1,
+                    legal_confirm: 1
+                  }
+                ]]
+              ], cb)
+            },
+            (cb) => {
+              helper.batchCreateInstances([
+                ['CitiAllTransactionsModel',
+                [
+                  {
+                    client_reference: 'settledOrcancelled',
+                    account_id: 'XXXXX',
+                    trade_date: moment('2017-01-30').toDate(),
+                    settlement_date: moment('2017-02-02').toDate(),
+                    transaction_type: 'DVP',
+                    sec_id_type: 'LOCAL',
+                    sec_id: '96008822',
+                    isin: 'XXXX',
+                    issue_name: 'XXXXSTRUC',
+                    quantity: '600000',
+                    settled_quantity: 600000,
+                    currency: 'USD',
+                    setltement_amount: 600000,
+                    asd: '2/2/2017',
+                    counterparty: 'CEDEL 83320',
+                    settlement_location: 'O/A EUROCLEAR                  *',
+                    position_held: 'HELD AT DEPOSITORY',
+                    counterparty_id: null,
+                    legal_confirm: 0,
+                    wire_confirm: 0,
+                    wire_amount: 0
+                  }
+                ]]
+              ], cb)
+            },
+            (cb) => {
+              vars['CitiService'].findAndSync('citi_unsettled_transactions', './tests/data/Citibank/', null).then(() => {
+                vars['CitiUnsettledTransactionsModel'].findAll().then((models) => {
+                  //2 existing, 5 from data source
+                  //updated one and deleted one
+                  assert.equal(models.length, 5)
+                  assert.equal(models[0].client_reference, 'AH21086504963212')
+                  //override based the value in data source file
+                  assert.equal(models[0].account_number, 'XXXXX')
+                  assert.equal(models[0].settlement_date.toISOString(), '2017-02-08T16:00:00.000Z')
+                  assert.equal(models[0].txn_type, 'RVP')
+                  assert.equal(models[0].custodian_reference, '56054827626')
+                  assert.equal(models[0].sec_id_type, 'LOCAL')
+                  assert.equal(models[0].sec_id, 'XXX')
+                  assert.equal(models[0].isin, 'XXX')
+                  assert.equal(models[0].issue_name, 'STRUC')
+                  assert.equal(models[0].quantity, 140000)
+                  assert.equal(models[0].settled_quantity, 0)
+                  assert.equal(models[0].currency, 'USD')
+                  assert.equal(models[0].settlement_amount, 148162)
+                  assert.equal(models[0].trade_date.toISOString(), '2017-02-05T16:00:00.000Z')
+                  assert.equal(models[0].counterparty_ec, 'EUROCLEAR 97375')
+                  //should preserved if these two columns have been manually updated
+                  assert.equal(models[0].counterparty_id, 1)
+                  assert.equal(models[0].legal_confirm, 1)
+                  vars['CitiUnsettledTransactionsModel'].findAll({
+                    where: {
+                      client_reference: 'settledOrcancelled'
+                    }
+                  }).then((txs) => {
+                    assert.equal(txs.length, 0)
+                    vars['CitiAllTransactionsModel'].findAll({
+                      where: {
+                        client_reference: 'settledOrcancelled'
+                      }
+                    }).then((txs) => {
+                      assert.equal(txs[0].counterparty_id, 1)
+                      assert.equal(txs[0].legal_confirm, 1)
+                      cb()
+                    })
+                  })
+                })
+              })
+            }
+          ], done)
+        });
+      });
     });
     describe('pershing', function () {
       describe('positions', function () {
@@ -483,6 +635,7 @@ describe('service tests', function() {
           vars['PershingService'].findAndSync('pershing_positions', './tests/data/Pershing/', '2017-02-08', 1).then(() => {
             vars['PershingPositionsModel'].findAll().then((models) => {
               assert.equal(models.length, 12)
+              // console.log(JSON.stringify(models, undefined, 2))
               assert.equal(models[0].security_id, 'CASH')
               assert.equal(models[0].account_number, 'PXXXXXXX')
               assert.equal(models[0].cusip, 'EUR999995')

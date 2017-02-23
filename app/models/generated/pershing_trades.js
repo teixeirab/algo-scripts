@@ -5,32 +5,32 @@ module.exports = function(FlexFundsDB, Sequelize) {
     account: {
       type: Sequelize.TEXT,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     date: {
       type: Sequelize.DATE,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     cusip: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     trade_date: {
       type: Sequelize.DATE,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     net_amount: {
       type: "DOUBLE",
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     price: {
       type: "DOUBLE",
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     account_nickname: {
       type: Sequelize.TEXT,

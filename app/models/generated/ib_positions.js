@@ -2,24 +2,24 @@
 
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('ib_positions', {
-    type: {
-      type: Sequelize.STRING,
-      allowNull: true
-    },
     account_id: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     con_id: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     report_date: {
       type: Sequelize.INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
+    },
+    type: {
+      type: Sequelize.STRING,
+      allowNull: true
     },
     security_id: {
       type: Sequelize.STRING,

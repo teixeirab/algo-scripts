@@ -8,77 +8,121 @@ const Promise = require('bluebird')
 module.exports = function(
   FileService,
   CommonService,
-  CitiAllTransactionsModel
+  CitiAllTransactionsModel,
+  CitiUnsettledTransactionsModel
 ) {
 
   var that = this;
 
   const modelMappings = {
-    citi_all_transactions: CitiAllTransactionsModel
+    citi_all_transactions: CitiAllTransactionsModel,
+    citi_unsettled_transactions: CitiUnsettledTransactionsModel
   }
   this.nameInfoListExtractConfigs = function(path, fromDate) {
     return {
-      theorem_balance_sheet: {
+      citi_all_transactions: {
         path: path,
         startLine: 1,
-        fromDate: fromDate,
-        dateFormat: 'YYYYMMDD',
-        pattern: '*_Activity_+(${dateStr}).csv',
-        // extractFn: this.extractActivityFileNameInfo
+        pattern: 'all_transactions.CSV',
       },
-      theorem_income_statement: {
+      citi_unsettled_transactions: {
         path: path,
-        startLine: 1,
-        fromDate: fromDate,
-        dateFormat: 'YYYYMMDD',
-        pattern: '*_CashReport_+(${dateStr}).csv',
-        // extractFn: this.extractCashReportFileNameInfo,
-        // assignDataFn: (data, nameInfo) => {
-        //   data['period'] = nameInfo.date
-        //   return data
-        // }
+        startLine: 0,
+        pattern: 'unsettled_transactions.CSV',
+        extractFn: this.extractFileNameInfo,
+        saveRowsFn: this.saveRows
       }
     }
   }
 
-  this.extractWeeklyFileNameInfo = function(path) {
-    const parts = path.split('/')
-    let filename = parts[parts.length - 1]
-    filename = filename.split('.')[0]
-    const infos = filename.split('_')
-    const accountId = infos[0]
-    const type = infos[1]
-    const date = infos[2]
+  this.extractFileNameInfo = function(path) {
     return {
       path: path,
-      accountId: accountId,
-      type: type,
-      date: moment(date, 'YYYYMMDD').toDate(),
-      source: 'Interactive Brokers',
-      table: 'ib_cash_report'
+      source: 'Citi Bank',
+      table: 'citi_unsettled_transactions'
     }
-  }
-
-  this.csvPostProcess = function(csvObject) {
-    let prevRow
-    const columns = [
-      'Actual Branch Name',
-      'Account ID',
-      'Account Name'
-    ]
-    csvObject.forEach((row) => {
-      columns.forEach((col) => {
-        if((_.isEmpty(row[col])) && !_.isEmpty(prevRow[col])) {
-          row[col] = prevRow[col]
-        }
-      })
-      prevRow = row
-    })
-    return csvObject
   }
 
   this.update = function(nameInfoList) {
     return CommonService.syncToDatabase(nameInfoList, modelMappings)
+  }
+
+  this.getFileNameInfoList = function(table, path, fromDate) {
+    const extractConfigs = this.nameInfoListExtractConfigs(path, fromDate)[table]
+    return CommonService.getFileNameInfoList(
+      extractConfigs.path,
+      extractConfigs.startLine,
+      extractConfigs.fromDate,
+      extractConfigs.dateFormat,
+      extractConfigs.pattern,
+      extractConfigs.extractFn,
+      extractConfigs.assignDataFn,
+      extractConfigs.saveRowsFn
+    )
+  }
+
+  this.findAndSync = function(table, path, fromDate, limit) {
+    return this
+      .getFileNameInfoList(table, path, fromDate)
+      .then((nameInfoList) => {
+        if(limit) {
+          nameInfoList.splice(limit, nameInfoList.length)
+        }
+        return this.update(nameInfoList)
+      })
+  }
+
+  this.saveRows = function(model, rows, nameInfo) {
+    const deferred = Promise.pending()
+    async.waterfall([
+      (cb) => {
+        model.findAll().then((unsettledTXs) => {
+          _.remove(unsettledTXs, (tx) => {
+            return _.find(rows, (row) => {
+              return row.client_reference === tx.client_reference
+            })
+          })
+          cb(undefined, unsettledTXs)
+        })
+      },
+      (toDelete, cb) => {
+        async.eachSeries(toDelete, (unsettledTx, _cb) => {
+          CitiAllTransactionsModel.update({
+            counterparty_id: unsettledTx.counterparty_id,
+            legal_confirm: unsettledTx.legal_confirm
+          }, {
+            where: {
+              client_reference: unsettledTx.client_reference
+            },
+            fields: ['counterparty_id', 'legal_confirm']
+          }).then(() => {
+            unsettledTx.destroy().then(() => {
+              _cb()
+            })
+          })
+        }, cb)
+      },
+      (cb) => {
+        async.eachSeries(rows, (row, _cb) => {
+          model.upsert(row, {defaults: row}).then(() => {
+            _cb()
+          }).catch((err) => {
+            if (Configs.sequelizeErrorLog) {
+              // console.log(err)
+              if(err.errors) {
+                console.error(`sequelize error: ${err.errors[0].message}  field: ${err.errors[0].path}  table: ${nameInfo.table}`)
+              }else {
+                console.error(err)
+              }
+            }
+            _cb()
+          })
+        }, cb)
+      }
+    ], () => {
+      deferred.resolve()
+    })
+    return deferred.promise
   }
 
   return this;

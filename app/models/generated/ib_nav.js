@@ -2,25 +2,20 @@
 
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('ib_nav', {
-    id: {
-      type: Sequelize.STRING,
-      // allowNull: false,
-      // primaryKey: true
-    },
     period: {
       type: Sequelize.DATE,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     account_id: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     base_currency: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: 'unique_index'
     },
     type: {
       type: Sequelize.STRING,

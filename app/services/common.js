@@ -59,6 +59,12 @@ module.exports = function(Configs, FileService) {
           this.getDBMappings(mappings, nameInfo).then((dbMappings) => {
             Object.keys(dbMappings).forEach((table) => {
               const model = modelMappings[table], rows = dbMappings[table]
+              if(nameInfo.saveRowsFn) {
+                nameInfo.saveRowsFn(model, rows, nameInfo).then(() => {
+                  cb()
+                })
+                return
+              }
               this.saveRows(model, rows, nameInfo).then(() => {
                 cb()
               })
@@ -109,7 +115,7 @@ module.exports = function(Configs, FileService) {
     return deferred.promise
   }
 
-  this.getFileNameInfoList = function(path, startLine, fromDate, dateFormat, pattern, nameInfoExtractFn, assignDataFn) {
+  this.getFileNameInfoList = function(path, startLine, fromDate, dateFormat, pattern, nameInfoExtractFn, assignDataFn, saveRowsFn) {
     const deferred = Promise.pending()
     let dateFormats = [], dateStrs = []
     if (!Array.isArray(dateFormat)) {
@@ -136,6 +142,7 @@ module.exports = function(Configs, FileService) {
           if (nameInfo) {
             nameInfo.startLine = startLine
             nameInfo.assignDataFn = assignDataFn
+            nameInfo.saveRowsFn = saveRowsFn
           }
           return nameInfo
         })
