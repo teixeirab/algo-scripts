@@ -38,7 +38,6 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 # RUN apt-get install openssh-server -y
 
 # Make ssh dir
-RUN mkdir /root/.ssh/
 RUN echo EST > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 # RUN apt-get install zsh -y
 # RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
