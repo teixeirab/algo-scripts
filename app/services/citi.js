@@ -182,11 +182,9 @@ module.exports = function(
   this.upsertRows = function(model, rows, nameInfo) {
     const deferred = Promise.pending()
     async.eachSeries(rows, (row, _cb) => {
-      console.log(row)
       model.upsert(row, {defaults: row}).then(() => {
         _cb()
       }).catch((err) => {
-        console.log(err)
         utils.logError(err, nameInfo)
         _cb()
       })
