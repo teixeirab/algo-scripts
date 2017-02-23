@@ -1,4 +1,4 @@
-FROM jenkins:2.7.1
+FROM jenkins:2.32.2
 
 # if we want to install via apt
 USER root
@@ -23,7 +23,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 4.6.0
+ENV NODE_VERSION 7.5.0
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -39,41 +39,21 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 
 # Make ssh dir
 RUN mkdir /root/.ssh/
-RUN echo Asia/Hong_Kong > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+RUN echo EST > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 # RUN apt-get install zsh -y
 # RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 RUN npm install -g gulp
-# Copy over private key, and set permissions
-ADD id_rsa /root/.ssh/id_rsa
-RUN chmod 700 /root/.ssh/id_rsa
-
-RUN ssh-keyscan -H -p 10022 topsolver.biz > ~/.ssh/known_hosts
-RUN apt-get install python-software-properties -y
-RUN apt-get install rsync -y
-# RUN ssh-keyscan -H -p 10022 58.96.190.164 > ~/.ssh/known_hosts
 
 
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app
-
-RUN npm config set registry https://registry.npm.taobao.org
+RUN apt-get install python-software-properties -y
 RUN npm install
+RUN apt-get install rsync -y
 ADD . /usr/src/app
 
 # RUN crontab schedules
 RUN chmod -R a+x ./shells
 RUN chmod a+x ./entrypoint.sh
-
-RUN rm -rf node_modules/fundpie-backend-engine
-RUN rm -rf node_modules/fundpie-backend-models
-RUN rm -rf node_modules/fundpie-backend-services
-
-ADD tmp/fundpie-backend-engine node_modules/fundpie-backend-engine
-ADD tmp/fundpie-backend-models node_modules/fundpie-backend-models
-ADD tmp/fundpie-backend-services node_modules/fundpie-backend-services
-
-#ENTRYPOINT bash ./entrypoint.sh
-# CMD ls /var/jenkins_home
-# USER jenkins
