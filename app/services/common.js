@@ -30,7 +30,7 @@ module.exports = function(Configs, utils, FileService) {
         let dbMapping = {}
         Object.keys(row).forEach((reportField) => {
           sourceMappings.forEach((mapping) => {
-            if (mapping.report_field.replace(/_/g, '') === reportField.replace(/_/g, '')) {
+            if (mapping.report_field.replace(/_/g, '').toLowerCase() === reportField.replace(/_/g, '').toLowerCase()) {
               matched = true
               dbMapping[mapping.table] = dbMapping[mapping.table] || {}
               dbMapping[mapping.table][mapping.database_field] = row[reportField]
@@ -65,7 +65,8 @@ module.exports = function(Configs, utils, FileService) {
                 })
                 return
               }
-              this.saveRows(model, rows, nameInfo).then(() => {
+              this.saveRows(model, rows, nameInfo).then((stats) => {
+                console.info(`table: ${table}, file: ${nameInfo.path}, added records: ${stats.added}, skip: ${stats.skip}`)
                 cb()
               })
             })
@@ -92,23 +93,29 @@ module.exports = function(Configs, utils, FileService) {
 
   this.saveRows = function(model, rows, nameInfo) {
     const deferred = Promise.pending()
+    let stats = {
+      added: 0,
+      skip: 0
+    }
     async.eachSeries(rows, (row, cb) => {
       if (nameInfo.assignDataFn) {
         row = nameInfo.assignDataFn(row, nameInfo)
       }
       model.create(row).then((persistedObj) => {
+        stats.added ++
         cb()
       }).catch((err) => {
-        utils.logError(err)
+        utils.logError(err, nameInfo)
+        stats.skip ++
         cb()
       })
     }, () => {
-      deferred.resolve()
+      deferred.resolve(stats)
     })
     return deferred.promise
   }
 
-  this.getFileNameInfoList = function(path, startLine, fromDate, dateFormat, pattern, nameInfoExtractFn, assignDataFn, saveRowsFn) {
+  this.getFileNameInfoList = function(path, startLine, fromDate, dateFormat, pattern, nameInfoExtractFn, assignDataFn, saveRowsFn, csvPostProcessFn) {
     const deferred = Promise.pending()
     let dateFormats = [], dateStrs = []
     if (!Array.isArray(dateFormat)) {
@@ -136,6 +143,7 @@ module.exports = function(Configs, utils, FileService) {
             nameInfo.startLine = startLine
             nameInfo.assignDataFn = assignDataFn
             nameInfo.saveRowsFn = saveRowsFn
+            nameInfo.csvPostProcessFn = csvPostProcessFn
           }
           return nameInfo
         })

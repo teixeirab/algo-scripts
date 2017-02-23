@@ -5,17 +5,17 @@ module.exports = function(FlexFundsDB, Sequelize) {
     account_id: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: 'unique_index'
+      primaryKey: true
     },
     con_id: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: 'unique_index'
+      primaryKey: true
     },
     report_date: {
       type: Sequelize.INTEGER(11),
       allowNull: false,
-      unique: 'unique_index'
+      primaryKey: true
     },
     type: {
       type: Sequelize.STRING,

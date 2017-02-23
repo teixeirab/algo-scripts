@@ -18,7 +18,11 @@ const serviceMappings = {
   'ib_positions': 'InteractiveBrokerService',
   'ib_nav': 'InteractiveBrokerService',
   'ib_cash_report': 'InteractiveBrokerService',
-  'ib_activity': 'InteractiveBrokerService'
+  'ib_activity': 'InteractiveBrokerService',
+  'citi_all_transactions': 'CitiService',
+  'citi_unsettled_transactions': 'CitiService',
+  'citi_fixed_income_settled_position': 'CitiService',
+  'citi_available_position': 'CitiService'
 }
 
 app.run = function() {
@@ -40,9 +44,17 @@ app.run = function() {
       alias: 'f',
       describe: 'date, from which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.'
     })
+    .option('verbose', {
+      alias: 'v',
+      describe: 'whether to show verbose info'
+    })
     .argv
 
-  let table = argv.table, path = argv.path, fromDate = argv.from || moment().format('YYYY-MM-DD')
+  let table = argv.table,
+      path = argv.path,
+      fromDate = argv.from || moment().format('YYYY-MM-DD'),
+      verbose = argv.verbose
+
   const serviceName = serviceMappings[table]
   if (!serviceName) {
     console.error(`No data conversion service found for ${table}`)
@@ -57,8 +69,11 @@ app.run = function() {
       console.error('The path is not a directory!')
       return
     }
-    if(path[path.length - 1] !== '/') {
+    if (path[path.length - 1] !== '/') {
       path += '/'
+    }
+    if (verbose) {
+      process.env.SEQERR = true
     }
     path = pt.resolve(path)
     const service = app.summon.get(serviceName)

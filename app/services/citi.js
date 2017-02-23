@@ -10,6 +10,8 @@ module.exports = function(
   FileService,
   CommonService,
   CitiAllTransactionsModel,
+  CitiAvailablePositionModel,
+  CitiFixedIncomePositionTransactionsModel,
   CitiUnsettledTransactionsModel
 ) {
 
@@ -17,31 +19,134 @@ module.exports = function(
 
   const modelMappings = {
     citi_all_transactions: CitiAllTransactionsModel,
-    citi_unsettled_transactions: CitiUnsettledTransactionsModel
+    citi_unsettled_transactions: CitiUnsettledTransactionsModel,
+    citi_fixed_income_settled_position: CitiFixedIncomePositionTransactionsModel,
+    citi_available_position: CitiAvailablePositionModel
   }
   this.nameInfoListExtractConfigs = function(path, fromDate) {
     return {
       citi_all_transactions: {
         path: path,
-        startLine: 1,
+        startLine: 0,
         pattern: 'all_transactions.CSV',
+        extractFn: this.extractAllTransactionsFileNameInfo,
+        saveRowsFn: this.upsertRows,
+        csvPostProcessFn: this.allTransactionsCsvPostProcessFn
       },
       citi_unsettled_transactions: {
         path: path,
         startLine: 0,
         pattern: 'unsettled_transactions.CSV',
-        extractFn: this.extractFileNameInfo,
-        saveRowsFn: this.saveRows
+        extractFn: this.extractUnsettledFileNameInfo,
+        saveRowsFn: this.saveUnsettledTxRows,
+        csvPostProcessFn: this.unsettledCsvPostProcessFn
+      },
+      citi_fixed_income_settled_position: {
+        path: path,
+        startLine: 0,
+        pattern: 'fixed_income_settled_position.CSV',
+        extractFn: this.extractFixedIncomeSettledPositionFileNameInfo,
+        saveRowsFn: this.upsertRows,
+        csvPostProcessFn: this.fixedIncomeCsvPostProcessFn
+      },
+      citi_available_position: {
+        path: path,
+        startLine: 0,
+        pattern: 'available_positions.CSV',
+        extractFn: this.extractAvailablePositionFileNameInfo,
+        saveRowsFn: this.upsertRows,
+        csvPostProcessFn: this.availableCsvPostProcessFn
       }
     }
   }
 
-  this.extractFileNameInfo = function(path) {
+  this.extractUnsettledFileNameInfo = function(path) {
     return {
       path: path,
       source: 'Citi Bank',
       table: 'citi_unsettled_transactions'
     }
+  }
+
+  this.extractFixedIncomeSettledPositionFileNameInfo = function(path) {
+    return {
+      path: path,
+      source: 'Citi Bank',
+      table: 'citi_fixed_income_settled_position'
+    }
+  }
+
+  this.extractAvailablePositionFileNameInfo = function(path) {
+    return {
+      path: path,
+      source: 'Citi Bank',
+      table: 'citi_available_position'
+    }
+  }
+
+  this.extractAllTransactionsFileNameInfo = function(path) {
+    return {
+      path: path,
+      source: 'Citi Bank',
+      table: 'citi_all_transactions'
+    }
+  }
+
+  const copyFromPrev = function(csvObject, fields) {
+    let prevRow
+    csvObject.forEach((row) => {
+      let empty = true
+      fields.forEach((field) => {
+        if (row[field] && row[field] !== '') {
+          empty = false
+        }
+        return;
+      })
+      if (empty) {
+        fields.forEach((field) => {
+          row[field] = prevRow[field]
+        })
+      }
+      prevRow = row
+    })
+    return csvObject
+  }
+
+  this.fixedIncomeCsvPostProcessFn = function(csvObject) {
+    const fieldsToCheck = [
+      'ISO Country Name',
+      'Branch Name',
+      'Account ID',
+      'Account Name'
+    ]
+    return copyFromPrev(csvObject, fieldsToCheck)
+  }
+
+  this.availableCsvPostProcessFn = function(csvObject) {
+    const fieldsToCheck = [
+      'Actual Branch Name',
+      'Account ID',
+      'Account Name'
+    ]
+    return copyFromPrev(csvObject, fieldsToCheck)
+  }
+
+  this.unsettledCsvPostProcessFn = function(csvObject) {
+    const fieldsToCheck = [
+      'Actual Branch Name',
+      'Account ID',
+      'Account Name'
+    ]
+    return copyFromPrev(csvObject, fieldsToCheck)
+  }
+
+  this.allTransactionsCsvPostProcessFn = function(csvObject) {
+    const fieldsToCheck = [
+      'Actual Branch Name',
+      'Account ID',
+      'Account Name'
+    ]
+    return copyFromPrev(csvObject, fieldsToCheck)
   }
 
   this.update = function(nameInfoList) {
@@ -58,7 +163,8 @@ module.exports = function(
       extractConfigs.pattern,
       extractConfigs.extractFn,
       extractConfigs.assignDataFn,
-      extractConfigs.saveRowsFn
+      extractConfigs.saveRowsFn,
+      extractConfigs.csvPostProcessFn
     )
   }
 
@@ -73,7 +179,24 @@ module.exports = function(
       })
   }
 
-  this.saveRows = function(model, rows, nameInfo) {
+  this.upsertRows = function(model, rows, nameInfo) {
+    const deferred = Promise.pending()
+    async.eachSeries(rows, (row, _cb) => {
+      console.log(row)
+      model.upsert(row, {defaults: row}).then(() => {
+        _cb()
+      }).catch((err) => {
+        console.log(err)
+        utils.logError(err, nameInfo)
+        _cb()
+      })
+    }, () => {
+      deferred.resolve()
+    })
+    return deferred.promise
+  }
+
+  this.saveUnsettledTxRows = function(model, rows, nameInfo) {
     const deferred = Promise.pending()
     async.waterfall([
       (cb) => {
@@ -108,7 +231,7 @@ module.exports = function(
           model.upsert(row, {defaults: row}).then(() => {
             _cb()
           }).catch((err) => {
-            utils.logError(err)
+            utils.logError(err, nameInfo)
             _cb()
           })
         }, cb)

@@ -12,6 +12,8 @@
         "TheoremBalanceSheetModel": "./models/generated/theorem_balance_sheet",
         "CitiAllTransactionsModel": "./models/generated/citi_all_transactions",
         "CitiUnsettledTransactionsModel": "./models/generated/citi_unsettled_transactions",
+        "CitiAvailablePositionModel": "./models/generated/citi_available_position",
+        "CitiFixedIncomePositionTransactionsModel": "./models/generated/citi_fixed_income_settled_position",
         "PershingPositionsModel": "./models/generated/pershing_positions",
         "PershingTradesModel": "./models/generated/pershing_trades",
 
@@ -28,8 +30,8 @@
     			"shim": true
     		},
         "colors": {
-            "path": "colors",
-            "shim": true
+          "path": "colors",
+          "shim": true
         }
     }
 }

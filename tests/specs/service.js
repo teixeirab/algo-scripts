@@ -19,6 +19,8 @@ describe('service tests', function() {
     'InteractiveBrokerPositionsModel',
     'CitiAllTransactionsModel',
     'CitiUnsettledTransactionsModel',
+    'CitiFixedIncomePositionTransactionsModel',
+    'CitiAvailablePositionModel',
     'TheoremIncomeStatementModel',
     'TheoremBalanceSheetModel',
     'PershingPositionsModel',
@@ -303,8 +305,8 @@ describe('service tests', function() {
                 assert.equal(models.length, 1)
                 assert.equal(models[0].series_number, 16)
                 assert.equal(models[0].type, 'Weekly')
-                assert.equal(models[0].portfolio_income, '12,013.25')
-                assert.equal(models[0].manager_fees, '-1,101.45')
+                assert.equal(models[0].portfolio_income, 12013.25)
+                assert.equal(models[0].manager_fees, -1101.45)
                 assert.equal(models[0].audit_fees, -40.81)
                 assert.equal(models[0].price_dissemination_fees, -23.01)
                 assert.equal(models[0].trustee_corporate_fees, -68.36)
@@ -360,24 +362,24 @@ describe('service tests', function() {
                 assert.equal(models.length, 1)
                 assert.equal(models[0].series_number, 16)
                 assert.equal(models[0].type, 'Weekly')
-                assert.equal(models[0].total_assets, '3,828,841.83')
-                assert.equal(models[0].total_liabilities, '3,687.11')
-                assert.equal(models[0].total_equity, '3,825,154.71')
-                assert.equal(models[0].number_of_units_held, '40,170.00')
+                assert.equal(models[0].total_assets, 3828841.83)
+                assert.equal(models[0].total_liabilities, 3687.11)
+                assert.equal(models[0].total_equity, 3825154.71)
+                assert.equal(models[0].number_of_units_held, 40170.00)
                 assert.equal(models[0].nav_per_unit, 95.2242)
                 assert.equal(models[0].operating_fees_payable, 616.6)
-                assert.equal(models[0].management_fees_payable, '3,070.52')
-                assert.equal(models[0].investments_long, '3,828,841.83')
-                assert.equal(models[0].annual_series_fees_payable, null)
+                assert.equal(models[0].management_fees_payable, 3070.52)
+                assert.equal(models[0].investments_long, 3828841.83)
+                assert.equal(models[0].annual_series_fees_payable, 0)
                 assert.equal(models[0].arranger_fees_payable, 554.99)
                 assert.equal(models[0].audit_fees_payable, 82.18)
                 assert.equal(models[0].inventory_costs_payable, 0.01)
                 assert.equal(models[0].price_dissemination_fees_payable, 46.05)
                 assert.equal(models[0].transfer_agent_fees_payable, 65.94)
                 assert.equal(models[0].trustee_agent_fees_payable, 137.66)
-                assert.equal(models[0].external_expense_offset_accrued, null)
-                assert.equal(models[0].extraordinary_expenses_payable, null)
-                assert.equal(models[0].manager_fees_payable, '2,515.53')
+                assert.equal(models[0].external_expense_offset_accrued, 0)
+                assert.equal(models[0].extraordinary_expenses_payable, 0)
+                assert.equal(models[0].manager_fees_payable, 2515.53)
                 done();
               })
             })
@@ -392,21 +394,21 @@ describe('service tests', function() {
                 assert.equal(models.length, 1)
                 assert.equal(models[0].series_number, 11)
                 assert.equal(models[0].type, 'Monthly')
-                assert.equal(models[0].total_assets, '30,136,881.00')
+                assert.equal(models[0].total_assets, 30136881.00)
                 assert.equal(models[0].total_liabilities, 0)
-                assert.equal(models[0].total_equity, '30,136,881.00')
-                assert.equal(models[0].number_of_units_held, '244,920.00')
+                assert.equal(models[0].total_equity, 30136881.00)
+                assert.equal(models[0].number_of_units_held, 244920.00)
                 assert.equal(models[0].nav_per_unit, 123.0479)
-                assert.equal(models[0].operating_fees_payable, '11,618.22')
-                assert.equal(models[0].management_fees_payable, '138,430.80')
-                assert.equal(models[0].investments_long, '30,136,881.00')
-                assert.equal(models[0].debt_instruments, '30,136,881.00')
-                assert.equal(models[0].arranger_fees_payable, '138,430.80')
-                assert.equal(models[0].audit_fees_payable, '2,934.70')
-                assert.equal(models[0].price_dissemination_fees_payable, '1,605.21')
-                assert.equal(models[0].transfer_agent_fees_payable, '2,676.26')
-                assert.equal(models[0].trustee_agent_fees_payable, '4,402.06')
-                assert.equal(models[0].external_expense_offset_accrued, '-150,049.03')
+                assert.equal(models[0].operating_fees_payable, 11618.22)
+                assert.equal(models[0].management_fees_payable, 138430.80)
+                assert.equal(models[0].investments_long, 30136881.00)
+                assert.equal(models[0].debt_instruments, 30136881.00)
+                assert.equal(models[0].arranger_fees_payable, 138430.80)
+                assert.equal(models[0].audit_fees_payable, 2934.70)
+                assert.equal(models[0].price_dissemination_fees_payable, 1605.21)
+                assert.equal(models[0].transfer_agent_fees_payable, 2676.26)
+                assert.equal(models[0].trustee_agent_fees_payable, 4402.06)
+                assert.equal(models[0].external_expense_offset_accrued, -150049.03)
                 done();
               })
             })
@@ -419,19 +421,19 @@ describe('service tests', function() {
                 assert.equal(models.length, 1)
                 assert.equal(models[0].series_number, 11)
                 assert.equal(models[0].type, 'Monthly')
-                assert.equal(models[0].loan_interest_income, null)
-                assert.equal(models[0].loan_interest_income_received, null)
-                assert.equal(models[0].dividend, null)
-                assert.equal(models[0].portfolio_income, null)
-                assert.equal(models[0].stcg, null)
-                assert.equal(models[0].unrealized_gain, '68,706.00')
-                assert.equal(models[0].manager_fees, null)
+                assert.equal(models[0].loan_interest_income, 0)
+                assert.equal(models[0].loan_interest_income_received, 0)
+                assert.equal(models[0].dividend, 0)
+                assert.equal(models[0].portfolio_income, 0)
+                assert.equal(models[0].stcg, 0)
+                assert.equal(models[0].unrealized_gain, 68706.00)
+                assert.equal(models[0].manager_fees, 0)
                 assert.equal(models[0].audit_fees, -179.97)
                 assert.equal(models[0].price_dissemination_fees, -100)
                 assert.equal(models[0].trustee_corporate_fees, -269.95)
                 assert.equal(models[0].transfer_agent_fees, -169.86)
-                assert.equal(models[0].arranger_fees, '-8,789.92')
-                assert.equal(models[0].external_expense_offset, '9,509.70')
+                assert.equal(models[0].arranger_fees, -8789.92)
+                assert.equal(models[0].external_expense_offset, 9509.70)
                 done();
               })
             })
@@ -440,43 +442,36 @@ describe('service tests', function() {
       });
     });
     describe('citibank', function () {
-      it('all transactions', function (done) {
-        const nameInfoList = [
-          {
-            path: './tests/data/Citibank/all_transactions.CSV',
-            type: 'AllTransactions',
-            source: 'Citibank',
-            table: 'citi_all_transactions',
-            csvPostProcess: vars['CitiService'].csvPostProcess
-          }
-        ]
-        vars['CitiService'].update(nameInfoList).then(() => {
-          vars['CitiAllTransactionsModel'].findAll().then((models) => {
-            assert.equal(models.length, 20)
-            assert.equal(models[0].client_reference, 'AH21085811481166')
-            assert.equal(models[0].account_id, 'XXXXX')
-            assert.equal(models[0].trade_date.toISOString(), '2017-01-29T16:00:00.000Z')
-            assert.equal(models[0].settlement_date.toISOString(), '2017-02-01T16:00:00.000Z')
-            assert.equal(models[0].transaction_type, 'DVP')
-            assert.equal(models[0].sec_id_type, 'LOCAL')
-            assert.equal(models[0].sec_id, '96008822')
-            assert.equal(models[0].isin, 'XXXX')
-            assert.equal(models[0].issue_name, 'XXXXSTRUC')
-            assert.equal(models[0].quantity, '600000')
-            assert.equal(models[0].settled_quantity, 600000)
-            assert.equal(models[0].currency, 'USD')
-            assert.equal(models[0].setltement_amount, 600000)
-            assert.equal(models[0].asd, '2/2/2017')
-            assert.equal(models[0].counterparty, 'CEDEL 83320')
-            assert.equal(models[0].settlement_location, 'O/A EUROCLEAR                  *')
-            assert.equal(models[0].position_held, 'HELD AT DEPOSITORY')
-            assert.equal(models[0].counterparty_id, null)
-            assert.equal(models[0].legal_confirm, 0)
-            assert.equal(models[0].wire_confirm, 0)
-            assert.equal(models[0].wire_amount, 0)
-            done();
+      describe('all transactions', function (done) {
+        it('#findAndSync', function (done) {
+          vars['CitiService'].findAndSync('citi_all_transactions', './tests/data/Citibank/', null).then(() => {
+            vars['CitiAllTransactionsModel'].findAll().then((models) => {
+              assert.equal(models.length, 20)
+              assert.equal(models[0].client_reference, 'AH21085811481166')
+              assert.equal(models[0].account_id, 'XXXXX')
+              assert.equal(models[0].trade_date.toISOString(), '2017-01-29T16:00:00.000Z')
+              assert.equal(models[0].settlement_date.toISOString(), '2017-02-01T16:00:00.000Z')
+              assert.equal(models[0].transaction_type, 'DVP')
+              assert.equal(models[0].sec_id_type, 'LOCAL')
+              assert.equal(models[0].sec_id, '96008822')
+              assert.equal(models[0].isin, 'XXXX')
+              assert.equal(models[0].issue_name, 'XXXXSTRUC')
+              assert.equal(models[0].quantity, '600000')
+              assert.equal(models[0].settled_quantity, 600000)
+              assert.equal(models[0].currency, 'USD')
+              assert.equal(models[0].setltement_amount, 600000)
+              assert.equal(models[0].asd.toISOString(), '2017-02-01T16:00:00.000Z')
+              assert.equal(models[0].counterparty, 'CEDEL 83320')
+              assert.equal(models[0].settlement_location, 'O/A EUROCLEAR                  *')
+              assert.equal(models[0].position_held, 'HELD AT DEPOSITORY')
+              assert.equal(models[0].counterparty_id, '0')
+              assert.equal(models[0].legal_confirm, 0)
+              assert.equal(models[0].wire_confirm, 0)
+              assert.equal(models[0].wire_amount, 0)
+              done();
+            })
           })
-        })
+        });
       });
       describe('unsettled transactions', function () {
         it('#findAndSync', function (done) {
@@ -499,7 +494,7 @@ describe('service tests', function() {
               assert.equal(models[0].trade_date.toISOString(), '2017-02-05T16:00:00.000Z')
               assert.equal(models[0].counterparty_ec, 'EUROCLEAR 97375')
               assert.equal(models[0].counterparty_id, null)
-              assert.equal(models[0].legal_confirm, null)
+              assert.equal(models[0].legal_confirm, 0)
               done();
             })
           })
@@ -628,6 +623,54 @@ describe('service tests', function() {
           ], done)
         });
       });
+      describe('fixed income position', function () {
+        it('#findAndSync', function (done) {
+          vars['CitiService'].findAndSync('citi_fixed_income_settled_position', './tests/data/Citibank/', null).then(() => {
+            vars['CitiFixedIncomePositionTransactionsModel'].findAll().then((models) => {
+              assert.equal(models.length, 2)
+              assert.equal(models[0].account_id, 'XXXXX')
+              assert.equal(models[0].as_of_date.toISOString(), '2017-02-07T16:00:00.000Z')
+              assert.equal(models[0].isin, 'XXXX')
+              assert.equal(models[0].maturity_date.toISOString(), '2024-12-30T16:00:00.000Z')
+              assert.equal(models[0].sec_id_type, 'LOCAL')
+              assert.equal(models[0].sec_id, 'XXXX')
+              assert.equal(models[0].issue_name, 'XXXXSTRUC')
+              assert.equal(models[0].how_position_is_held, 'HELD AT DEPOSITORY')
+              assert.equal(models[0].settled_quantity, 880000)
+              assert.equal(models[0].interest_rate, 0)
+              assert.equal(models[0].current_face_value, 0)
+              done();
+            })
+          })
+        });
+      });
+      xdescribe('available position', function () {
+        it('#findAndSync', function (done) {
+          vars['CitiService'].findAndSync('citi_available_position', './tests/data/Citibank/', null).then(() => {
+            vars['CitiAvailablePositionModel'].findAll().then((models) => {
+              assert.equal(models.length, 5)
+              assert.equal(models[0].client_reference, 'AH21086504963212')
+              assert.equal(models[0].account_number, 'XXXXX')
+              assert.equal(models[0].settlement_date.toISOString(), '2017-02-08T16:00:00.000Z')
+              assert.equal(models[0].txn_type, 'RVP')
+              assert.equal(models[0].custodian_reference, '56054827626')
+              assert.equal(models[0].sec_id_type, 'LOCAL')
+              assert.equal(models[0].sec_id, 'XXX')
+              assert.equal(models[0].isin, 'XXX')
+              assert.equal(models[0].issue_name, 'STRUC')
+              assert.equal(models[0].quantity, 140000)
+              assert.equal(models[0].settled_quantity, 0)
+              assert.equal(models[0].currency, 'USD')
+              assert.equal(models[0].settlement_amount, 148162)
+              assert.equal(models[0].trade_date.toISOString(), '2017-02-05T16:00:00.000Z')
+              assert.equal(models[0].counterparty_ec, 'EUROCLEAR 97375')
+              assert.equal(models[0].counterparty_id, null)
+              assert.equal(models[0].legal_confirm, 0)
+              done();
+            })
+          })
+        });
+      });
     });
     describe('pershing', function () {
       describe('positions', function () {
@@ -646,7 +689,7 @@ describe('service tests', function() {
               assert.equal(models[0].price, 1.07)
               assert.equal(models[0].timezone, 'ET')
               assert.equal(models[0].change_price_amount, 0)
-              assert.equal(models[0].change_price, '0.00%')
+              assert.equal(models[0].change_price, 0)
               assert.equal(models[0].market_value, 0)
               assert.equal(models[0].market_value_change, 0)
               assert.equal(models[0].last_activity_date.toISOString(), '2017-02-07T16:00:00.000Z')
@@ -663,20 +706,20 @@ describe('service tests', function() {
         it('#findAndSync', function (done) {
           vars['PershingService'].findAndSync('pershing_trades', './tests/data/Pershing/', '2017-02-08', 1).then(() => {
             vars['PershingTradesModel'].findAll().then((models) => {
-              assert.equal(models.length, 475)
+              assert.equal(models.length, 309)
               assert.equal(models[0].account, 'JXXXXXX')
-              assert.equal(models[0].date.toISOString(), '2017-02-08T16:00:00.000Z')
-              assert.equal(models[0].cusip, 'G30855103')
-              assert.equal(models[0].net_amount, -300000)
-              assert.equal(models[0].price, 124.772)
+              assert.equal(models[0].date.toISOString(), '2017-02-06T16:00:00.000Z')
+              assert.equal(models[0].cusip, 'USD999997')
+              assert.equal(models[0].net_amount, 63452.98)
+              assert.equal(models[0].price, 0)
               assert.equal(models[0].account_nickname, '')
               assert.equal(models[0].security_id, '')
-              assert.equal(models[0].description, 'BUY 0.0000 SHARES OF G30855103 @ 124.77200ISIN# KYG308551038')
+              assert.equal(models[0].description, 'MONEY FUND REDEMPTION')
               assert.equal(models[0].quantity, 0)
-              assert.equal(models[0].principal, -300000)
+              assert.equal(models[0].principal, 0)
               assert.equal(models[0].commission_fees, 0)
               assert.equal(models[0].account_type, 'CASH')
-              assert.equal(models[0].details, 'CI SOUTHERN CONEFUND CLASS A (USD)PENDING')
+              assert.equal(models[0].details, 'BNY MELLON US TREAS SERVICE SHS MMF DUTG G1206E151')
               done();
             })
           })

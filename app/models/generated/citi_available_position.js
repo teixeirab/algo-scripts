@@ -1,80 +1,78 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('citi_available_position', {
-    id: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "",
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('citi_available_position', {
+    period: {
+      type: Sequelize.DATE,
+      allowNull: true,
       primaryKey: true
     },
-    period: {
-      type: DataTypes.DATE,
-      allowNull: true
+    account_id: {
+      type: Sequelize.STRING,
+      allowNull: true,
+      primaryKey: true
+    },
+    isin: {
+      type: Sequelize.STRING,
+      allowNull: true,
+      primaryKey: true
     },
     iso_country_name: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     branch_name: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     account_name: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    account_id: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     issue_name: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    isin: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     settled_position: {
-      type: DataTypes.DECIMAL,
+      type: Sequelize.DECIMAL,
       allowNull: true
     },
     confirmed_delivers: {
-      type: DataTypes.DECIMAL,
+      type: Sequelize.DECIMAL,
       allowNull: true
     },
     confirmed_receives: {
-      type: DataTypes.DECIMAL,
+      type: Sequelize.DECIMAL,
       allowNull: true
     },
     unconfirmed_delivers: {
-      type: DataTypes.DECIMAL,
+      type: Sequelize.DECIMAL,
       allowNull: true
     },
     unconfirmed_receives: {
-      type: DataTypes.DECIMAL,
+      type: Sequelize.DECIMAL,
       allowNull: true
     },
     blocked_position: {
-      type: DataTypes.DECIMAL,
+      type: Sequelize.DECIMAL,
       allowNull: true
     },
     available_position: {
-      type: DataTypes.DECIMAL,
+      type: Sequelize.DECIMAL,
       allowNull: true
     },
     additional_informaiton: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     blocked_to_delivery: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: true
     },
     dt_added: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
     tableName: 'citi_available_position'

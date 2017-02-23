@@ -5,12 +5,12 @@ module.exports = function(FlexFundsDB, Sequelize) {
     period: {
       type: Sequelize.DATE,
       allowNull: false,
-      unique: 'unique_index'
+      primaryKey: true
     },
     series_number: {
       type: Sequelize.INTEGER(11),
       allowNull: false,
-      unique: 'unique_index'
+      primaryKey: true
     },
     type: {
       type: Sequelize.ENUM('Weekly','Monthly'),
@@ -130,7 +130,8 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     accounting_fees: {
       type: Sequelize.DECIMAL,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     dt_added: {
       type: Sequelize.DATE,

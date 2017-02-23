@@ -69,7 +69,8 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     legal_confirm: {
       type: Sequelize.INTEGER(1),
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     dt_added: {
       type: Sequelize.DATE,

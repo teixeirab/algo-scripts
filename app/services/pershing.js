@@ -1,8 +1,9 @@
 'use strict';
 
-var  async = require('async');
-var moment = require('moment');
-var _ = require('lodash');
+const  async = require('async');
+const moment = require('moment');
+const _ = require('lodash');
+const numeral = require('numeral')
 const Promise = require('bluebird')
 
 module.exports = function(
@@ -30,6 +31,9 @@ module.exports = function(
         extractFn: this.extractPositionsFileNameInfo,
         assignDataFn: (data, nameInfo) => {
           data['period'] = nameInfo.date
+          data['change_price'] = numeral(data['change_price']).value()
+          const priceDate = moment(data['price_as_of_date'], 'MM/DD/YYYY h:mm:ss a')
+          data['price_as_of_date'] = priceDate.isValid() ? priceDate.toDate() : null
           return data
         }
       },
@@ -42,6 +46,10 @@ module.exports = function(
         extractFn: this.extractTradesFileNameInfo,
         assignDataFn: (data, nameInfo) => {
           data['period'] = nameInfo.date
+          const tradeDate = moment(data['trade_date'], 'MM/DD/YYYY')
+          const settlementDate = moment(data['settlement_date'], 'MM/DD/YYYY')
+          data['trade_date'] = tradeDate.isValid() ?  tradeDate.toDate() : null
+          data['settlement_date'] = settlementDate.isValid() ?  settlementDate.toDate() : null
           return data
         }
       }

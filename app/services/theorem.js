@@ -1,9 +1,10 @@
 'use strict';
 
-var  async = require('async');
-var moment = require('moment');
-var _ = require('lodash');
+const  async = require('async');
+const moment = require('moment');
+const _ = require('lodash');
 const Promise = require('bluebird')
+const numeral = require('numeral');
 
 module.exports = function(
   FileService,
@@ -31,6 +32,7 @@ module.exports = function(
           data['period'] = nameInfo.date
           data['series_number'] = nameInfo.seriesNumber
           data['type'] = nameInfo.type
+          this.convertDecimalString(TheoremBalanceSheetModel, data)
           return data
         }
       },
@@ -45,6 +47,7 @@ module.exports = function(
           data['period'] = nameInfo.date
           data['series_number'] = nameInfo.seriesNumber
           data['type'] = nameInfo.type
+          this.convertDecimalString(TheoremIncomeStatementModel, data)
           return data
         }
       },
@@ -59,6 +62,7 @@ module.exports = function(
           data['period'] = nameInfo.date
           data['series_number'] = nameInfo.seriesNumber
           data['type'] = nameInfo.type
+          this.convertDecimalString(TheoremBalanceSheetModel, data)
           return data
         }
       },
@@ -73,10 +77,19 @@ module.exports = function(
           data['period'] = nameInfo.date
           data['series_number'] = nameInfo.seriesNumber
           data['type'] = nameInfo.type
+          this.convertDecimalString(TheoremIncomeStatementModel, data)
           return data
         }
       }
     }
+  }
+
+  this.convertDecimalString = function(model, data) {
+    Object.keys(model.rawAttributes).forEach((field) => {
+      if (model.rawAttributes[field].type.key === 'DECIMAL') {
+        data[field] = numeral(data[field]).value()
+      }
+    })
   }
 
   this.extractBSWeeklyFileNameInfo = function(path) {

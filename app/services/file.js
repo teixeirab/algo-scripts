@@ -70,8 +70,8 @@ module.exports = function() {
     const deferred = Promise.pending()
 
     this.processCsvStream(stream, nameInfo).then((csvObject) => {
-      if(nameInfo.csvPostProcess) {
-        csvObject = nameInfo.csvPostProcess(csvObject)
+      if(nameInfo.csvPostProcessFn) {
+        csvObject = nameInfo.csvPostProcessFn(csvObject)
         // console.log(csvObject)
       }
       deferred.resolve(csvObject)

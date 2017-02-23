@@ -56,7 +56,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
       allowNull: true
     },
     asd: {
-      type: Sequelize.STRING,
+      type: Sequelize.DATE,
       allowNull: true
     },
     counterparty: {
@@ -73,12 +73,13 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     counterparty_id: {
       type: Sequelize.STRING,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     legal_confirm: {
       type: Sequelize.INTEGER(11),
-      allowNull: false,
-      defaultValue: "0"
+      allowNull: true,
+      defaultValue: 0
     },
     wire_confirm: {
       type: Sequelize.INTEGER(1),
