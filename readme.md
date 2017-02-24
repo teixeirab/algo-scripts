@@ -44,4 +44,4 @@ Example:
 node app -t ib_nav -p /path/to/interactive/broker/folder -f 2017-02-15
 ```
 
-This will search for all the ftp files later or equal than the date of 2017-02-15 in that folder, and try to insert into the database based on the ftp_transaction table mappings.
+This will search for all the ftp files later than or equal to the date of 2017-02-15 in that folder, and try to insert into the database based on the ftp_transaction table mappings.
