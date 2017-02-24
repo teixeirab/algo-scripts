@@ -4,13 +4,13 @@ A command line tool to search data source files and sync them into database base
 ## Install
 After clone this repo, run command below to install all necessary packages
 
-```
+```bash
 npm install
 ```
 
 To run the tool, run command under this repo's folder:
 
-```
+```bash
 node app
 ```
 
@@ -39,7 +39,7 @@ Options:
 ```
 
 Example:
-```
+```bash
 node app -t ib_nav -p /path/to/interactive/broker/folder -f 2017-02-15
 ```
 
