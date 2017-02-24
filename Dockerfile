@@ -1,5 +1,5 @@
-FROM jenkins:2.32.2
-
+# FROM jenkins:2.32.2
+FROM jenkins:2.7.1
 # if we want to install via apt
 USER root
 
@@ -55,4 +55,5 @@ ADD . /usr/src/app
 
 # RUN crontab schedules
 RUN chmod -R a+x ./shells
+RUN chmod a+x ./exec_tasks.sh
 RUN chmod a+x ./entrypoint.sh

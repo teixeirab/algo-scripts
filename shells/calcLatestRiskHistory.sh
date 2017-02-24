@@ -1,3 +1,0 @@
-#!/bin/bash
-cd "$(dirname "${BASH_SOURCE[0]}")"&&cd ..;
-node --max-old-space-size=400 app/setup.js --calculator=latest-portfolio-risk-history

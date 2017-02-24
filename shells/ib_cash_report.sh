@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "$(dirname "${BASH_SOURCE[0]}")";
+cd "$(dirname "${BASH_SOURCE[0]}")"&&cd ..;
 
 if [$from == ""]
 then
@@ -8,4 +8,4 @@ else
   from=$from
 fi
 
-node app -t $table -p $dir -f $from -v
+node app -t $table -p $dir -f $from

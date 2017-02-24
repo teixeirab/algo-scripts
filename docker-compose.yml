@@ -9,8 +9,9 @@ services:
       NODE_ENV: dev
     ports:
       - "8000:8080"
-    #entrypoint:
-    #  - ./entrypoint.sh
-    volumes: 
-      - ~/development/flexfunds/data-updater/app:/usr/src/app/app 
+    entrypoint:
+     - ./entrypoint.sh
+    volumes:
+      - ~/development/flexfunds/data-updater/app:/usr/src/app/app
       - ~/development/flexfunds/data-updater/tests:/usr/src/app/tests
+      - ~/development/flexfunds/data-updater/tests/data:/usr/src/data
