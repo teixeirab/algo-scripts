@@ -8,7 +8,7 @@ After clone this repo, run command below to install all necessary packages
 npm install
 ```
 
-To run the tool, run command under this repo's folder:
+To show the command tool's usage:
 
 ```bash
 node app
@@ -20,7 +20,7 @@ Options:
   --target, -t   Data source target to update. Available targets:
                  pershing_trades
                  pershing_positions
-                 theorem_income_statement_monthly
+                 theorem_in.come_statement_monthly
                  theorem_balance_sheet_monthly
                  theorem_balance_sheet_weekly
                  theorem_income_statement_weekly
