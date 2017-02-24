@@ -39,7 +39,13 @@ Options:
   --verbose, -v  Whether to show verbose info
 ```
 
-Example:
+### Config
+To use the app/config/dev.js config, set the NODE_ENV environment variable to `dev`
+```
+export NODE_ENV=dev
+```
+
+### Example
 ```bash
 node app -t ib_nav -p /path/to/interactive/broker/folder -f 2017-02-15
 ```
