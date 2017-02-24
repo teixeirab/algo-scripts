@@ -27,6 +27,9 @@ describe('service tests', function() {
     'PershingTradesModel',
     'FlexFundsDB'
   ]
+  const formatDate = (date) => {
+    return moment(date).format('YYYY-MM-DD')
+  }
   beforeEach(function(done) {
     vars.forEach((dep) => {
       vars[dep] = app.summon.get(dep)
@@ -95,7 +98,7 @@ describe('service tests', function() {
             assert.equal(nameInfoList[0].path, './tests/data/ib/U1161356_Activity_20170215.csv')
             assert.equal(nameInfoList[0].accountId, 'U1161356')
             assert.equal(nameInfoList[0].type, 'Activity')
-            assert.equal(nameInfoList[0].date.toISOString(), '2017-02-14T16:00:00.000Z')
+            assert.equal(formatDate(nameInfoList[0].date), '2017-02-15')
             done();
           })
       });
@@ -109,7 +112,7 @@ describe('service tests', function() {
               assert.equal(nameInfoList[0].path, './tests/data/ib/U1161356_Activity_20170215.csv')
               assert.equal(nameInfoList[0].accountId, 'U1161356')
               assert.equal(nameInfoList[0].type, 'Activity')
-              assert.equal(nameInfoList[0].date.toISOString(), '2017-02-14T16:00:00.000Z')
+              assert.equal(formatDate(nameInfoList[0].date), '2017-02-15')
               assert.equal(nameInfoList[0].source, 'Interactive Brokers')
               assert.equal(nameInfoList[0].table, 'ib_activity')
               done();
@@ -130,8 +133,40 @@ describe('service tests', function() {
             ]
             vars['InteractiveBrokerService'].update(nameInfoList).then(() => {
               vars['InteractiveBrokerActivityModel'].findAll().then((models) => {
-                assert.equal(models[0].trade_date.toISOString(), '2017-02-15T16:00:00.000Z')
-                assert.equal(models[0].settle_date.toISOString(), '2017-02-16T16:00:00.000Z')
+                assert.equal(models[0].trade_id, '504343277')
+                assert.equal(models[0].type, 'D')
+                assert.equal(models[0].account_id, 'U1891163')
+                assert.equal(models[0].con_id, '97589595')
+                assert.equal(models[0].security_id, '')
+                assert.equal(models[0].symbol, 'CLH7')
+                assert.equal(models[0].bb_ticker, 'CLH7')
+                assert.equal(models[0].bb_global_id, 'BBG0028FBLW9')
+                assert.equal(models[0].security_description, 'CL MAR17')
+                assert.equal(models[0].asset_type, 'FUT')
+                assert.equal(models[0].currency, 'USD')
+                assert.equal(models[0].base_currency, 'USD')
+                assert.equal(formatDate(models[0].trade_date), '2017-02-16')
+                assert.equal(models[0].trade_time, '10:30:25')
+                assert.equal(formatDate(models[0].settle_date), '2017-02-17')
+                assert.equal(models[0].transaction_type, 'SELL')
+                assert.equal(models[0].quantity, -1)
+                assert.equal(models[0].unit_price, 52.8)
+                assert.equal(models[0].gross_amount, 52800)
+                assert.equal(models[0].sec_fee, 0)
+                assert.equal(models[0].commission, -54.36)
+                assert.equal(models[0].tax, 0)
+                assert.equal(models[0].net, -614.36)
+                assert.equal(models[0].net_in_base, -614.36)
+                assert.equal(models[0].tax_basis_election, 'FI')
+                assert.equal(models[0].description, 'TRADE CL MAR17')
+                assert.equal(models[0].fx_rate_to_base, 1)
+                assert.equal(models[0].contraparty_name, '')
+                assert.equal(models[0].clr_firm_id, '')
+                assert.equal(models[0].exchange, 'NYMEX')
+                assert.equal(models[0].master_account_id, '')
+                assert.equal(models[0].van, '')
+                assert.equal(models[0].away_broker_commission, 0)
+                assert.equal(models[0].order_id, '364796120')
                 assert.equal(models.length, 11)
                 done();
               })
@@ -143,8 +178,8 @@ describe('service tests', function() {
               .then(() => {
                 vars['InteractiveBrokerActivityModel'].findAll().then((models) => {
                   assert.equal(models.length, 3)
-                  assert.equal(models[0].trade_date.toISOString(), '2017-02-15T16:00:00.000Z')
-                  assert.equal(models[0].settle_date.toISOString(), '2017-02-21T16:00:00.000Z')
+                  assert.equal(formatDate(models[0].trade_date), '2017-02-16')
+                  assert.equal(formatDate(models[0].settle_date), '2017-02-22')
                   assert.equal(models.length, 3)
                   done();
                 })
@@ -162,7 +197,7 @@ describe('service tests', function() {
               assert.equal(nameInfoList[0].path, './tests/data/ib/U1161356_CashReport_20170215.csv')
               assert.equal(nameInfoList[0].accountId, 'U1161356')
               assert.equal(nameInfoList[0].type, 'CashReport')
-              assert.equal(nameInfoList[0].date.toISOString(), '2017-02-14T16:00:00.000Z')
+              assert.equal(formatDate(nameInfoList[0].date), '2017-02-15')
               assert.equal(nameInfoList[0].source, 'Interactive Brokers')
               assert.equal(nameInfoList[0].table, 'ib_cash_report')
               assert(nameInfoList[0].assignDataFn)
@@ -189,7 +224,7 @@ describe('service tests', function() {
             vars['InteractiveBrokerService'].update(nameInfoList).then(() => {
               vars['InteractiveBrokerCashReportModel'].findAll().then((models) => {
                 assert.equal(models.length, 15)
-                assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
+                assert.equal(formatDate(models[0].period), '2017-02-15')
                 assert.equal(models[0].account_id, 'U1161356')
                 done();
               })
@@ -199,8 +234,16 @@ describe('service tests', function() {
             vars['InteractiveBrokerService'].findAndSync('ib_cash_report', './tests/data/ib/', '2017-02-15', 1).then(() => {
               vars['InteractiveBrokerCashReportModel'].findAll().then((models) => {
                 assert.equal(models.length, 15)
-                assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
+                assert.equal(formatDate(models[0].period), '2017-02-15')
                 assert.equal(models[0].account_id, 'U1161356')
+                assert.equal(models[0].label, 'Starting Cash')
+                assert.equal(models[0].currency, 'USD')
+                assert.equal(models[0].base_summary, 'Y')
+                assert.equal(models[0].type, 'D')
+                assert.equal(models[0].total, -3635972.47732594)
+                assert.equal(models[0].securities, -3635972.47732594)
+                assert.equal(models[0].futures, 0)
+                assert.equal(models[0].ibukl, 0)
                 done();
               })
             })
@@ -213,8 +256,25 @@ describe('service tests', function() {
             vars['InteractiveBrokerService'].findAndSync('ib_nav', './tests/data/ib/', '2017-02-15', 1).then(() => {
               vars['InteractiveBrokerNavModel'].findAll().then((models) => {
                 assert.equal(models.length, 2)
-                assert.equal(models[0].period.toISOString(), '2017-02-14T16:00:00.000Z')
+                assert.equal(formatDate(models[0].period), '2017-02-15')
                 assert.equal(models[0].account_id, 'U1161356')
+                assert.equal(models[0].base_currency, 'USD')
+                assert.equal(models[0].type, 'D')
+                assert.equal(models[0].cash, -3619475.24732598)
+                assert.equal(models[0].cash_collateral, 0)
+                assert.equal(models[0].stocks, 5545171)
+                assert.equal(models[0].securities_borrowed, 0)
+                assert.equal(models[0].securities_lent, 0)
+                assert.equal(models[0].options, 0)
+                assert.equal(models[0].bonds, 8865.3)
+                assert.equal(models[0].commodities, 0)
+                assert.equal(models[0].funds, 0)
+                assert.equal(models[0].notes, 0)
+                assert.equal(models[0].accruals, -2042.42)
+                assert.equal(models[0].dividend_accruals, 11.2)
+                assert.equal(models[0].soft_dollars, 0)
+                assert.equal(models[0].totals, 1932529.83267402)
+                assert.equal(models[0].twr, -0.124385986)
                 done();
               })
             })
@@ -226,11 +286,11 @@ describe('service tests', function() {
           it('#findAndSync', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-02-15', 1).then(() => {
               vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
-                assert.equal(models.length, 8)
+                assert.equal(models.length, 9)
                 assert.equal(models[0].type, 'D')
                 assert.equal(models[0].account_id, 'U1161356')
                 assert.equal(models[0].con_id, '85004379')
-                assert.equal(models[0].report_date, 20170215)
+                assert.equal(formatDate(models[0].report_date), '2017-02-15')
                 assert.equal(models[0].security_id, '361860208')
                 assert.equal(models[0].symbol, 'ALLY PRA')
                 assert.equal(models[0].bb_ticker, '')
@@ -287,7 +347,7 @@ describe('service tests', function() {
             ]
             vars['TheoremService'].update(nameInfoList).then(() => {
               vars['TheoremIncomeStatementModel'].findAll().then((models) => {
-                assert.equal(models[0].period.toISOString(), '2017-02-09T16:00:00.000Z')
+                assert.equal(formatDate(models[0].period), '2017-02-10')
                 assert.equal(models[0].series_number, 95)
                 assert.equal(models[0].audit_fees, -40.81)
                 assert.equal(models[0].price_dissemination_fees, -23.01)
@@ -449,8 +509,8 @@ describe('service tests', function() {
               assert.equal(models.length, 20)
               assert.equal(models[0].client_reference, 'AH21085811481166')
               assert.equal(models[0].account_id, 'XXXXX')
-              assert.equal(models[0].trade_date.toISOString(), '2017-01-29T16:00:00.000Z')
-              assert.equal(models[0].settlement_date.toISOString(), '2017-02-01T16:00:00.000Z')
+              assert.equal(formatDate(models[0].trade_date), '2017-01-30')
+              assert.equal(formatDate(models[0].settlement_date), '2017-02-02')
               assert.equal(models[0].transaction_type, 'DVP')
               assert.equal(models[0].sec_id_type, 'LOCAL')
               assert.equal(models[0].sec_id, '96008822')
@@ -460,7 +520,7 @@ describe('service tests', function() {
               assert.equal(models[0].settled_quantity, 600000)
               assert.equal(models[0].currency, 'USD')
               assert.equal(models[0].setltement_amount, 600000)
-              assert.equal(models[0].asd.toISOString(), '2017-02-01T16:00:00.000Z')
+              assert.equal(formatDate(models[0].asd), '2017-02-02')
               assert.equal(models[0].counterparty, 'CEDEL 83320')
               assert.equal(models[0].settlement_location, 'O/A EUROCLEAR                  *')
               assert.equal(models[0].position_held, 'HELD AT DEPOSITORY')
@@ -480,7 +540,7 @@ describe('service tests', function() {
               assert.equal(models.length, 5)
               assert.equal(models[0].client_reference, 'AH21086504963212')
               assert.equal(models[0].account_number, 'XXXXX')
-              assert.equal(models[0].settlement_date.toISOString(), '2017-02-08T16:00:00.000Z')
+              assert.equal(formatDate(models[0].settlement_date), '2017-02-09')
               assert.equal(models[0].txn_type, 'RVP')
               assert.equal(models[0].custodian_reference, '56054827626')
               assert.equal(models[0].sec_id_type, 'LOCAL')
@@ -491,7 +551,7 @@ describe('service tests', function() {
               assert.equal(models[0].settled_quantity, 0)
               assert.equal(models[0].currency, 'USD')
               assert.equal(models[0].settlement_amount, 148162)
-              assert.equal(models[0].trade_date.toISOString(), '2017-02-05T16:00:00.000Z')
+              assert.equal(formatDate(models[0].trade_date), '2017-02-06')
               assert.equal(models[0].counterparty_ec, 'EUROCLEAR 97375')
               assert.equal(models[0].counterparty_id, null)
               assert.equal(models[0].legal_confirm, 0)
@@ -585,7 +645,7 @@ describe('service tests', function() {
                   assert.equal(models[0].client_reference, 'AH21086504963212')
                   //override based the value in data source file
                   assert.equal(models[0].account_number, 'XXXXX')
-                  assert.equal(models[0].settlement_date.toISOString(), '2017-02-08T16:00:00.000Z')
+                  assert.equal(formatDate(models[0].settlement_date), '2017-02-09')
                   assert.equal(models[0].txn_type, 'RVP')
                   assert.equal(models[0].custodian_reference, '56054827626')
                   assert.equal(models[0].sec_id_type, 'LOCAL')
@@ -596,7 +656,7 @@ describe('service tests', function() {
                   assert.equal(models[0].settled_quantity, 0)
                   assert.equal(models[0].currency, 'USD')
                   assert.equal(models[0].settlement_amount, 148162)
-                  assert.equal(models[0].trade_date.toISOString(), '2017-02-05T16:00:00.000Z')
+                  assert.equal(formatDate(models[0].trade_date), '2017-02-06')
                   assert.equal(models[0].counterparty_ec, 'EUROCLEAR 97375')
                   //should preserved if these two columns have been manually updated
                   assert.equal(models[0].counterparty_id, 1)
@@ -629,9 +689,9 @@ describe('service tests', function() {
             vars['CitiFixedIncomePositionTransactionsModel'].findAll().then((models) => {
               assert.equal(models.length, 2)
               assert.equal(models[0].account_id, 'XXXXX')
-              assert.equal(models[0].as_of_date.toISOString(), '2017-02-07T16:00:00.000Z')
+              assert.equal(formatDate(models[0].as_of_date), '2017-02-08')
               assert.equal(models[0].isin, 'XXXX')
-              assert.equal(models[0].maturity_date.toISOString(), '2024-12-30T16:00:00.000Z')
+              assert.equal(formatDate(models[0].maturity_date), '2024-12-31')
               assert.equal(models[0].sec_id_type, 'LOCAL')
               assert.equal(models[0].sec_id, 'XXXX')
               assert.equal(models[0].issue_name, 'XXXXSTRUC')
@@ -651,7 +711,7 @@ describe('service tests', function() {
               assert.equal(models.length, 5)
               assert.equal(models[0].client_reference, 'AH21086504963212')
               assert.equal(models[0].account_number, 'XXXXX')
-              assert.equal(models[0].settlement_date.toISOString(), '2017-02-08T16:00:00.000Z')
+              assert.equal(formatDate(models[0].settlement_date), '2017-02-09')
               assert.equal(models[0].txn_type, 'RVP')
               assert.equal(models[0].custodian_reference, '56054827626')
               assert.equal(models[0].sec_id_type, 'LOCAL')
@@ -662,7 +722,7 @@ describe('service tests', function() {
               assert.equal(models[0].settled_quantity, 0)
               assert.equal(models[0].currency, 'USD')
               assert.equal(models[0].settlement_amount, 148162)
-              assert.equal(models[0].trade_date.toISOString(), '2017-02-05T16:00:00.000Z')
+              assert.equal(formatDate(models[0].trade_date), '2017-02-06')
               assert.equal(models[0].counterparty_ec, 'EUROCLEAR 97375')
               assert.equal(models[0].counterparty_id, null)
               assert.equal(models[0].legal_confirm, 0)
@@ -692,7 +752,7 @@ describe('service tests', function() {
               assert.equal(models[0].change_price, 0)
               assert.equal(models[0].market_value, 0)
               assert.equal(models[0].market_value_change, 0)
-              assert.equal(models[0].last_activity_date.toISOString(), '2017-02-07T16:00:00.000Z')
+              assert.equal(formatDate(models[0].last_activity_date), '2017-02-08')
               assert.equal(models[0].accrued_interest, 0)
               assert.equal(models[0].disposition_method, 'N/A')
               assert.equal(models[0].dividend_reinvestment, 'Payout In Cash')
@@ -708,7 +768,7 @@ describe('service tests', function() {
             vars['PershingTradesModel'].findAll().then((models) => {
               assert.equal(models.length, 309)
               assert.equal(models[0].account, 'JXXXXXX')
-              assert.equal(models[0].date.toISOString(), '2017-02-06T16:00:00.000Z')
+              assert.equal(formatDate(models[0].date), '2017-02-07')
               assert.equal(models[0].cusip, 'USD999997')
               assert.equal(models[0].net_amount, 63452.98)
               assert.equal(models[0].price, 0)

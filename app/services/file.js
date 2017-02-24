@@ -125,22 +125,6 @@ module.exports = function() {
     return deferred.promise;
   }
 
-  // this.transposeCsv = function(csvStr) {
-  //   const deferred = Promise.pending()
-  //   let stream = new Readable
-  //   stream.push(csvStr)
-  //   stream.push(null)
-  //   stream
-  //     .pipe(csv.parse({
-  //     }, function(err, data){
-  //       if(err) {
-  //         return deferred.reject(err);
-  //       }
-  //       deferred.resolve(data)
-  //     }))
-  //   return deferred.promise;
-  // }
-
   this.sheetToCsvObject = function(sheet, nameInfo) {
     const csvStr = this.sheetToCsv(sheet)
     return this.csvStringToObject(csvStr, nameInfo)

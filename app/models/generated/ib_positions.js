@@ -13,7 +13,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
       primaryKey: true
     },
     report_date: {
-      type: Sequelize.INTEGER(11),
+      type: Sequelize.DATE,
       allowNull: false,
       primaryKey: true
     },

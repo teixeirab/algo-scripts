@@ -4,6 +4,7 @@
 
         "FlexFundsDB": "./dbs/flexfunds",
 
+        "FtpTranslationModel": "./models/generated/ftp_translation",
         "InteractiveBrokerActivityModel": "./models/generated/ib_activity",
         "InteractiveBrokerCashReportModel": "./models/generated/ib_cash_report",
         "InteractiveBrokerNavModel": "./models/generated/ib_nav",

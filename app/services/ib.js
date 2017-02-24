@@ -63,7 +63,11 @@ module.exports = function(
         fromDate: fromDate,
         dateFormat: ['YYYYMMDD'],
         pattern: '*_Position_+(${date[0]}).csv',
-        extractFn: this.extractPositionFileNameInfo
+        extractFn: this.extractPositionFileNameInfo,
+        assignDataFn: (data, nameInfo) => {
+          data['report_date'] = moment(data['report_date'], 'YYYYMMDD').toDate()
+          return data
+        }
       }
     }
   }

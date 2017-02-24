@@ -1,27 +1,28 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('ftp_translation', {
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('ftp_translation', {
     id: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
     database_field: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false
     },
     report_field: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false
     },
     source: {
-      type: DataTypes.ENUM('Theorem','Citi','Interactive Brokers','Pershing'),
+      type: Sequelize.ENUM('Theorem','Citi','Interactive Brokers','Pershing'),
       allowNull: false
     },
-    table_loc: {
-      type: DataTypes.STRING,
+    table: {
+      type: Sequelize.STRING,
+      field: 'table_loc',
       allowNull: false
     }
   }, {

@@ -6,11 +6,14 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const template = require('backtick-template');
 
-module.exports = function(Configs, utils, FileService) {
+module.exports = function(Configs, utils, FileService, FtpTranslationModel) {
   var that = this;
 
   this.getMappings = function() {
-    return FileService.readFile({path: Configs.mappingFilePath, sheet: 'Sheet1'})
+    if (process.env.NODE_ENV === 'test') {
+      return FileService.readFile({path: Configs.mappingFilePath, sheet: 'Sheet1'})
+    }
+    return FtpTranslationModel.findAll()
   }
 
   this.getDBMappings = function(mappings, nameInfo) {
