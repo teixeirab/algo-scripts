@@ -1,5 +1,5 @@
-FROM jenkins:2.32.2
-# FROM jenkins:2.7.1
+# FROM jenkins:2.32.2
+FROM jenkins:2.7.1
 # if we want to install via apt
 USER root
 
