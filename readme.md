@@ -8,6 +8,7 @@ After clone this repo, run command below to install all necessary packages
 npm install
 ```
 
+## How to use
 To show the command tool's usage:
 
 ```bash
