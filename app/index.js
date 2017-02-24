@@ -1,4 +1,5 @@
 'use strict';
+require('colors')
 const fs = require('fs')
 const pt = require('path')
 const moment = require('moment')

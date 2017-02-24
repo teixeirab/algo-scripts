@@ -69,7 +69,7 @@ module.exports = function(Configs, utils, FileService, FtpTranslationModel) {
                 return
               }
               this.saveRows(model, rows, nameInfo).then((stats) => {
-                console.info(`table: ${table}, file: ${nameInfo.path}, added records: ${stats.added}, skip: ${stats.skip}`)
+                console.info(`table: ${table}, file: ${nameInfo.path}, added records: ${stats.added}, skip: ${stats.skip}`.cyan)
                 cb()
               })
             })
