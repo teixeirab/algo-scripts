@@ -31,7 +31,7 @@ gulp.task('globalConfig', function() {
     }
 });
 gulp.task('setupApp', function() {
-    require('./tests/setup.js');
+    require('./app');
 });
 gulp.task('runApp', function(){
     global.app.run();
