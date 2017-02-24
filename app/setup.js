@@ -31,23 +31,23 @@ app.run = function() {
     return
   }
   const argv = require('yargs')
-    .option('table', {
+    .option('target', {
       alias: 't',
-      describe: 'mysql table to update',
+      describe: 'Data source target to update. Available targets:\n ' + Object.keys(serviceMappings).map((table) => {return table}).join('\n'),
       demand: true
     })
     .option('path', {
       alias: 'p',
-      describe: 'path of the data source files',
+      describe: 'Path of the data source files to search from',
       demand: true
     })
     .option('from', {
       alias: 'f',
-      describe: 'date, from which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.'
+      describe: 'Date, from which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.'
     })
     .option('verbose', {
       alias: 'v',
-      describe: 'whether to show verbose info'
+      describe: 'Whether to show verbose info'
     })
     .argv
 
