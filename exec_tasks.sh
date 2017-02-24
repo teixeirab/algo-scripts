@@ -1,7 +1,7 @@
 #!/bin/bash
 cd "$(dirname "${BASH_SOURCE[0]}")";
 
-if [$from == ""]
+if [ $from == ""]
 then
   from=$(date "+%Y-%m-%d")
 else
