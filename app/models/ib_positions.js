@@ -86,7 +86,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
       allowNull: true
     },
     open_date_time: {
-      type: "DOUBLE",
+      type: Sequelize.STRING,
       allowNull: true
     },
     fx_rate_to_base: {

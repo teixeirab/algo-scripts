@@ -51,14 +51,14 @@ app.run = function() {
     })
     .argv
 
-  let table = argv.table,
+  let target = argv.target,
       path = argv.path,
       fromDate = argv.from || moment().format('YYYY-MM-DD'),
       verbose = argv.verbose
 
-  const serviceName = serviceMappings[table]
+  const serviceName = serviceMappings[target]
   if (!serviceName) {
-    console.error(`No data conversion service found for ${table}`)
+    console.error(`No data conversion service found for ${target}`)
     process.exit(1)
   }
   fs.stat(path, function (err, stats){
@@ -79,8 +79,8 @@ app.run = function() {
     path = pt.resolve(path)
     const service = app.summon.get(serviceName)
     console.info('Find data source files and sync with the database...')
-    console.info(`Table: ${table}, Path: ${path}, Since: ${fromDate}`)
-    service.findAndSync(table, path, fromDate).then(() => {
+    console.info(`Table: ${target}, Path: ${path}, Since: ${fromDate}`)
+    service.findAndSync(target, path, fromDate).then(() => {
       console.info('DONE')
       process.exit(0)
     })
