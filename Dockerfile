@@ -10,8 +10,7 @@ RUN apt-get install build-essential -y
 RUN apt-get install python-software-properties -y
 RUN apt-get install rsync -y
 # gpg keys listed at https://github.com/nodejs/node
-RUN curl -sL https://deb.nodesource.com/setup_7.5 -o nodesource_setup.sh
-RUN bash nodesource_setup.sh
+RUN curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 RUN apt-get install nodejs build-essential -y
 # USER jenkins
 # RUN apt-get install cron -y
