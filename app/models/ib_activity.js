@@ -88,7 +88,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
       allowNull: true
     },
     commission: {
-      type: Sequelize.INTEGER(11),
+      type: "DOUBLE",
       allowNull: true
     },
     tax: {
