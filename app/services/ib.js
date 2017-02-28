@@ -52,6 +52,7 @@ module.exports = function(
         dateFormat: ['YYYYMMDD'],
         pattern: '*_NAV_+(${date[0]}).csv',
         extractFn: this.extractNavFileNameInfo,
+        csvPostProcessFn: this.filterCsvRows,
         assignDataFn: (data, nameInfo) => {
           data['period'] = nameInfo.date
           return data
@@ -64,12 +65,19 @@ module.exports = function(
         dateFormat: ['YYYYMMDD'],
         pattern: '*_Position_+(${date[0]}).csv',
         extractFn: this.extractPositionFileNameInfo,
+        csvPostProcessFn: this.filterCsvRows,
         assignDataFn: (data, nameInfo) => {
           data['report_date'] = moment(nameInfo.date).format('YYYY-MM-DD')
           return data
         }
       }
     }
+  }
+
+  this.filterCsvRows = function(csvObject) {
+    return _.filter(csvObject, (row) => {
+      return row.Type !== 'T'
+    })
   }
 
   this.extractActivityFileNameInfo = function(path) {
@@ -153,7 +161,9 @@ module.exports = function(
       extractConfigs.dateFormat,
       extractConfigs.pattern,
       extractConfigs.extractFn,
-      extractConfigs.assignDataFn
+      extractConfigs.assignDataFn,
+      null,
+      extractConfigs.csvPostProcessFn
     )
   }
 

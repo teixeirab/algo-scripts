@@ -255,7 +255,7 @@ describe('service tests', function() {
           it('#findAndSync', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_nav', './tests/data/ib/', '2017-02-15', 1).then(() => {
               vars['InteractiveBrokerNavModel'].findAll().then((models) => {
-                assert.equal(models.length, 2)
+                assert.equal(models.length, 1)
                 assert.equal(formatDate(models[0].period), '2017-02-15')
                 assert.equal(models[0].account_id, 'U1161356')
                 assert.equal(models[0].base_currency, 'USD')
@@ -286,7 +286,7 @@ describe('service tests', function() {
           it('#findAndSync', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-02-15', 1).then(() => {
               vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
-                assert.equal(models.length, 9)
+                assert.equal(models.length, 8)
                 assert.equal(models[0].type, 'D')
                 assert.equal(models[0].account_id, 'U1161356')
                 assert.equal(models[0].con_id, '85004379')
@@ -704,28 +704,26 @@ describe('service tests', function() {
           })
         });
       });
-      xdescribe('available position', function () {
+      describe('available position', function () {
         it('#findAndSync', function (done) {
-          vars['CitiService'].findAndSync('citi_available_position', './tests/data/Citibank/', null).then(() => {
+          vars['CitiService'].findAndSync('citi_available_position', './tests/data/Citibank/', '2017-02-15').then(() => {
             vars['CitiAvailablePositionModel'].findAll().then((models) => {
-              assert.equal(models.length, 5)
-              assert.equal(models[0].client_reference, 'AH21086504963212')
-              assert.equal(models[0].account_number, 'XXXXX')
-              assert.equal(formatDate(models[0].settlement_date), '2017-02-09')
-              assert.equal(models[0].txn_type, 'RVP')
-              assert.equal(models[0].custodian_reference, '56054827626')
-              assert.equal(models[0].sec_id_type, 'LOCAL')
-              assert.equal(models[0].sec_id, 'XXX')
-              assert.equal(models[0].isin, 'XXX')
-              assert.equal(models[0].issue_name, 'STRUC')
-              assert.equal(models[0].quantity, 140000)
-              assert.equal(models[0].settled_quantity, 0)
-              assert.equal(models[0].currency, 'USD')
-              assert.equal(models[0].settlement_amount, 148162)
-              assert.equal(formatDate(models[0].trade_date), '2017-02-06')
-              assert.equal(models[0].counterparty_ec, 'EUROCLEAR 97375')
-              assert.equal(models[0].counterparty_id, null)
-              assert.equal(models[0].legal_confirm, 0)
+              assert.equal(formatDate(models[0].period), '2017-02-16')
+              assert.equal(models[0].account_id, '6017709722')
+              assert.equal(models[0].isin, 'XS0855794367')
+              assert.equal(models[0].iso_country_name, 'GB')
+              assert.equal(models[0].branch_name, 'CITIBANK NA LONDON')
+              assert.equal(models[0].account_name, 'IA CAPITAL - NOTE UNWIND ACCOUNT - USD')
+              assert.equal(models[0].issue_name, 'IA CAPITAL STRUC')
+              assert.equal(models[0].settled_position, 1150000)
+              assert.equal(models[0].confirmed_delivers, -200000)
+              assert.equal(models[0].confirmed_receives, 0)
+              assert.equal(models[0].unconfirmed_delivers, 0)
+              assert.equal(models[0].unconfirmed_receives, 0)
+              assert.equal(models[0].blocked_position, 0)
+              assert.equal(models[0].available_position, 950000)
+              assert.equal(models[0].additional_informaiton, '')
+              assert.equal(models[0].blocked_to_delivery, 0)
               done();
             })
           })

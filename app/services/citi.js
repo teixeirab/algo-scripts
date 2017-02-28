@@ -65,6 +65,7 @@ module.exports = function(
         dateFormat: ['YYYY-MM-DD'],
         pattern: 'available_positions_+(${date[0]}).CSV',
         filterNameInfoListFn: this.useLatest,
+        assignDataFn: this.assignAvailablePositionDataFn,
         extractFn: this.extractAvailablePositionFileNameInfo,
         saveRowsFn: this.upsertRows,
         csvPostProcessFn: this.availableCsvPostProcessFn
@@ -79,6 +80,11 @@ module.exports = function(
     })
     nameInfoList.splice(limit, nameInfoList.length)
     return nameInfoList
+  }
+
+  this.assignAvailablePositionDataFn = function(data, nameInfo) {
+    data['period'] = nameInfo.date
+    return data
   }
 
   this.extractUnsettledFileNameInfo = function(path) {
@@ -227,6 +233,9 @@ module.exports = function(
   this.upsertRows = function(model, rows, nameInfo) {
     const deferred = Promise.pending()
     async.eachSeries(rows, (row, _cb) => {
+      if (nameInfo.assignDataFn) {
+        row = nameInfo.assignDataFn(row, nameInfo)
+      }
       model.upsert(row, {defaults: row}).then(() => {
         _cb()
       }).catch((err) => {
