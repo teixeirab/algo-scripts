@@ -53,7 +53,7 @@ module.exports = function(
         fromDate: fromDate,
         dateFormat: ['YYYY-MM-DD'],
         pattern: 'fixed_income_settled_position_+(${date[0]}).CSV',
-        filterNameInfoListFn: this.useLatest,
+        // filterNameInfoListFn: this.useLatest,
         extractFn: this.extractFixedIncomeSettledPositionFileNameInfo,
         saveRowsFn: this.upsertRows,
         csvPostProcessFn: this.fixedIncomeCsvPostProcessFn
