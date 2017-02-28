@@ -66,7 +66,6 @@ module.exports = function(
         extractFn: this.extractPositionFileNameInfo,
         assignDataFn: (data, nameInfo) => {
           data['report_date'] = moment(nameInfo.date).format('YYYY-MM-DD')
-          console.log(data[['open_date_time']])
           return data
         }
       }

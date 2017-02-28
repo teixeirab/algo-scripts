@@ -118,7 +118,7 @@ module.exports = function(Configs, utils, FileService, FtpTranslationModel) {
     return deferred.promise
   }
 
-  this.getFileNameInfoList = function(path, startLine, fromDate, dateFormat, pattern, nameInfoExtractFn, assignDataFn, saveRowsFn, csvPostProcessFn) {
+  this.getFileNameInfoList = function(path, startLine, fromDate, dateFormat, pattern, nameInfoExtractFn, assignDataFn, saveRowsFn, csvPostProcessFn, filterNameInfoListFn) {
     const deferred = Promise.pending()
     let dateFormats = [], dateStrs = []
     if (!Array.isArray(dateFormat)) {
@@ -150,7 +150,9 @@ module.exports = function(Configs, utils, FileService, FtpTranslationModel) {
           }
           return nameInfo
         })
-
+        if (filterNameInfoListFn) {
+          nameInfoList = filterNameInfoListFn(nameInfoList)
+        }
         deferred.resolve(nameInfoList)
       })
     return deferred.promise

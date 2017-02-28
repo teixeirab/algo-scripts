@@ -504,7 +504,7 @@ describe('service tests', function() {
     describe('citibank', function () {
       describe('all transactions', function (done) {
         it('#findAndSync', function (done) {
-          vars['CitiService'].findAndSync('citi_all_transactions', './tests/data/Citibank/', null).then(() => {
+          vars['CitiService'].findAndSync('citi_all_transactions', './tests/data/Citibank/', '2017-02-15').then(() => {
             vars['CitiAllTransactionsModel'].findAll().then((models) => {
               assert.equal(models.length, 20)
               assert.equal(models[0].client_reference, 'AH21085811481166')
@@ -535,7 +535,7 @@ describe('service tests', function() {
       });
       describe('unsettled transactions', function () {
         it('#findAndSync', function (done) {
-          vars['CitiService'].findAndSync('citi_unsettled_transactions', './tests/data/Citibank/', null).then(() => {
+          vars['CitiService'].findAndSync('citi_unsettled_transactions', './tests/data/Citibank/', '2017-02-15').then(() => {
             vars['CitiUnsettledTransactionsModel'].findAll().then((models) => {
               assert.equal(models.length, 5)
               assert.equal(models[0].client_reference, 'AH21086504963212')
@@ -637,7 +637,7 @@ describe('service tests', function() {
               ], cb)
             },
             (cb) => {
-              vars['CitiService'].findAndSync('citi_unsettled_transactions', './tests/data/Citibank/', null).then(() => {
+              vars['CitiService'].findAndSync('citi_unsettled_transactions', './tests/data/Citibank/', '2017-02-15').then(() => {
                 vars['CitiUnsettledTransactionsModel'].findAll().then((models) => {
                   //2 existing, 5 from data source
                   //updated one and deleted one
@@ -685,7 +685,7 @@ describe('service tests', function() {
       });
       describe('fixed income position', function () {
         it('#findAndSync', function (done) {
-          vars['CitiService'].findAndSync('citi_fixed_income_settled_position', './tests/data/Citibank/', null).then(() => {
+          vars['CitiService'].findAndSync('citi_fixed_income_settled_position', './tests/data/Citibank/', '2017-02-15').then(() => {
             vars['CitiFixedIncomePositionTransactionsModel'].findAll().then((models) => {
               assert.equal(models.length, 2)
               assert.equal(models[0].account_id, 'XXXXX')

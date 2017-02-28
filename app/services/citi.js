@@ -28,7 +28,10 @@ module.exports = function(
       citi_all_transactions: {
         path: path,
         startLine: 0,
-        pattern: 'all_transactions.CSV',
+        fromDate: fromDate,
+        dateFormat: ['YYYY-MM-DD'],
+        pattern: 'all_transactions_+(${date[0]}).CSV',
+        filterNameInfoListFn: this.useLatest,
         extractFn: this.extractAllTransactionsFileNameInfo,
         saveRowsFn: this.upsertRows,
         csvPostProcessFn: this.allTransactionsCsvPostProcessFn
@@ -36,7 +39,10 @@ module.exports = function(
       citi_unsettled_transactions: {
         path: path,
         startLine: 0,
-        pattern: 'unsettled_transactions.CSV',
+        fromDate: fromDate,
+        dateFormat: ['YYYY-MM-DD'],
+        pattern: 'unsettled_transactions_+(${date[0]}).CSV',
+        filterNameInfoListFn: this.useLatest,
         extractFn: this.extractUnsettledFileNameInfo,
         saveRowsFn: this.saveUnsettledTxRows,
         csvPostProcessFn: this.unsettledCsvPostProcessFn
@@ -44,7 +50,10 @@ module.exports = function(
       citi_fixed_income_settled_position: {
         path: path,
         startLine: 0,
-        pattern: 'fixed_income_settled_position.CSV',
+        fromDate: fromDate,
+        dateFormat: ['YYYY-MM-DD'],
+        pattern: 'fixed_income_settled_position_+(${date[0]}).CSV',
+        filterNameInfoListFn: this.useLatest,
         extractFn: this.extractFixedIncomeSettledPositionFileNameInfo,
         saveRowsFn: this.upsertRows,
         csvPostProcessFn: this.fixedIncomeCsvPostProcessFn
@@ -52,7 +61,10 @@ module.exports = function(
       citi_available_position: {
         path: path,
         startLine: 0,
-        pattern: 'available_positions.CSV',
+        fromDate: fromDate,
+        dateFormat: ['YYYY-MM-DD'],
+        pattern: 'available_positions_+(${date[0]}).CSV',
+        filterNameInfoListFn: this.useLatest,
         extractFn: this.extractAvailablePositionFileNameInfo,
         saveRowsFn: this.upsertRows,
         csvPostProcessFn: this.availableCsvPostProcessFn
@@ -60,15 +72,35 @@ module.exports = function(
     }
   }
 
+  this.useLatest = function(nameInfoList) {
+    const limit = 1
+    nameInfoList.sort((a, b) => {
+      return b.date - a.date
+    })
+    nameInfoList.splice(limit, nameInfoList.length)
+    return nameInfoList
+  }
+
   this.extractUnsettledFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const date = moment(infos[2], 'YYYY-MM-DD').toDate()
     return {
       path: path,
+      date: date,
       source: 'Citi Bank',
       table: 'citi_unsettled_transactions'
     }
   }
 
   this.extractFixedIncomeSettledPositionFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const date = moment(infos[4], 'YYYY-MM-DD').toDate()
     return {
       path: path,
       source: 'Citi Bank',
@@ -77,16 +109,28 @@ module.exports = function(
   }
 
   this.extractAvailablePositionFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const date = moment(infos[2], 'YYYY-MM-DD').toDate()
     return {
       path: path,
+      date: date,
       source: 'Citi Bank',
       table: 'citi_available_position'
     }
   }
 
   this.extractAllTransactionsFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const date = moment(infos[2], 'YYYY-MM-DD').toDate()
     return {
       path: path,
+      date: date,
       source: 'Citi Bank',
       table: 'citi_all_transactions'
     }
@@ -164,7 +208,8 @@ module.exports = function(
       extractConfigs.extractFn,
       extractConfigs.assignDataFn,
       extractConfigs.saveRowsFn,
-      extractConfigs.csvPostProcessFn
+      extractConfigs.csvPostProcessFn,
+      extractConfigs.filterNameInfoListFn
     )
   }
 
