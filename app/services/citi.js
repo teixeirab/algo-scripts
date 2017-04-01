@@ -69,6 +69,17 @@ module.exports = function(
         extractFn: this.extractAvailablePositionFileNameInfo,
         saveRowsFn: this.upsertRows,
         csvPostProcessFn: this.availableCsvPostProcessFn
+      },
+      citi_positions_valuations: {
+        path: path,
+        startLine: 0,
+        fromDate: fromDate,
+        dateFormat: ['YYYY-MM-DD'],
+        pattern: 'positions_valuations_+(${date[0]}).CSV',
+        filterNameInfoListFn: this.useLatest,
+        extractFn: this.extractValuationFileNameInfo,
+        saveRowsFn: this.upsertRows,
+        csvPostProcessFn: this.positionValuationCsvPostProcessFn
       }
     }
   }
@@ -142,6 +153,20 @@ module.exports = function(
     }
   }
 
+  this.extractValuationFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const date = moment(infos[2], 'YYYY-MM-DD').toDate()
+    return {
+      path: path,
+      date: date,
+      source: 'Citi Bank',
+      table: 'citi_positions_valuations'
+    }
+  }
+
   const copyFromPrev = function(csvObject, fields) {
     let prevRow
     csvObject.forEach((row) => {
@@ -195,6 +220,15 @@ module.exports = function(
       'Actual Branch Name',
       'Account ID',
       'Account Name'
+    ]
+    return copyFromPrev(csvObject, fieldsToCheck)
+  }
+
+  this.positionValuationCsvPostProcessFn = function(csvObject) {
+    const fieldsToCheck = [
+      'Account ID',
+      'Account Name',
+      'Branch Name'
     ]
     return copyFromPrev(csvObject, fieldsToCheck)
   }

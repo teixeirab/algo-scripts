@@ -1,5 +1,3 @@
-/* jshint indent: 2 */
-
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('citi_positions_valuations', {
     account_id: {
