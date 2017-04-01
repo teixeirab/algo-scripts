@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(FlexFundsDB, Sequelize) {
+module.exports = function(FlexFundsDB, Sequelize, SeriesNamesModel) {
   return FlexFundsDB.define('citi_available_position', {
     period: {
       type: Sequelize.DATE,
@@ -75,6 +75,11 @@ module.exports = function(FlexFundsDB, Sequelize) {
       defaultValue: new Date()
     }
   }, {
-    tableName: 'citi_available_position'
-  });
+    tableName: 'citi_available_position',
+    hooks: {
+      afterFind: function(rows, options) {
+        SeriesNamesModel.assignSeriesNumber(rows)
+      }
+    }
+  })
 };

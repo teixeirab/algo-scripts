@@ -8,3 +8,4 @@ logs
 id_rsa
 tmp
 jenkins
+~*.xlsx

@@ -1,43 +1,47 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('series_agent_information', {
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('series_agent_information', {
     series_number: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: false,
       defaultValue: "0",
       primaryKey: true
     },
-    Calculation Agent: {
-      type: DataTypes.TEXT,
+    issuer: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    calculation_agent: {
+      type: Sequelize.TEXT,
       allowNull: true
     },
-    Arranger: {
-      type: DataTypes.TEXT,
+    arranger: {
+      type: Sequelize.TEXT,
       allowNull: true
     },
-    Administrator: {
-      type: DataTypes.TEXT,
+    administrator: {
+      type: Sequelize.TEXT,
       allowNull: true
     },
-    Custodian: {
-      type: DataTypes.TEXT,
+    custodian: {
+      type: Sequelize.TEXT,
       allowNull: true
     },
-    BD of Record: {
-      type: DataTypes.TEXT,
+    bd_of_record: {
+      type: Sequelize.TEXT,
       allowNull: true
     },
-    Sale Agent: {
-      type: DataTypes.TEXT,
+    sale_agent: {
+      type: Sequelize.TEXT,
       allowNull: true
     },
-    Placing Agent: {
-      type: DataTypes.TEXT,
+    placing_agent: {
+      type: Sequelize.TEXT,
       allowNull: true
     },
-    Portfolio Manager: {
-      type: DataTypes.DECIMAL,
+    portfolio_manager: {
+      type: Sequelize.DECIMAL,
       allowNull: true
     }
   }, {

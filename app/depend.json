@@ -17,6 +17,7 @@
         "CitiFixedIncomePositionTransactionsModel": "./models/citi_fixed_income_settled_position",
         "PershingPositionsModel": "./models/pershing_positions",
         "PershingTradesModel": "./models/pershing_trades",
+        "SeriesNamesModel": "./models/series_names",
 
         "CommonService": "./services/common",
         "FileService": "./services/file",

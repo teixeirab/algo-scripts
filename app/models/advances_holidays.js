@@ -1,13 +1,13 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('advances_holidays', {
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('advances_holidays', {
     date: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       allowNull: false
     },
     holiday: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false
     }
   }, {

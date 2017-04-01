@@ -1,65 +1,58 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('advances_info', {
-    id: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      primaryKey: true
-    },
-    type: {
-      type: DataTypes.ENUM('Initial','Transaction','Transaction-1'),
-      allowNull: false
-    },
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('advances_info', {
     series_number: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
+      primaryKey: true,
       allowNull: false
     },
     interest_accrual_date: {
-      type: DataTypes.DATE,
-      allowNull: true
+      type: Sequelize.DATE,
+      allowNull: false
     },
     first_interest_date: {
-      type: DataTypes.DATE,
-      allowNull: true
+      type: Sequelize.DATE,
+      allowNull: false
     },
     maturity_date: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    nominal_amount: {
-      type: DataTypes.DECIMAL,
-      allowNull: false
-    },
-    interest_rate: {
-      type: DataTypes.FLOAT,
-      allowNull: false
-    },
-    coupon_frequency: {
-      type: DataTypes.ENUM('D','M','Q','S','Y'),
-      allowNull: false
-    },
-    coupon_type: {
-      type: DataTypes.ENUM('simple','compound','floating'),
+      type: Sequelize.DATE,
       allowNull: false
     },
     day_count_convention: {
-      type: DataTypes.ENUM('360','365','actual'),
+      type: Sequelize.ENUM('360','365','Actual'),
       allowNull: false
     },
-    interest_payment_type: {
-      type: DataTypes.ENUM('C','R'),
+    principal_repayment_type: {
+      type: Sequelize.ENUM('Bullet','No Repayment','Amortized'),
+      allowNull: false
+    },
+    simple_interest_rate: {
+      type: Sequelize.FLOAT,
       allowNull: true
     },
-    repayment_type: {
-      type: DataTypes.ENUM('B','N','A'),
+    simple_coupon_frequency: {
+      type: Sequelize.ENUM('Daily','Monthly','Quarterly','Semi-Annually','Yearly'),
+      allowNull: true
+    },
+    compounded_interest_rate: {
+      type: Sequelize.FLOAT,
+      allowNull: true
+    },
+    compounded_coupon_frequency: {
+      type: Sequelize.ENUM('Daily','Monthly','Quarterly','Semi-Annually','Yearly'),
+      allowNull: true
+    },
+    compounded_frequency: {
+      type: Sequelize.ENUM('Daily','Monthly','Quarterly','Semi-Annually','Yearly'),
       allowNull: true
     },
     price_table: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false,
       defaultValue: "0"
     }
+
   }, {
     tableName: 'advances_info'
   });
