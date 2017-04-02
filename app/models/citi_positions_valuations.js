@@ -1,7 +1,7 @@
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('citi_positions_valuations', {
     account_id: {
-      type: Sequelize.INTEGER(11),
+      type: Sequelize.STRING(11),
       allowNull: true
     },
     account_name: {
