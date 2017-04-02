@@ -45,7 +45,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
       allowNull: true
     },
     isin: {
-      type: "DOUBLE",
+      type: Sequelize.STRING(45),
       allowNull: true
     }
   }, {
