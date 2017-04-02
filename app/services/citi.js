@@ -12,16 +12,17 @@ module.exports = function(
   CitiAllTransactionsModel,
   CitiAvailablePositionModel,
   CitiFixedIncomePositionTransactionsModel,
+  CitiPositionsValuationsModel,
   CitiUnsettledTransactionsModel
 ) {
 
   var that = this;
-
   const modelMappings = {
     citi_all_transactions: CitiAllTransactionsModel,
     citi_unsettled_transactions: CitiUnsettledTransactionsModel,
     citi_fixed_income_settled_position: CitiFixedIncomePositionTransactionsModel,
-    citi_available_position: CitiAvailablePositionModel
+    citi_available_position: CitiAvailablePositionModel,
+    citi_positions_valuations: CitiPositionsValuationsModel
   }
   this.nameInfoListExtractConfigs = function(path, fromDate) {
     return {
@@ -270,7 +271,7 @@ module.exports = function(
       if (nameInfo.assignDataFn) {
         row = nameInfo.assignDataFn(row, nameInfo)
       }
-      model.upsert(row, {defaults: row}).then(() => {
+      model.upsert(row).then((t) => {
         _cb()
       }).catch((err) => {
         utils.logError(err, nameInfo)

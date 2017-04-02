@@ -21,6 +21,7 @@ describe('service tests', function() {
     'CitiUnsettledTransactionsModel',
     'CitiFixedIncomePositionTransactionsModel',
     'CitiAvailablePositionModel',
+    'CitiPositionsValuationsModel',
     'TheoremIncomeStatementModel',
     'TheoremBalanceSheetModel',
     'PershingPositionsModel',
@@ -724,6 +725,29 @@ describe('service tests', function() {
               assert.equal(models[0].available_position, 950000)
               assert.equal(models[0].additional_informaiton, '')
               assert.equal(models[0].blocked_to_delivery, 0)
+              done();
+            })
+          })
+        });
+      });
+      describe('position valuation', function () {
+        it('#findAndSync', function (done) {
+          vars['CitiService'].findAndSync('citi_positions_valuations', './tests/data/Citibank/', '2017-02-15').then(() => {
+            vars['CitiPositionsValuationsModel'].findAll().then((models) => {
+              assert.equal(models.length, 102)
+              assert.equal(models[0].id, 1)
+              assert.equal(models[0].account_id, 6017709722)
+              assert.equal(models[0].account_name, 'IA CAPITAL - NOTE UNWIND ACCOUNT - USD')
+              assert.equal(formatDate(models[0].as_of_date), '2017-03-28')
+              assert.equal(models[0].issue_name, 'IA CAPITAL STRUCTURES PLC')
+              assert.equal(models[0].maturity_date, '11-14-2019')
+              assert.equal(models[0].sec_id_type, 'LOCAL')
+              assert.equal(models[0].sec_id, '0096546019')
+              assert.equal(models[0].settled_quantity, 9980000)
+              assert.equal(models[0].market_value, 9980000)
+              assert.equal(models[0].currency, null)
+              assert.equal(models[0].interest_rate, 0)
+              assert.equal(models[0].isin, 'XS1514984936')
               done();
             })
           })
