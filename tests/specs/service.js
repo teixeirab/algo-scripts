@@ -173,7 +173,7 @@ describe('service tests', function() {
               })
             })
           });
-          it.only('#findAndSync', function (done) {
+          it('#findAndSync', function (done) {
             vars['InteractiveBrokerService']
               .findAndSync('ib_activity', './tests/data/ib/', '2017-02-16', 10)
               .then(() => {
