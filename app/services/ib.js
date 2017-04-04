@@ -31,7 +31,14 @@ module.exports = function(
         fromDate: fromDate,
         dateFormat: ['YYYYMMDD'],
         pattern: '*_Activity_+(${date[0]}).csv',
-        extractFn: this.extractActivityFileNameInfo
+        extractFn: this.extractActivityFileNameInfo,
+        assignDataFn: (data) => {
+          if ((!data.trade_id || data.trade_id === '') &&
+              ['DIV', 'CORP'].indexOf(data.transaction_type) > -1) {
+            data.trade_id = data.symbol + data.settle_date
+          }
+          return data
+        }
       },
       ib_cash_report: {
         path: path,

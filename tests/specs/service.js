@@ -173,15 +173,14 @@ describe('service tests', function() {
               })
             })
           });
-          it('#findAndSync', function (done) {
+          it.only('#findAndSync', function (done) {
             vars['InteractiveBrokerService']
               .findAndSync('ib_activity', './tests/data/ib/', '2017-02-16', 10)
               .then(() => {
                 vars['InteractiveBrokerActivityModel'].findAll().then((models) => {
-                  assert.equal(models.length, 3)
+                  assert.equal(models.length, 5)
                   assert.equal(formatDate(models[0].trade_date), '2017-02-16')
                   assert.equal(formatDate(models[0].settle_date), '2017-02-22')
-                  assert.equal(models.length, 3)
                   done();
                 })
               })
