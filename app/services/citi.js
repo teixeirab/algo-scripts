@@ -12,16 +12,17 @@ module.exports = function(
   CitiAllTransactionsModel,
   CitiAvailablePositionModel,
   CitiFixedIncomePositionTransactionsModel,
+  CitiPositionsValuationsModel,
   CitiUnsettledTransactionsModel
 ) {
 
   var that = this;
-
   const modelMappings = {
     citi_all_transactions: CitiAllTransactionsModel,
     citi_unsettled_transactions: CitiUnsettledTransactionsModel,
     citi_fixed_income_settled_position: CitiFixedIncomePositionTransactionsModel,
-    citi_available_position: CitiAvailablePositionModel
+    citi_available_position: CitiAvailablePositionModel,
+    citi_positions_valuations: CitiPositionsValuationsModel
   }
   this.nameInfoListExtractConfigs = function(path, fromDate) {
     return {
@@ -69,6 +70,17 @@ module.exports = function(
         extractFn: this.extractAvailablePositionFileNameInfo,
         saveRowsFn: this.upsertRows,
         csvPostProcessFn: this.availableCsvPostProcessFn
+      },
+      citi_positions_valuations: {
+        path: path,
+        startLine: 0,
+        fromDate: fromDate,
+        dateFormat: ['YYYY-MM-DD'],
+        pattern: 'positions_valuations_+(${date[0]}).CSV',
+        filterNameInfoListFn: this.useLatest,
+        extractFn: this.extractValuationFileNameInfo,
+        saveRowsFn: this.upsertRows,
+        csvPostProcessFn: this.positionValuationCsvPostProcessFn
       }
     }
   }
@@ -142,6 +154,20 @@ module.exports = function(
     }
   }
 
+  this.extractValuationFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const date = moment(infos[2], 'YYYY-MM-DD').toDate()
+    return {
+      path: path,
+      date: date,
+      source: 'Citi Bank',
+      table: 'citi_positions_valuations'
+    }
+  }
+
   const copyFromPrev = function(csvObject, fields) {
     let prevRow
     csvObject.forEach((row) => {
@@ -199,6 +225,15 @@ module.exports = function(
     return copyFromPrev(csvObject, fieldsToCheck)
   }
 
+  this.positionValuationCsvPostProcessFn = function(csvObject) {
+    const fieldsToCheck = [
+      'Account ID',
+      'Account Name',
+      'Branch Name'
+    ]
+    return copyFromPrev(csvObject, fieldsToCheck)
+  }
+
   this.update = function(nameInfoList) {
     return CommonService.syncToDatabase(nameInfoList, modelMappings)
   }
@@ -236,7 +271,7 @@ module.exports = function(
       if (nameInfo.assignDataFn) {
         row = nameInfo.assignDataFn(row, nameInfo)
       }
-      model.upsert(row, {defaults: row}).then(() => {
+      model.upsert(row).then((t) => {
         _cb()
       }).catch((err) => {
         utils.logError(err, nameInfo)

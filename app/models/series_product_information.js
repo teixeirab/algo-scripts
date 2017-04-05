@@ -1,68 +1,71 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('series_product_information', {
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('series_product_information', {
     series_number: {
-      type: DataTypes.INTEGER(50),
+      type: Sequelize.INTEGER(50),
       allowNull: false,
       primaryKey: true
     },
     bloomberg_name: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false
     },
     product_type: {
-      type: DataTypes.ENUM('Fund','Wrapper','Loan','Hybrid'),
+      type: Sequelize.ENUM('Fund','Wrapper','Loan','Hybrid'),
       allowNull: false
     },
     issue_date: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       allowNull: false
     },
     maturity_date: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       allowNull: false
     },
     region: {
-      type: DataTypes.ENUM('South Cone','Andean & Caribbean','North America','Europe','Asia & ME','Africa'),
+      type: Sequelize.ENUM('South Cone','Andean & Caribbean','North America','Europe','Asia & ME','Africa'),
       allowNull: false
     },
     nav_frequency: {
-      type: DataTypes.ENUM('Weekly','Monthly'),
+      type: Sequelize.ENUM('Weekly','Monthly'),
       allowNull: false
     },
     currency: {
-      type: DataTypes.ENUM('USD','EUR'),
+      type: Sequelize.ENUM('USD','EUR'),
       allowNull: false
     },
     custodian: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     account_number: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true
     },
     portfolio_manager: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     initial_principal_amount: {
-      type: DataTypes.FLOAT,
+      type: Sequelize.FLOAT,
       allowNull: true
     },
     investment_strategy: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     valuation_frequency: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
-    status: {
-      type: DataTypes.ENUM('A','D'),
-      allowNull: false,
-      defaultValue: "A"
+    shares: {
+      type: Sequelize.TEXT,
+      allowNull: true
+    },
+    type_of_subscription: {
+      type: Sequelize.TEXT,
+      allowNull: true
     }
   }, {
     tableName: 'series_product_information'

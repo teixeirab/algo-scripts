@@ -1,19 +1,19 @@
 /* jshint indent: 2 */
 
 module.exports = function(FlexFundsDB, Sequelize) {
-  return FlexFundsDB.define('counterparties', {
-    counterparty_key: {
+  return FlexFundsDB.define('borrowers', {
+    company_name: {
       type: Sequelize.STRING,
       allowNull: false,
       primaryKey: true
     },
-    name: {
-      type: Sequelize.STRING,
+    series_number: {
+      type: Sequelize.INTEGER(11),
       allowNull: false
     },
-    person_name: {
+    contact_name: {
       type: Sequelize.STRING,
-      allowNull: true
+      allowNull: false
     },
     email: {
       type: Sequelize.TEXT,
@@ -23,27 +23,19 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: Sequelize.STRING,
       allowNull: true
     },
-    address_1: {
+    address1: {
       type: Sequelize.TEXT,
       allowNull: true
     },
-    address_2: {
+    address2: {
       type: Sequelize.TEXT,
       allowNull: true
     },
-    custodian: {
-      type: Sequelize.TEXT,
-      allowNull: true
-    },
-    euroclear_clearstream_account: {
-      type: Sequelize.TEXT,
-      allowNull: true
-    },
-    status: {
-      type: Sequelize.ENUM('A','D'),
+    percent_outstanding: {
+      type: Sequelize.FLOAT,
       allowNull: false
     }
   }, {
-    tableName: 'counterparties'
+    tableName: 'borrowers'
   });
 };

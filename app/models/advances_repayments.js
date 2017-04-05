@@ -1,27 +1,20 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('advances_repayments', {
-    id: {
-      type: DataTypes.STRING,
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('advances_repayments', {
+    series_number: {
+      type: Sequelize.INTEGER(11),
       allowNull: false,
       primaryKey: true
     },
-    info_id: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     repayment_amount: {
-      type: DataTypes.DECIMAL,
-      allowNull: false
-    },
-    series_number: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.DECIMAL,
       allowNull: false
     },
     repayment_date: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Sequelize.DATE,
+      allowNull: false,
+      primaryKey: true
     }
   }, {
     tableName: 'advances_repayments'

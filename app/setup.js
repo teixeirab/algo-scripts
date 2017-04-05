@@ -23,7 +23,8 @@ const serviceMappings = {
   'citi_all_transactions': 'CitiService',
   'citi_unsettled_transactions': 'CitiService',
   'citi_fixed_income_settled_position': 'CitiService',
-  'citi_available_position': 'CitiService'
+  'citi_available_position': 'CitiService',
+  'citi_positions_valuations': 'CitiService'
 }
 
 app.run = function() {

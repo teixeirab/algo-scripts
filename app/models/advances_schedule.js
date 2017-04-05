@@ -1,7 +1,6 @@
 /* jshint indent: 2 */
-
 module.exports = function(FlexFundsDB, Sequelize) {
-  return FlexFundsDB.define('series_price_table', {
+  return FlexFundsDB.define('advances_schedule', {
     id: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -11,27 +10,23 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: Sequelize.INTEGER(11),
       allowNull: false
     },
-    last_loan_payment_date: {
+    loan_payment_date: {
       type: Sequelize.DATE,
       allowNull: false
     },
-    settlement_date: {
+    interest_determination_date: {
       type: Sequelize.DATE,
       allowNull: false
     },
-    nav: {
-      type: Sequelize.FLOAT,
+    series_interest_payment_date: {
+      type: Sequelize.DATE,
       allowNull: false
     },
-    price: {
-      type: Sequelize.DECIMAL,
-      allowNull: false
-    },
-    special_dates: {
-      type: Sequelize.STRING,
-      allowNull: false
+    previous_payment_date: {
+      type: Sequelize.DATE,
+      allowNull: true
     }
   }, {
-    tableName: 'series_price_table'
+    tableName: 'advances_schedule'
   });
 };

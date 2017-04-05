@@ -31,7 +31,14 @@ module.exports = function(
         fromDate: fromDate,
         dateFormat: ['YYYYMMDD'],
         pattern: '*_Activity_+(${date[0]}).csv',
-        extractFn: this.extractActivityFileNameInfo
+        extractFn: this.extractActivityFileNameInfo,
+        assignDataFn: (data) => {
+          if ((!data.trade_id || data.trade_id === '') &&
+              ['DIV', 'CORP'].indexOf(data.transaction_type) > -1) {
+            data.trade_id = data.symbol + data.settle_date
+          }
+          return data
+        }
       },
       ib_cash_report: {
         path: path,
@@ -65,9 +72,9 @@ module.exports = function(
         dateFormat: ['YYYYMMDD'],
         pattern: '*_Position_+(${date[0]}).csv',
         extractFn: this.extractPositionFileNameInfo,
-        csvPostProcessFn: this.filterCsvRows,
+        csvPostProcessFn: this.filterPositionCsvRows,
         assignDataFn: (data, nameInfo) => {
-          data['report_date'] = moment(nameInfo.date).format('YYYY-MM-DD')
+          data['report_date'] = nameInfo.date
           return data
         }
       }
@@ -77,6 +84,12 @@ module.exports = function(
   this.filterCsvRows = function(csvObject) {
     return _.filter(csvObject, (row) => {
       return row.Type !== 'T'
+    })
+  }
+
+  this.filterPositionCsvRows = function(csvObject) {
+    return _.filter(csvObject, (row) => {
+      return row.Type !== 'T' && moment(row.ReportDate, 'YYYYMMDD').weekday() === 5
     })
   }
 

@@ -1,43 +1,43 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('series_fees_terms', {
+module.exports = function(FlexFundsDB, Sequelize) {
+  return FlexFundsDB.define('series_fees_terms', {
     series_number: {
-      type: DataTypes.INTEGER(11),
+      type: Sequelize.INTEGER(11),
       allowNull: false,
       primaryKey: true
     },
     operating_fees: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: Sequelize.TEXT,
+      allowNull: true
     },
     administrator_fees: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: Sequelize.TEXT,
+      allowNull: true
     },
     setup_fees: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: Sequelize.TEXT,
+      allowNull: true
     },
     arranger_fee: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     portfolio_management_fee: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     performance_fee: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     special_condition: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     external_offset: {
-      type: DataTypes.INTEGER(1),
-      allowNull: false
+      type: Sequelize.ENUM('Yes','No'),
+      allowNull: true
     }
   }, {
     tableName: 'series_fees_terms'

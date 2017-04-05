@@ -1,7 +1,9 @@
 /* jshint indent: 2 */
-
-module.exports = function(FlexFundsDB, Sequelize) {
-  return FlexFundsDB.define('citi_all_transactions', {
+const async = require('async')
+const Promise = require('bluebird')
+const _ = require('lodash')
+module.exports = function(FlexFundsDB, Sequelize, SeriesNamesModel) {
+  const model = FlexFundsDB.define('citi_all_transactions', {
     client_reference: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -97,6 +99,12 @@ module.exports = function(FlexFundsDB, Sequelize) {
       defaultValue: new Date()
     }
   }, {
-    tableName: 'citi_all_transactions'
+    tableName: 'citi_all_transactions',
+    hooks: {
+      afterFind: function(rows, options) {
+        return SeriesNamesModel.assignSeriesNumber(rows)
+      }
+    }
   });
+  return model
 };
