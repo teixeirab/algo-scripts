@@ -72,7 +72,7 @@ module.exports = function(
         dateFormat: ['YYYYMMDD'],
         pattern: '*_Position_+(${date[0]}).csv',
         extractFn: this.extractPositionFileNameInfo,
-        csvPostProcessFn: this.filterCsvRows,
+        csvPostProcessFn: this.filterPositionCsvRows,
         assignDataFn: (data, nameInfo) => {
           data['report_date'] = moment(nameInfo.date).format('YYYY-MM-DD')
           return data
@@ -84,6 +84,12 @@ module.exports = function(
   this.filterCsvRows = function(csvObject) {
     return _.filter(csvObject, (row) => {
       return row.Type !== 'T'
+    })
+  }
+
+  this.filterPositionCsvRows = function(csvObject) {
+    return _.filter(csvObject, (row) => {
+      return row.Type !== 'T' && moment(row.ReportDate, 'YYYYMMDD').isoWeekday() === 5
     })
   }
 
