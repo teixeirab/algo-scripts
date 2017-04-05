@@ -89,7 +89,7 @@ module.exports = function(
 
   this.filterPositionCsvRows = function(csvObject) {
     return _.filter(csvObject, (row) => {
-      return row.Type !== 'T' && moment(row.ReportDate, 'YYYYMMDD').isoWeekday() === 5
+      return row.Type !== 'T' && moment(row.ReportDate, 'YYYYMMDD').weekday() === 5
     })
   }
 
