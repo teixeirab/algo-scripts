@@ -74,7 +74,7 @@ module.exports = function(
         extractFn: this.extractPositionFileNameInfo,
         csvPostProcessFn: this.filterPositionCsvRows,
         assignDataFn: (data, nameInfo) => {
-          data['report_date'] = moment(nameInfo.date).format('YYYY-MM-DD')
+          data['report_date'] = nameInfo.date
           return data
         }
       }
