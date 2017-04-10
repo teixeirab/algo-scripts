@@ -110,7 +110,8 @@ module.exports = function(FlexFundsDB, Sequelize) {
     tableName: 'pershing_positions',
     setterMethods: {
       accrued_interest: function(value) {
-        this.setDataValue('accrued_interest', parseFloat(value))
+        let val = parseFloat(value)
+        this.setDataValue('accrued_interest', val ? val : null)
       }
     }
   });
