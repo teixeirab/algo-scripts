@@ -48,6 +48,9 @@ module.exports = function(
               data[field] = null
             }
           });
+          if (data['rating'] === '0') {
+            data['rating'] = null
+          }
           return data
         }
       },
