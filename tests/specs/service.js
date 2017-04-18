@@ -29,6 +29,9 @@ describe('service tests', function() {
     'FlexFundsDB'
   ]
   const formatDate = (date) => {
+    if (!date) {
+      return null
+    }
     return moment(date).format('YYYY-MM-DD')
   }
   beforeEach(function(done) {
@@ -756,28 +759,52 @@ describe('service tests', function() {
     describe('pershing', function () {
       describe('positions', function () {
         it('#findAndSync', function (done) {
-          vars['PershingService'].findAndSync('pershing_positions', './tests/data/Pershing/', '2017-02-08', 1).then(() => {
+          vars['PershingService'].findAndSync('pershing_positions', './tests/data/Pershing/', '2017-04-03', 1).then(() => {
             vars['PershingPositionsModel'].findAll().then((models) => {
-              assert.equal(models.length, 12)
-              // console.log(JSON.stringify(models, undefined, 2))
-              assert.equal(models[0].security_id, 'CASH')
-              assert.equal(models[0].account_number, 'PXXXXXXX')
-              assert.equal(models[0].cusip, 'EUR999995')
-              assert.equal(models[0].account_name, 'IA CAPITAL - NETALPHA')
-              assert.equal(models[0].description, 'EURO CURRENCY')
-              assert.equal(models[0].asset_classification, 'CASH, MONEY FUNDS, BANK DEPOSITS')
-              assert.equal(models[0].quantity, 0)
-              assert.equal(models[0].price, 1.07)
+              assert.equal(models.length, 8)
+              assert.equal(models[0].security_id, 'BUD4327481')
+              assert.equal(models[0].account_number, 'JWC042504')
+              assert.equal(models[0].cusip, '035242AP1')
+              assert.equal(models[0].accrued_interest, null)
+              assert.equal(models[0].market_value_change, null)
+              assert.equal(models[0].coupon, null)
+              assert.equal(models[0].rating, null)
+              assert.equal(formatDate(models[0].last_activity_date), null)
+              assert.equal(models[0].account_name, '')
+              assert.equal(models[0].description, 'ANHEUSER-BUSCH INBEV FIN INC GTD FXD RT NT  3.650% 02/01/26 B/E DTD 01/25/16 CLB  CLB 11/01/2025 @100')
+              assert.equal(models[0].asset_classification, 'FIXED INCOME')
+              assert.equal(models[0].quantity, 300000)
+              assert.equal(models[0].price, 101.12)
               assert.equal(models[0].timezone, 'ET')
-              assert.equal(models[0].change_price_amount, 0)
-              assert.equal(models[0].change_price, 0)
-              assert.equal(models[0].market_value, 0)
-              assert.equal(models[0].market_value_change, 0)
-              assert.equal(formatDate(models[0].last_activity_date), '2017-02-08')
-              assert.equal(models[0].accrued_interest, 0)
-              assert.equal(models[0].disposition_method, 'N/A')
-              assert.equal(models[0].dividend_reinvestment, 'Payout In Cash')
-              assert.equal(models[0].market, 'NASD')
+              assert.equal(models[0].change_price_amount, 0.431)
+              assert.equal(models[0].change_price, 0.0043)
+              assert.equal(models[0].market_value, 303360)
+              assert.equal(models[0].disposition_method, 'FI')
+              assert.equal(models[0].dividend_reinvestment, null)
+              assert.equal(models[0].market, 'NYSE')
+
+              assert.equal(models[2].security_id, 'VZ.MT')
+              assert.equal(models[2].account_number, 'JWC042504')
+              assert.equal(models[2].cusip, '92344GAM8')
+              assert.equal(models[2].accrued_interest, 3875)
+              assert.equal(models[2].market_value_change, -861)
+              assert.equal(models[2].coupon, 7.75)
+              assert.equal(models[2].rating, 'BAA1')
+              assert.equal(formatDate(models[2].last_activity_date), '2016-01-19')
+              assert.equal(models[2].account_name, '')
+              assert.equal(models[2].description, 'VERIZON GLOBAL FDG CORP DEB  7.750% 12/01/30 B/E DTD 12/12/00   N/C')
+              assert.equal(models[2].asset_classification, 'FIXED INCOME')
+              assert.equal(models[2].quantity, 150000)
+              assert.equal(models[2].price, 134.569)
+              assert.equal(models[2].timezone, 'ET')
+              assert.equal(models[2].change_price_amount, -0.574)
+              assert.equal(models[2].change_price, -0.0042)
+              assert.equal(models[2].market_value, 201853.5)
+              assert.equal(models[2].disposition_method, 'FI')
+              assert.equal(models[2].dividend_reinvestment, null)
+              assert.equal(models[2].market, 'NYSE')
+
+              assert.equal(formatDate(models[7].price_as_of_date), '2017-04-03')
               done();
             })
           })

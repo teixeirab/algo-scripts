@@ -34,6 +34,9 @@ module.exports = function(
           data['change_price'] = numeral(data['change_price']).value()
           const priceDate = moment(data['price_as_of_date'], 'MM/DD/YYYY h:mm:ss a')
           data['price_as_of_date'] = priceDate.isValid() ? priceDate.toDate() : null
+          if (data['cusip'] === 'Cash' && !data['price_as_of_date']) {
+            data['price_as_of_date'] = data['period']
+          }
           return data
         }
       },

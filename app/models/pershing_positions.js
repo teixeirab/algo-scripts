@@ -1,4 +1,4 @@
-/* jshint indent: 2 */
+'use strict'
 
 module.exports = function(FlexFundsDB, Sequelize) {
   return FlexFundsDB.define('pershing_positions', {
@@ -112,6 +112,25 @@ module.exports = function(FlexFundsDB, Sequelize) {
       accrued_interest: function(value) {
         let val = parseFloat(value)
         this.setDataValue('accrued_interest', val ? val : null)
+      },
+      coupon: function(value) {
+        let val = parseFloat(value)
+        this.setDataValue('coupon', val ? val : null)
+      }
+    },
+    hooks: {
+      beforeValidate: function(instance, cb) {
+        ['coupon', 'market_value_change', 'accrued_interest', 'rating'].forEach((field) => {
+          if (/\s/.test(instance[field]) || instance[field] === "'" || instance[field] === '') {
+            instance[field] = null
+          }
+        });
+
+        ['last_activity_date', 'maturity_date'].forEach(function(field) {
+          if (!instance[field] || isNaN(instance[field].getTime())) {
+            instance[field] = null
+          }
+        });
       }
     }
   });
