@@ -37,6 +37,17 @@ module.exports = function(
           if (data['cusip'] === 'Cash' && !data['price_as_of_date']) {
             data['price_as_of_date'] = data['period']
           }
+          ['coupon', 'market_value_change', 'accrued_interest', 'rating'].forEach((field) => {
+            if (/\s/.test(data[field]) || data[field] === "'" || data[field] === '') {
+              data[field] = null
+            }
+          });
+
+          ['last_activity_date', 'maturity_date'].forEach(function(field) {
+            if (!moment(new Date(data[field])).isValid()) {
+              data[field] = null
+            }
+          });
           return data
         }
       },

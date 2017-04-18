@@ -117,21 +117,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
         let val = parseFloat(value)
         this.setDataValue('coupon', val ? val : null)
       }
-    },
-    hooks: {
-      beforeValidate: function(instance, cb) {
-        ['coupon', 'market_value_change', 'accrued_interest', 'rating'].forEach((field) => {
-          if (/\s/.test(instance[field]) || instance[field] === "'" || instance[field] === '') {
-            instance[field] = null
-          }
-        });
-
-        ['last_activity_date', 'maturity_date'].forEach(function(field) {
-          if (!instance[field] || isNaN(instance[field].getTime())) {
-            instance[field] = null
-          }
-        });
-      }
     }
   });
 };
