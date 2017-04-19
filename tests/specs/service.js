@@ -13,6 +13,7 @@ describe('service tests', function() {
     'TheoremService',
     'CitiService',
     'PershingService',
+    'QuickBookService',
     'InteractiveBrokerActivityModel',
     'InteractiveBrokerCashReportModel',
     'InteractiveBrokerNavModel',
@@ -27,6 +28,7 @@ describe('service tests', function() {
     'TheoremBalanceSheetModel',
     'PershingPositionsModel',
     'PershingTradesModel',
+    'QBTransactionListModel',
     'FlexFundsDB'
   ]
   const formatDate = (date) => {
@@ -39,7 +41,12 @@ describe('service tests', function() {
     vars.forEach((dep) => {
       vars[dep] = app.summon.get(dep)
     })
-    done()
+    vars['FlexFundsDB'].sync({
+      // logging: console.log,
+      force: true
+    }).then(function() {
+      done();
+    });
   });
   describe('read data source files', function () {
     it('read csv', function (done) {
@@ -83,14 +90,6 @@ describe('service tests', function() {
     });
   });
   describe('read and save to database based on mappings', function () {
-    beforeEach(function (done) {
-      vars['FlexFundsDB'].sync({
-        // logging: console.log,
-        force: true
-      }).then(function() {
-        done();
-      });
-    });
     describe('interactive broker', function () {
       it('look for data files with a period later or equal than specified', function (done) {
         //extract the info from the file names
@@ -850,6 +849,20 @@ describe('service tests', function() {
             })
           })
         });
+      });
+    });
+  });
+  describe('quickbooks', function () {
+    describe('transaction list', function () {
+      it('sync for a period', function (done) {
+        vars['QuickBookService']
+          .findAndSync('qb_transaction_list', null, new Date(2017, 3, 1))
+          .then((report) => {
+            vars['QBTransactionListModel'].findAll().then((txns) => {
+              assert.equal(4, txns.length)
+              done()
+            })
+          })
       });
     });
   });

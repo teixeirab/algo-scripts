@@ -20,6 +20,7 @@
         "PershingPositionsModel": "./models/pershing_positions",
         "PershingTradesModel": "./models/pershing_trades",
         "SeriesNamesModel": "./models/series_names",
+        "QBTransactionListModel": "./models/qb_transaction_list",
 
         "CommonService": "./services/common",
         "FileService": "./services/file",
@@ -27,6 +28,7 @@
         "TheoremService": "./services/theorem",
         "CitiService": "./services/citi",
         "PershingService": "./services/pershing",
+        "QuickBookService": "./services/quickbooks",
 
         "utils": "./utils",
         "Sequelize": {
