@@ -22,6 +22,7 @@ describe('service tests', function() {
     'CitiFixedIncomePositionTransactionsModel',
     'CitiAvailablePositionModel',
     'CitiPositionsValuationsModel',
+    'CitiCashBalancesModel',
     'TheoremIncomeStatementModel',
     'TheoremBalanceSheetModel',
     'PershingPositionsModel',
@@ -750,6 +751,23 @@ describe('service tests', function() {
               assert.equal(models[0].currency, null)
               assert.equal(models[0].interest_rate, 0)
               assert.equal(models[0].isin, 'XS1514984936')
+              done();
+            })
+          })
+        });
+      });
+      describe('cash balances', function () {
+        it('#findAndSync', function (done) {
+          vars['CitiService'].findAndSync('citi_cash_balances', './tests/data/Citibank/', '2016-12-01').then(() => {
+            vars['CitiCashBalancesModel'].findAll().then((models) => {
+              assert.equal(models.length, 13)
+              assert.equal(models[0].currency, 'USD')
+              assert.equal(models[0].account_id, '17161085')
+              assert.equal(models[0].account_name, 'IA CAPITAL STRUCTURES (IRELAND) - USD')
+              assert.equal(formatDate(models[0].period), '2017-03-31')
+              assert.equal(models[0].opening_balance, '270834.58')
+              assert.equal(models[0].ledger_balance, '270834.58')
+              assert.equal(models[0].available_balance, '270834.58')
               done();
             })
           })

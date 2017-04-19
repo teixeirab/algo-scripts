@@ -13,6 +13,7 @@ module.exports = function(
   CitiAvailablePositionModel,
   CitiFixedIncomePositionTransactionsModel,
   CitiPositionsValuationsModel,
+  CitiCashBalancesModel,
   CitiUnsettledTransactionsModel
 ) {
 
@@ -22,6 +23,7 @@ module.exports = function(
     citi_unsettled_transactions: CitiUnsettledTransactionsModel,
     citi_fixed_income_settled_position: CitiFixedIncomePositionTransactionsModel,
     citi_available_position: CitiAvailablePositionModel,
+    citi_cash_balances: CitiCashBalancesModel,
     citi_positions_valuations: CitiPositionsValuationsModel
   }
   this.nameInfoListExtractConfigs = function(path, fromDate) {
@@ -81,6 +83,17 @@ module.exports = function(
         extractFn: this.extractValuationFileNameInfo,
         saveRowsFn: this.upsertRows,
         csvPostProcessFn: this.positionValuationCsvPostProcessFn
+      },
+      citi_cash_balances: {
+        path: path,
+        startLine: 0,
+        fromDate: fromDate,
+        dateFormat: ['YYYY-MM-DD'],
+        pattern: 'cash_balances_+(${date[0]}).CSV',
+        filterNameInfoListFn: this.useLatest,
+        assignDataFn: this.assignCashBalancesDataFn,
+        extractFn: this.extractCashBalancesFileNameInfo,
+        saveRowsFn: this.upsertRows
       }
     }
   }
@@ -95,6 +108,11 @@ module.exports = function(
   }
 
   this.assignAvailablePositionDataFn = function(data, nameInfo) {
+    data['period'] = nameInfo.date
+    return data
+  }
+
+  this.assignCashBalancesDataFn = function(data, nameInfo) {
     data['period'] = nameInfo.date
     return data
   }
@@ -165,6 +183,20 @@ module.exports = function(
       date: date,
       source: 'Citi Bank',
       table: 'citi_positions_valuations'
+    }
+  }
+
+  this.extractCashBalancesFileNameInfo = function(path) {
+    const parts = path.split('/')
+    let filename = parts[parts.length - 1]
+    filename = filename.split('.')[0]
+    const infos = filename.split('_')
+    const date = moment(infos[2], 'YYYY-MM-DD').toDate()
+    return {
+      path: path,
+      date: date,
+      source: 'Citi Bank',
+      table: 'citi_cash_balances'
     }
   }
 
