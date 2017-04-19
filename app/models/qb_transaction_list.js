@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+const moment = require('moment')
 module.exports = function(FlexFundsDB, Sequelize) {
   let model = FlexFundsDB.define('qb_transaction_list', {
     tx_date: {
@@ -94,10 +94,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: Sequelize.DOUBLE,
       allowNull: true
     },
-    term_name: {
-      type: Sequelize.DOUBLE,
-      allowNull: true
-    },
     subt_nat_amount: {
       type: Sequelize.DOUBLE,
       allowNull: true
@@ -143,6 +139,11 @@ module.exports = function(FlexFundsDB, Sequelize) {
           if (model.attributes[col] && model.attributes[col].type instanceof Sequelize.DOUBLE) {
             let val = parseFloat(instance[col])
             instance[col] = val ? val : null
+          }
+          if (model.attributes[col] && model.attributes[col].type instanceof Sequelize.DATE) {
+            if (!moment(new Date(instance[col])).isValid()) {
+              instance[col] = null
+            }
           }
         })
       }
