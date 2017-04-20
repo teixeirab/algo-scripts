@@ -150,46 +150,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
     }
   });
 
-  model.qbFields = [
-    'account_name',
-    'create_by',
-    'create_date',
-    'cust_msg',
-    'due_date',
-    'doc_num',
-    'inv_date',
-    'is_ap_paid',
-    'is_cleared',
-    'is_no_post',
-    'last_mod_by',
-    'memo',
-    'name',
-    'other_account',
-    'pmt_mthd',
-    'printed',
-    'sales_cust1',
-    'sales_cust2',
-    'sales_cust3',
-    'term_name',
-    'tracking_num',
-    'tx_date',
-    'txn_type',
-    'term_name',
-    'subt_nat_amount',
-    'nat_open_bal',
-    'currency',
-    'debt_home_amt',
-    'credit_home_amt',
-    'exch_rate',
-    'nat_home_open_bal',
-    'nat_foreign_open_bal',
-    'subt_nat_home_amount',
-    'nat_foreign_amount',
-    'home_tax_amount',
-    'foreign_tax_amount',
-    'home_net_amount',
-    'foreign_net_amount'
-  ]
   return model
   // EXAMPLE DATA
   //================================Column Headers=====================================
@@ -324,16 +284,16 @@ module.exports = function(FlexFundsDB, Sequelize) {
   //       }
   //     ]
   //   },
-  //   {
-  //     "ColTitle": "Terms",
-  //     "ColType": "String",
-  //     "MetaData": [
-  //       {
-  //         "Name": "ColKey",
-  //         "Value": "term_name"
-  //       }
-  //     ]
-  //   },
+    //  {
+    //    "ColTitle": "Terms",
+    //    "ColType": "String",
+    //    "MetaData": [
+    //      {
+    //        "Name": "ColKey",
+    //        "Value": "term_name"
+    //      }
+    //    ]
+    //  },
   //   {
   //     "ColTitle": "Due Date",
   //     "ColType": "Date",

@@ -21,6 +21,7 @@
         "PershingTradesModel": "./models/pershing_trades",
         "SeriesNamesModel": "./models/series_names",
         "QBTransactionListModel": "./models/qb_transaction_list",
+        "QBAccountListModel": "./models/qb_account_list",
 
         "CommonService": "./services/common",
         "FileService": "./services/file",
