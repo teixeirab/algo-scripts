@@ -284,9 +284,17 @@ describe('service tests', function() {
           });
         });
       });
-      describe('position', function () {
+      describe.only('position', function () {
         describe('find and save to db', function () {
-          it('#findAndSync', function (done) {
+          it('filter month end', function (done) {
+            vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-01-31', 1).then(() => {
+              vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
+                assert.equal(models.length, 8)
+                done();
+              })
+            })
+          });
+          it('filter friday', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-02-10', 1).then(() => {
               vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
                 assert.equal(models.length, 8)
