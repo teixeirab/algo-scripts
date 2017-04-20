@@ -34,7 +34,7 @@ module.exports = function(
         extractFn: this.extractActivityFileNameInfo,
         assignDataFn: (data) => {
           if ((!data.trade_id || data.trade_id === '') &&
-              ['DIV', 'CORP'].indexOf(data.transaction_type) > -1) {
+              ['DIV', 'CORP', 'DEL', 'DVPOUT'].indexOf(data.transaction_type) > -1) {
             data.trade_id = data.symbol + data.settle_date
           }
           return data
