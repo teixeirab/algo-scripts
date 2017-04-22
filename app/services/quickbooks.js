@@ -39,18 +39,32 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
       "columns": Object.keys(QBTransactionListModel.attributes)
     }
     return new Promise((resolve, reject) => {
-      qbo.reportTransactionList(opts, (err, report) => {
-        if(err) {
-          return reject(err)
-        }
-        let rows = that.transform(report)
-        async.eachSeries(rows, (row, cb) => {
-          QBTransactionListModel.upsert(row).then(() => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = new QuickBooks(
+          config.consumerKey,
+          config.consumerSecret,
+          config.token,
+          config.tokenSecret,
+          config.realmId,
+          config.useSandbox,
+          config.debug
+        )
+        qbo.reportTransactionList(opts, (err, report) => {
+          if(err) {
+            return cb()
+          }
+          let rows = that.transform(report)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            QBTransactionListModel.upsert(row).then(() => {
+              _cb()
+            })
+          }, () => {
             cb()
           })
-        }, () => {
-          resolve()
         })
+      }, () => {
+        resolve()
       })
     })
   }
@@ -60,21 +74,35 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
       // "transaction_type": "Invoice",
       "start_date": moment(from).format('YYYY-MM-DD'),
       "end_date": moment(to).format('YYYY-MM-DD'),
-      "columns": Object.keys(QBAccountListModel.attributes)
+      "columns": Object.keys(QBTransactionListModel.attributes)
     }
     return new Promise((resolve, reject) => {
-      qbo.reportAccountListDetail(opts, (err, report) => {
-        if(err) {
-          return reject(err)
-        }
-        let rows = that.transform(report)
-        async.eachSeries(rows, (row, cb) => {
-          QBAccountListModel.upsert(row).then(() => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = new QuickBooks(
+          config.consumerKey,
+          config.consumerSecret,
+          config.token,
+          config.tokenSecret,
+          config.realmId,
+          config.useSandbox,
+          config.debug
+        )
+        qbo.reportAccountListDetail(opts, (err, report) => {
+          if(err) {
+            return cb()
+          }
+          let rows = that.transform(report)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            QBAccountListModel.upsert(row).then(() => {
+              _cb()
+            })
+          }, () => {
             cb()
           })
-        }, () => {
-          resolve()
         })
+      }, () => {
+        resolve()
       })
     })
   }
@@ -112,18 +140,17 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
     }
     return new Promise((resolve, reject) => {
       qbo.reportGeneralLedgerDetail(opts, (err, report) => {
-        resolve(report)
-        // if(err) {
-        //   return reject(err)
-        // }
-        // let rows = that.transform(report)
-        // async.eachSeries(rows, (row, cb) => {
-        //   QBAccountListModel.upsert(row).then(() => {
-        //     cb()
-        //   })
-        // }, () => {
-        //   resolve()
-        // })
+        if(err) {
+          return reject(err)
+        }
+        let rows = that.transform(report)
+        async.eachSeries(rows, (row, cb) => {
+          QBAccountListModel.upsert(row).then(() => {
+            cb()
+          })
+        }, () => {
+          resolve()
+        })
       })
     })
   }

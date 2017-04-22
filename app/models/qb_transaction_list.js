@@ -2,6 +2,10 @@
 const moment = require('moment')
 module.exports = function(FlexFundsDB, Sequelize) {
   let model = FlexFundsDB.define('qb_transaction_list', {
+    qb_account: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     tx_date: {
       type: Sequelize.DATE,
       allowNull: true

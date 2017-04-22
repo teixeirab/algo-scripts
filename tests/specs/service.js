@@ -285,7 +285,7 @@ describe('service tests', function() {
           });
         });
       });
-      describe.only('position', function () {
+      describe('position', function () {
         describe('find and save to db', function () {
           it('filter month end', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-01-31', 1).then(() => {
@@ -861,7 +861,7 @@ describe('service tests', function() {
       });
     });
   });
-  describe('quickbooks', function () {
+  describe.only('quickbooks', function () {
     describe('transaction list', function () {
       it('sync for a period', function (done) {
         vars['QuickBookService']
