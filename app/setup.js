@@ -27,7 +27,8 @@ const serviceMappings = {
   'citi_cash_balances': 'CitiService',
   'citi_positions_valuations': 'CitiService',
   'qb_transaction_list': 'QuickBookService',
-  'qb_account_list': 'QuickBookService'
+  'qb_account_list': 'QuickBookService',
+  'qb_general_ledger': 'QuickBookService'
 }
 
 app.run = function() {

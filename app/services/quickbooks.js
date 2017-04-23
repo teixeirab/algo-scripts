@@ -14,15 +14,17 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
     'qb_general_ledger': syncGeneralLedger
   }
 
-  const qbo = new QuickBooks(
-    Configs.quickbooks.consumerKey,
-    Configs.quickbooks.consumerSecret,
-    Configs.quickbooks.token,
-    Configs.quickbooks.tokenSecret,
-    Configs.quickbooks.realmId,
-    Configs.quickbooks.useSandbox,
-    Configs.quickbooks.debug
-  )
+  this.getQBO = (config) => {
+    return new QuickBooks(
+      config.consumerKey,
+      config.consumerSecret,
+      config.token,
+      config.tokenSecret,
+      config.realmId,
+      config.useSandbox,
+      config.debug
+    )
+  }
 
   this.findAndSync = (table, path, from) => {
     let to = new Date()
@@ -40,22 +42,16 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
     }
     return new Promise((resolve, reject) => {
       async.eachSeries(Configs.quickbooks, (config, cb) => {
-        let qbo = new QuickBooks(
-          config.consumerKey,
-          config.consumerSecret,
-          config.token,
-          config.tokenSecret,
-          config.realmId,
-          config.useSandbox,
-          config.debug
-        )
+        let qbo = that.getQBO(config)
         qbo.reportTransactionList(opts, (err, report) => {
           if(err) {
             return cb()
           }
           let rows = that.transform(report)
+          console.info(`loaded ${rows.length} reports @${config.account}`)
           async.eachSeries(rows, (row, _cb) => {
             row.qb_account = config.account
+            console.info(`insert report name:${row.name}`)
             QBTransactionListModel.upsert(row).then(() => {
               _cb()
             })
@@ -78,22 +74,16 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
     }
     return new Promise((resolve, reject) => {
       async.eachSeries(Configs.quickbooks, (config, cb) => {
-        let qbo = new QuickBooks(
-          config.consumerKey,
-          config.consumerSecret,
-          config.token,
-          config.tokenSecret,
-          config.realmId,
-          config.useSandbox,
-          config.debug
-        )
+        let qbo = that.getQBO(config)
         qbo.reportAccountListDetail(opts, (err, report) => {
           if(err) {
             return cb()
           }
           let rows = that.transform(report)
+          console.info(`loaded ${rows.length} reports @${config.account}`)
           async.eachSeries(rows, (row, _cb) => {
             row.qb_account = config.account
+            console.info(`insert report name:${row.account_name}`)
             QBAccountListModel.upsert(row).then(() => {
               _cb()
             })
@@ -139,17 +129,13 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
       ]
     }
     return new Promise((resolve, reject) => {
-      qbo.reportGeneralLedgerDetail(opts, (err, report) => {
-        if(err) {
-          return reject(err)
-        }
-        let rows = that.transform(report)
-        async.eachSeries(rows, (row, cb) => {
-          QBAccountListModel.upsert(row).then(() => {
+      const fs = require('fs')
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.reportGeneralLedgerDetail(opts, (err, report) => {
+          fs.writeFile(config.account, JSON.stringify(report, undefined, 2), (err) => {
             cb()
           })
-        }, () => {
-          resolve()
         })
       })
     })
