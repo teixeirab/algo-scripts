@@ -29,6 +29,7 @@ describe('service tests', function() {
     'PershingPositionsModel',
     'PershingTradesModel',
     'QBTransactionListModel',
+    'QBAccountListModel',
     'FlexFundsDB'
   ]
   const formatDate = (date) => {
@@ -284,7 +285,7 @@ describe('service tests', function() {
           });
         });
       });
-      describe.only('position', function () {
+      describe('position', function () {
         describe('find and save to db', function () {
           it('filter month end', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-01-31', 1).then(() => {
@@ -860,7 +861,7 @@ describe('service tests', function() {
       });
     });
   });
-  describe('quickbooks', function () {
+  describe.only('quickbooks', function () {
     describe('transaction list', function () {
       it('sync for a period', function (done) {
         vars['QuickBookService']
@@ -873,5 +874,30 @@ describe('service tests', function() {
           })
       });
     });
+    describe('account list', function () {
+      it('sync for a period', function (done) {
+        vars['QuickBookService']
+          .findAndSync('qb_account_list', null, new Date(2017, 3, 1))
+          .then((report) => {
+            vars['QBAccountListModel'].findAll().then((accounts) => {
+              assert.equal(90, accounts.length)
+              done()
+            })
+          })
+      });
+    });
+    // describe('general ledger', function () {
+    //   it('sync for a period', function (done) {
+    //     vars['QuickBookService']
+    //       .findAndSync('qb_general_ledger', null, new Date(2017, 3, 1))
+    //       .then((report) => {
+    //         console.log(JSON.stringify(report, undefined, 2))
+    //         // vars['QBAccountListModel'].findAll().then((accounts) => {
+    //         //   assert.equal(90, accounts.length)
+    //         //   done()
+    //         // })
+    //       })
+    //   });
+    // });
   });
 });

@@ -1,16 +1,21 @@
 /* jshint indent: 2 */
-
+const moment = require('moment')
 module.exports = function(FlexFundsDB, Sequelize) {
   let model = FlexFundsDB.define('qb_transaction_list', {
+    qb_account: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    doc_num: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      primaryKey: true
+    },
     tx_date: {
       type: Sequelize.DATE,
       allowNull: true
     },
     txn_type: {
-      type: Sequelize.STRING,
-      allowNull: true
-    },
-    doc_num: {
       type: Sequelize.STRING,
       allowNull: true
     },
@@ -94,10 +99,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: Sequelize.DOUBLE,
       allowNull: true
     },
-    term_name: {
-      type: Sequelize.DOUBLE,
-      allowNull: true
-    },
     subt_nat_amount: {
       type: Sequelize.DOUBLE,
       allowNull: true
@@ -139,56 +140,24 @@ module.exports = function(FlexFundsDB, Sequelize) {
     tableName: 'qb_transaction_list',
     hooks: {
       beforeValidate: (instance) => {
+        if (instance.doc_num === '') {
+          instance.doc_num = null
+        }
         Object.keys(instance.dataValues).forEach((col) => {
           if (model.attributes[col] && model.attributes[col].type instanceof Sequelize.DOUBLE) {
             let val = parseFloat(instance[col])
             instance[col] = val ? val : null
+          }
+          if (model.attributes[col] && model.attributes[col].type instanceof Sequelize.DATE) {
+            if (!moment(new Date(instance[col])).isValid()) {
+              instance[col] = null
+            }
           }
         })
       }
     }
   });
 
-  model.qbFields = [
-    'account_name',
-    'create_by',
-    'create_date',
-    'cust_msg',
-    'due_date',
-    'doc_num',
-    'inv_date',
-    'is_ap_paid',
-    'is_cleared',
-    'is_no_post',
-    'last_mod_by',
-    'memo',
-    'name',
-    'other_account',
-    'pmt_mthd',
-    'printed',
-    'sales_cust1',
-    'sales_cust2',
-    'sales_cust3',
-    'term_name',
-    'tracking_num',
-    'tx_date',
-    'txn_type',
-    'term_name',
-    'subt_nat_amount',
-    'nat_open_bal',
-    'currency',
-    'debt_home_amt',
-    'credit_home_amt',
-    'exch_rate',
-    'nat_home_open_bal',
-    'nat_foreign_open_bal',
-    'subt_nat_home_amount',
-    'nat_foreign_amount',
-    'home_tax_amount',
-    'foreign_tax_amount',
-    'home_net_amount',
-    'foreign_net_amount'
-  ]
   return model
   // EXAMPLE DATA
   //================================Column Headers=====================================
@@ -323,16 +292,16 @@ module.exports = function(FlexFundsDB, Sequelize) {
   //       }
   //     ]
   //   },
-  //   {
-  //     "ColTitle": "Terms",
-  //     "ColType": "String",
-  //     "MetaData": [
-  //       {
-  //         "Name": "ColKey",
-  //         "Value": "term_name"
-  //       }
-  //     ]
-  //   },
+    //  {
+    //    "ColTitle": "Terms",
+    //    "ColType": "String",
+    //    "MetaData": [
+    //      {
+    //        "Name": "ColKey",
+    //        "Value": "term_name"
+    //      }
+    //    ]
+    //  },
   //   {
   //     "ColTitle": "Due Date",
   //     "ColType": "Date",
