@@ -140,9 +140,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
     tableName: 'qb_transaction_list',
     hooks: {
       beforeValidate: (instance) => {
-        if (instance.doc_num === '') {
-          instance.doc_num = null
-        }
         Object.keys(instance.dataValues).forEach((col) => {
           if (model.attributes[col] && model.attributes[col].type instanceof Sequelize.DOUBLE) {
             let val = parseFloat(instance[col])
