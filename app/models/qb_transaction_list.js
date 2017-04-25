@@ -4,8 +4,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
   let model = FlexFundsDB.define('qb_transaction_list', {
     qb_account: {
       type: Sequelize.STRING,
-      allowNull: false,
-      primaryKey: true
+      allowNull: false
     },
     doc_num: {
       type: Sequelize.STRING,

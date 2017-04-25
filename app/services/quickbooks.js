@@ -145,6 +145,9 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
     let columns = data.Columns.Column.map((col) => {
       return col.MetaData[0].Value
     })
+    if (!data.Rows.Row) {
+      return []
+    }
     let rows = data.Rows.Row.map((row) => {
       let transformedRow = {}
       for(let i = 0; i < row.ColData.length; i++){
