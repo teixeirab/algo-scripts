@@ -290,15 +290,15 @@ describe('service tests', function() {
           it('filter month end', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-01-31', 1).then(() => {
               vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
-                assert.equal(models.length, 8)
+                assert.equal(models.length, 10)
                 done();
               })
             })
           });
-          it('filter friday', function (done) {
+          it('filter for friday or month end', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-02-10', 1).then(() => {
               vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
-                assert.equal(models.length, 8)
+                assert.equal(models.length, 11)
                 assert.equal(models[0].type, 'D')
                 assert.equal(models[0].account_id, 'U1161356')
                 assert.equal(models[0].con_id, '85004379')
@@ -861,14 +861,14 @@ describe('service tests', function() {
       });
     });
   });
-  describe.only('quickbooks', function () {
+  describe('quickbooks', function () {
     describe('transaction list', function () {
       it('sync for a period', function (done) {
         vars['QuickBookService']
           .findAndSync('qb_transaction_list', null, new Date(2017, 3, 1))
           .then((report) => {
             vars['QBTransactionListModel'].findAll().then((txns) => {
-              assert.equal(4, txns.length)
+              assert.equal(1, txns.length)
               done()
             })
           })
