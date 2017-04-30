@@ -30,6 +30,9 @@ describe('service tests', function() {
     'PershingTradesModel',
     'QBTransactionListModel',
     'QBAccountListModel',
+    'QBClassModel',
+    'QBItemModel',
+    'QBCustomerModel',
     'FlexFundsDB'
   ]
   const formatDate = (date) => {
@@ -290,7 +293,7 @@ describe('service tests', function() {
           it('filter month end', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-01-31', 1).then(() => {
               vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
-                assert.equal(models.length, 8)
+                assert.equal(models.length, 10)
                 done();
               })
             })
@@ -298,7 +301,7 @@ describe('service tests', function() {
           it('filter friday', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-02-10', 1).then(() => {
               vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
-                assert.equal(models.length, 8)
+                assert.equal(models.length, 11)
                 assert.equal(models[0].type, 'D')
                 assert.equal(models[0].account_id, 'U1161356')
                 assert.equal(models[0].con_id, '85004379')
@@ -861,14 +864,14 @@ describe('service tests', function() {
       });
     });
   });
-  describe.only('quickbooks', function () {
+  describe('quickbooks', function () {
     describe('transaction list', function () {
       it('sync for a period', function (done) {
         vars['QuickBookService']
           .findAndSync('qb_transaction_list', null, new Date(2017, 3, 1))
           .then((report) => {
             vars['QBTransactionListModel'].findAll().then((txns) => {
-              assert.equal(4, txns.length)
+              assert.equal(1, txns.length)
               done()
             })
           })
@@ -881,6 +884,42 @@ describe('service tests', function() {
           .then((report) => {
             vars['QBAccountListModel'].findAll().then((accounts) => {
               assert.equal(90, accounts.length)
+              done()
+            })
+          })
+      });
+    });
+    xdescribe('class', function () {
+      it('sync', function (done) {
+        vars['QuickBookService']
+          .findAndSync('qb_class')
+          .then((report) => {
+            vars['QBClassModel'].findAll().then((classes) => {
+              assert.equal(149, classes.length)
+              done()
+            })
+          })
+      });
+    });
+    xdescribe('items', function () {
+      it('sync', function (done) {
+        vars['QuickBookService']
+          .findAndSync('qb_item')
+          .then((report) => {
+            vars['QBItemModel'].findAll().then((classes) => {
+              assert.equal(27, classes.length)
+              done()
+            })
+          })
+      });
+    });
+    describe.only('customers', function () {
+      it('sync', function (done) {
+        vars['QuickBookService']
+          .findAndSync('qb_customer')
+          .then((report) => {
+            vars['QBCustomerModel'].findAll().then((classes) => {
+              assert.equal(27, classes.length)
               done()
             })
           })
