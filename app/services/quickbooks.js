@@ -155,7 +155,7 @@ module.exports = function(
     return new Promise((resolve, reject) => {
       async.eachSeries(Configs.quickbooks, (config, cb) => {
         let qbo = that.getQBO(config)
-        qbo.findClasses((err, data) => {
+        qbo.findClasses({fetchall: true}, (err, data) => {
           let classes = data.QueryResponse.Class
           if(err || !classes) {
             return cb()
@@ -193,7 +193,7 @@ module.exports = function(
     return new Promise((resolve, reject) => {
       async.eachSeries(Configs.quickbooks, (config, cb) => {
         let qbo = that.getQBO(config)
-        qbo.findItems((err, data) => {
+        qbo.findItems({fetchall: true}, (err, data) => {
           let items = data.QueryResponse.Item
           if(err || !items) {
             return cb()
@@ -235,7 +235,7 @@ module.exports = function(
     return new Promise((resolve, reject) => {
       async.eachSeries(Configs.quickbooks, (config, cb) => {
         let qbo = that.getQBO(config)
-        qbo.findCustomers((err, data) => {
+        qbo.findCustomers({fetchall: true}, (err, data) => {
           let customers = data.QueryResponse.Customer
           if(err || !customers) {
             return cb()
