@@ -11,6 +11,7 @@ module.exports = function(
   QBAccountListModel,
   QBItemModel,
   QBCustomerModel,
+  QBAccountModel,
   QBClassModel
 ) {
   const that = this
@@ -18,9 +19,11 @@ module.exports = function(
   const mappings = {
     'qb_transaction_list': syncTransactionList,
     'qb_account_list': syncAccountList,
+    'qb_account': syncAccounts,
     'qb_class': syncClasses,
     'qb_item': syncItems,
     'qb_customer': syncCustomers,
+    'qb_invoice': syncInvoices,
     'qb_general_ledger': syncGeneralLedger
   }
 
@@ -151,6 +154,50 @@ module.exports = function(
     })
   }
 
+  function syncAccounts (from, to) {
+    return new Promise((resolve, reject) => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.findAccounts({fetchall: true}, (err, data) => {
+          let accounts = data.QueryResponse.Account
+          if(err || !accounts) {
+            return cb()
+          }
+          let rows = accounts.map((account) => {
+            return {
+              id                               : account.Id,
+              name                             : account.Name,
+              description                      : account.Description,
+              fully_qualified_name             : account.FullyQualifiedName,
+              classification                   : account.Classification,
+              account_type                     : account.AccountType,
+              account_sub_type                 : account.AccountSubType,
+              current_balance                  : account.CurrentBalance,
+              current_balance_with_sub_accounts: account.CurrentBalanceWithSubAccounts,
+              currency_code                    : _.get(account, 'CurrencyRef.value'),
+              active                           : account.Active
+            }
+          })
+          console.info(`loaded ${rows.length} account @${config.account}`)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            console.info(`insert account name:${row.name}`)
+            QBAccountModel.upsert(row).then(() => {
+              _cb()
+            }).catch((err) => {
+              console.error(err)
+              _cb()
+            })
+          }, () => {
+            cb()
+          })
+        })
+      }, () => {
+        resolve()
+      })
+    })
+  }
+
   function syncClasses (from, to) {
     return new Promise((resolve, reject) => {
       async.eachSeries(Configs.quickbooks, (config, cb) => {
@@ -208,6 +255,7 @@ module.exports = function(
               parent_id: item.ParentRef? item.ParentRef.value : null,
               income_account_id: item.IncomeAccountRef? item.IncomeAccountRef.value : null,
               expense_account_id: item.ExpenseAccountRef? item.ExpenseAccountRef.value : null,
+              asset_account_id: item.AssetAccountRef? item.AssetAccountRef.value : null,
               active: item.Active
             }
           })
@@ -272,6 +320,21 @@ module.exports = function(
           }, () => {
             cb()
           })
+        })
+      }, () => {
+        resolve()
+      })
+    })
+  }
+
+  function syncInvoices (from, to) {
+    return new Promise((resolve, reject) => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        console.log(config.account)
+        let qbo = that.getQBO(config)
+        qbo.findInvoices({DocNumber: '241146'}, (err, data) => {
+          console.log(JSON.stringify(data, undefined, 2))
+          cb()
         })
       }, () => {
         resolve()

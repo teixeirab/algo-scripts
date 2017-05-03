@@ -25,6 +25,7 @@
         "QBClassModel": "./models/qb_class",
         "QBItemModel": "./models/qb_item",
         "QBCustomerModel": "./models/qb_customer",
+        "QBAccountModel": "./models/qb_account",
 
         "CommonService": "./services/common",
         "FileService": "./services/file",

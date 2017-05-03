@@ -33,6 +33,7 @@ describe('service tests', function() {
     'QBClassModel',
     'QBItemModel',
     'QBCustomerModel',
+    'QBAccountModel',
     'FlexFundsDB'
   ]
   const formatDate = (date) => {
@@ -865,9 +866,10 @@ describe('service tests', function() {
     });
   });
   describe('quickbooks', function () {
-    describe('transaction list', function () {
-      it('sync for a period', function (done) {
-        vars['QuickBookService']
+    describe('reports', function () {
+      describe('transaction list', function () {
+        it('sync for a period', function (done) {
+          vars['QuickBookService']
           .findAndSync('qb_transaction_list', null, new Date(2017, 3, 1))
           .then((report) => {
             vars['QBTransactionListModel'].findAll().then((txns) => {
@@ -875,11 +877,11 @@ describe('service tests', function() {
               done()
             })
           })
+        });
       });
-    });
-    describe('account list', function () {
-      it('sync for a period', function (done) {
-        vars['QuickBookService']
+      describe('account list', function () {
+        it('sync for a period', function (done) {
+          vars['QuickBookService']
           .findAndSync('qb_account_list', null, new Date(2017, 3, 1))
           .then((report) => {
             vars['QBAccountListModel'].findAll().then((accounts) => {
@@ -887,11 +889,26 @@ describe('service tests', function() {
               done()
             })
           })
+        });
       });
     });
-    xdescribe('class', function () {
-      it('sync', function (done) {
-        vars['QuickBookService']
+    describe('entity', function () {
+      describe('accounts', function () {
+        it.only('sync', function (done) {
+          vars['QuickBookService']
+            .findAndSync('qb_account')
+            .then(() => {
+              vars['QBAccountModel'].findAll().then((account) => {
+                console.log(account[0].toJSON())
+                assert.equal(144, account.length)
+                done()
+              })
+            })
+        });
+      });
+      xdescribe('class', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
           .findAndSync('qb_class')
           .then((report) => {
             vars['QBClassModel'].findAll().then((classes) => {
@@ -899,11 +916,11 @@ describe('service tests', function() {
               done()
             })
           })
+        });
       });
-    });
-    xdescribe('items', function () {
-      it('sync', function (done) {
-        vars['QuickBookService']
+      xdescribe('items', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
           .findAndSync('qb_item')
           .then((report) => {
             vars['QBItemModel'].findAll().then((classes) => {
@@ -911,11 +928,11 @@ describe('service tests', function() {
               done()
             })
           })
+        });
       });
-    });
-    describe.only('customers', function () {
-      it('sync', function (done) {
-        vars['QuickBookService']
+      xdescribe('customers', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
           .findAndSync('qb_customer')
           .then((report) => {
             vars['QBCustomerModel'].findAll().then((classes) => {
@@ -923,6 +940,20 @@ describe('service tests', function() {
               done()
             })
           })
+        });
+      });
+      xdescribe('invoices', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
+          .findAndSync('qb_invoice')
+          .then((report) => {
+            done()
+            // vars['QBCustomerModel'].findAll().then((classes) => {
+            //   assert.equal(27, classes.length)
+            //   done()
+            // })
+          })
+        });
       });
     });
     // describe('general ledger', function () {

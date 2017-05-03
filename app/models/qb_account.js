@@ -1,7 +1,7 @@
 module.exports = function(FlexFundsDB, Sequelize) {
-  let model = FlexFundsDB.define('qb_item', {
+  let model = FlexFundsDB.define('qb_account', {
     id: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       primaryKey: true,
       allowNull: false
     },
@@ -18,29 +18,37 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: Sequelize.STRING,
       allowNull: true
     },
-    type: {
+    fully_qualified_name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    classification: {
       type: Sequelize.STRING,
       allowNull: true
     },
-    parent_id: {
-      type: Sequelize.INTEGER,
+    account_type: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    account_sub_type: {
+      type: Sequelize.STRING,
       allowNull: true
     },
-    income_account_id: {
-      type: Sequelize.INTEGER,
+    current_balance: {
+      type: Sequelize.DECIMAL(12, 2),
       allowNull: true
     },
-    expense_account_id: {
-      type: Sequelize.INTEGER,
+    current_balance_with_sub_accounts: {
+      type: Sequelize.DECIMAL(12, 2),
       allowNull: true
     },
-    asset_account_id: {
-      type: Sequelize.INTEGER,
+    currency_code: {
+      type: Sequelize.STRING(3),
       allowNull: true
     },
     active: {
       type: Sequelize.BOOLEAN,
-      allowNull: true
+      allowNull: false
     },
     dt_added: {
       type: Sequelize.DATE,
@@ -48,7 +56,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
       allowNull: false
     }
   }, {
-    tableName: 'qb_item'
+    tableName: 'qb_account'
   });
 
   return model

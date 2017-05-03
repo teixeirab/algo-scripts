@@ -10,6 +10,10 @@ module.exports = function(FlexFundsDB, Sequelize) {
       primaryKey: true,
       allowNull: false
     },
+    display_name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     email: {
       type: Sequelize.STRING,
       allowNull: true
@@ -31,10 +35,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
       allowNull: true
     },
     company_name: {
-      type: Sequelize.STRING,
-      allowNull: true
-    },
-    display_name: {
       type: Sequelize.STRING,
       allowNull: true
     },
