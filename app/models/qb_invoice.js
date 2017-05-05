@@ -10,11 +10,23 @@ module.exports = function(FlexFundsDB, Sequelize) {
       primaryKey: true,
       allowNull: false
     },
+    customer_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    },
     doc_num: {
       type: Sequelize.STRING,
       allowNull: false
     },
     total_amount: {
+      type: Sequelize.DOUBLE,
+      allowNull: false
+    },
+    currency_code: {
+      type: Sequelize.STRING(3),
+      allowNull: false
+    },
+    exchange_rate: {
       type: Sequelize.DOUBLE,
       allowNull: false
     },
@@ -30,13 +42,14 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: Sequelize.STRING,
       allowNull: false
     },
-    active: {
-      type: Sequelize.BOOLEAN,
+    einvoice_status: {
+      type: Sequelize.STRING,
       allowNull: true
     },
     dt_added: {
       type: Sequelize.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: new Date()
     }
   }, {
     tableName: 'qb_invoice'

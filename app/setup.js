@@ -32,6 +32,7 @@ const serviceMappings = {
   'qb_item': 'QuickBookService',
   'qb_customer': 'QuickBookService',
   'qb_account': 'QuickBookService',
+  'qb_invoice': 'QuickBookService',
   'qb_general_ledger': 'QuickBookService'
 }
 

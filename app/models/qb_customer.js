@@ -58,6 +58,9 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: Sequelize.STRING,
       allowNull: true
     },
+    currency_code: {
+      type: Sequelize.STRING(3)
+    },
     active: {
       type: Sequelize.BOOLEAN,
       allowNull: true
