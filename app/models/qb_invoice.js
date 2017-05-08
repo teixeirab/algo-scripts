@@ -16,7 +16,7 @@ module.exports = function(FlexFundsDB, Sequelize) {
     },
     doc_num: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
     total_amount: {
       type: Sequelize.DOUBLE,
