@@ -350,6 +350,7 @@ module.exports = function(
               due_date: invoice.DueDate,
               txn_date: invoice.TxnDate,
               email_status: invoice.EmailStatus,
+              balance: invoice.Balance,
               einvoice_status: invoice.EInvoiceStatus
             }
           })
