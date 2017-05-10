@@ -22,6 +22,12 @@
         "SeriesNamesModel": "./models/series_names",
         "QBTransactionListModel": "./models/qb_transaction_list",
         "QBAccountListModel": "./models/qb_account_list",
+        "QBClassModel": "./models/qb_class",
+        "QBItemModel": "./models/qb_item",
+        "QBCustomerModel": "./models/qb_customer",
+        "QBInvoiceModel": "./models/qb_invoice",
+        "QBAccountModel": "./models/qb_account",
+        "QBInvoiceTypeItemModel": "./models/invoice_type_item",
 
         "CommonService": "./services/common",
         "FileService": "./services/file",

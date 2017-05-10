@@ -28,6 +28,11 @@ const serviceMappings = {
   'citi_positions_valuations': 'CitiService',
   'qb_transaction_list': 'QuickBookService',
   'qb_account_list': 'QuickBookService',
+  'qb_class': 'QuickBookService',
+  'qb_item': 'QuickBookService',
+  'qb_customer': 'QuickBookService',
+  'qb_account': 'QuickBookService',
+  'qb_invoice': 'QuickBookService',
   'qb_general_ledger': 'QuickBookService'
 }
 
