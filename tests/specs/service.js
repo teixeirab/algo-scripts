@@ -866,16 +866,10 @@ describe('service tests', function() {
     });
   });
   describe('quickbooks', function () {
-<<<<<<< HEAD
-    describe('transaction list', function () {
-      it('sync for a period', function (done) {
-        vars['QuickBookService']
-=======
     describe('reports', function () {
       describe('transaction list', function () {
         it('sync for a period', function (done) {
           vars['QuickBookService']
->>>>>>> auto_setup_fee
           .findAndSync('qb_transaction_list', null, new Date(2017, 3, 1))
           .then((report) => {
             vars['QBTransactionListModel'].findAll().then((txns) => {
