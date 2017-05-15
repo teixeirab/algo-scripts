@@ -468,6 +468,7 @@ describe('service tests', function() {
             vars['TheoremService'].findAndSync('theorem_balance_sheet_monthly', './tests/data/theorem/', '2017-01-01', 1).then(() => {
               vars['TheoremBalanceSheetModel'].findAll().then((models) => {
                 assert.equal(models.length, 1)
+                assert.equal(formatDate(models[0].period), '2017-01-31')
                 assert.equal(models[0].series_number, 11)
                 assert.equal(models[0].type, 'Monthly')
                 assert.equal(models[0].total_assets, 30136881.00)
@@ -495,6 +496,7 @@ describe('service tests', function() {
             vars['TheoremService'].findAndSync('theorem_income_statement_monthly', './tests/data/theorem/', '2017-01-01', 1).then(() => {
               vars['TheoremIncomeStatementModel'].findAll().then((models) => {
                 assert.equal(models.length, 1)
+                assert.equal(formatDate(models[0].period), '2017-01-31')
                 assert.equal(models[0].series_number, 11)
                 assert.equal(models[0].type, 'Monthly')
                 assert.equal(models[0].loan_interest_income, 0)
@@ -865,7 +867,7 @@ describe('service tests', function() {
       });
     });
   });
-  describe('quickbooks', function () {
+  xdescribe('quickbooks', function () {
     describe('reports', function () {
       describe('transaction list', function () {
         it('sync for a period', function (done) {
@@ -894,7 +896,7 @@ describe('service tests', function() {
     });
     describe('entity', function () {
       describe('accounts', function () {
-        it.only('sync', function (done) {
+        it('sync', function (done) {
           vars['QuickBookService']
             .findAndSync('qb_account')
             .then(() => {
@@ -940,7 +942,7 @@ describe('service tests', function() {
               done()
             })
           })
-        });
+      });
       });
       xdescribe('invoices', function () {
         it('sync', function (done) {

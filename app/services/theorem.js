@@ -59,7 +59,7 @@ module.exports = function(
         pattern: 'monthly_reports/+(${date[0]})/+(${date[1]})_Series_*_Financials.xlsx',
         extractFn: this.extractBSMonthlyFileNameInfo,
         assignDataFn: (data, nameInfo) => {
-          data['period'] = nameInfo.date
+          data['period'] = moment(nameInfo.date).endOf('month').toDate()
           data['series_number'] = nameInfo.seriesNumber
           data['type'] = nameInfo.type
           this.convertDecimalString(TheoremBalanceSheetModel, data)
@@ -74,7 +74,7 @@ module.exports = function(
         pattern: 'monthly_reports/+(${date[0]})/+(${date[1]})_Series_*_Financials.xlsx',
         extractFn: this.extractISMonthlyFileNameInfo,
         assignDataFn: (data, nameInfo) => {
-          data['period'] = nameInfo.date
+          data['period'] = moment(nameInfo.date).endOf('month').toDate()
           data['series_number'] = nameInfo.seriesNumber
           data['type'] = nameInfo.type
           this.convertDecimalString(TheoremIncomeStatementModel, data)
