@@ -26,8 +26,15 @@ const serviceMappings = {
   'citi_available_position': 'CitiService',
   'citi_cash_balances': 'CitiService',
   'citi_positions_valuations': 'CitiService',
+  'qb_invoices_maintenance': 'QuickBookService',
   'qb_transaction_list': 'QuickBookService',
-  'qb_account_list': 'QuickBookService'
+  'qb_account_list': 'QuickBookService',
+  'qb_class': 'QuickBookService',
+  'qb_item': 'QuickBookService',
+  'qb_customer': 'QuickBookService',
+  'qb_account': 'QuickBookService',
+  'qb_invoice': 'QuickBookService',
+  'qb_general_ledger': 'QuickBookService'
 }
 
 app.run = function() {
@@ -42,12 +49,15 @@ app.run = function() {
     })
     .option('path', {
       alias: 'p',
-      describe: 'Path of the data source files to search from',
-      demand: true
+      describe: 'Path of the data source files to search from'
     })
     .option('from', {
       alias: 'f',
       describe: 'Date, from which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.'
+    })
+    .option('to', {
+      alias: 'to',
+      describe: 'Date, to which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.'
     })
     .option('verbose', {
       alias: 'v',
@@ -56,8 +66,9 @@ app.run = function() {
     .argv
 
   let target = argv.target,
-      path = argv.path,
+      path = argv.path || './',
       fromDate = argv.from || moment().format('YYYY-MM-DD'),
+      toDate = argv.to || moment().format('YYYY-MM-DD'),
       verbose = argv.verbose
 
   const serviceName = serviceMappings[target]
@@ -84,7 +95,7 @@ app.run = function() {
     const service = app.summon.get(serviceName)
     console.info('Find data source files and sync with the database...')
     console.info(`Table: ${target}, Path: ${path}, Since: ${fromDate}`)
-    service.findAndSync(target, path, fromDate).then(() => {
+    service.findAndSync(target, path, fromDate, toDate).then(() => {
       console.info('DONE')
       process.exit(0)
     })

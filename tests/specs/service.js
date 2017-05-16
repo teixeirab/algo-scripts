@@ -30,6 +30,10 @@ describe('service tests', function() {
     'PershingTradesModel',
     'QBTransactionListModel',
     'QBAccountListModel',
+    'QBClassModel',
+    'QBItemModel',
+    'QBCustomerModel',
+    'QBAccountModel',
     'FlexFundsDB'
   ]
   const formatDate = (date) => {
@@ -287,10 +291,18 @@ describe('service tests', function() {
       });
       describe('position', function () {
         describe('find and save to db', function () {
-          it('#findAndSync', function (done) {
+          it('filter month end', function (done) {
+            vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-01-31', 1).then(() => {
+              vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
+                assert.equal(models.length, 10)
+                done();
+              })
+            })
+          });
+          it('filter for friday or month end', function (done) {
             vars['InteractiveBrokerService'].findAndSync('ib_positions', './tests/data/ib/', '2017-02-10', 1).then(() => {
               vars['InteractiveBrokerPositionsModel'].findAll().then((models) => {
-                assert.equal(models.length, 8)
+                assert.equal(models.length, 11)
                 assert.equal(models[0].type, 'D')
                 assert.equal(models[0].account_id, 'U1161356')
                 assert.equal(models[0].con_id, '85004379')
@@ -456,6 +468,7 @@ describe('service tests', function() {
             vars['TheoremService'].findAndSync('theorem_balance_sheet_monthly', './tests/data/theorem/', '2017-01-01', 1).then(() => {
               vars['TheoremBalanceSheetModel'].findAll().then((models) => {
                 assert.equal(models.length, 1)
+                assert.equal(formatDate(models[0].period), '2017-01-31')
                 assert.equal(models[0].series_number, 11)
                 assert.equal(models[0].type, 'Monthly')
                 assert.equal(models[0].total_assets, 30136881.00)
@@ -483,6 +496,7 @@ describe('service tests', function() {
             vars['TheoremService'].findAndSync('theorem_income_statement_monthly', './tests/data/theorem/', '2017-01-01', 1).then(() => {
               vars['TheoremIncomeStatementModel'].findAll().then((models) => {
                 assert.equal(models.length, 1)
+                assert.equal(formatDate(models[0].period), '2017-01-31')
                 assert.equal(models[0].series_number, 11)
                 assert.equal(models[0].type, 'Monthly')
                 assert.equal(models[0].loan_interest_income, 0)
@@ -853,22 +867,23 @@ describe('service tests', function() {
       });
     });
   });
-  describe('quickbooks', function () {
-    describe('transaction list', function () {
-      it('sync for a period', function (done) {
-        vars['QuickBookService']
+  xdescribe('quickbooks', function () {
+    describe('reports', function () {
+      describe('transaction list', function () {
+        it('sync for a period', function (done) {
+          vars['QuickBookService']
           .findAndSync('qb_transaction_list', null, new Date(2017, 3, 1))
           .then((report) => {
             vars['QBTransactionListModel'].findAll().then((txns) => {
-              assert.equal(4, txns.length)
+              assert.equal(1, txns.length)
               done()
             })
           })
+        });
       });
-    });
-    describe('account list', function () {
-      it('sync for a period', function (done) {
-        vars['QuickBookService']
+      describe('account list', function () {
+        it('sync for a period', function (done) {
+          vars['QuickBookService']
           .findAndSync('qb_account_list', null, new Date(2017, 3, 1))
           .then((report) => {
             vars['QBAccountListModel'].findAll().then((accounts) => {
@@ -876,6 +891,71 @@ describe('service tests', function() {
               done()
             })
           })
+        });
+      });
+    });
+    describe('entity', function () {
+      describe('accounts', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
+            .findAndSync('qb_account')
+            .then(() => {
+              vars['QBAccountModel'].findAll().then((account) => {
+                console.log(account[0].toJSON())
+                assert.equal(144, account.length)
+                done()
+              })
+            })
+        });
+      });
+      xdescribe('class', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
+          .findAndSync('qb_class')
+          .then((report) => {
+            vars['QBClassModel'].findAll().then((classes) => {
+              assert.equal(149, classes.length)
+              done()
+            })
+          })
+        });
+      });
+      xdescribe('items', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
+          .findAndSync('qb_item')
+          .then((report) => {
+            vars['QBItemModel'].findAll().then((classes) => {
+              assert.equal(27, classes.length)
+              done()
+            })
+          })
+        });
+      });
+      xdescribe('customers', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
+          .findAndSync('qb_customer')
+          .then((report) => {
+            vars['QBCustomerModel'].findAll().then((classes) => {
+              assert.equal(27, classes.length)
+              done()
+            })
+          })
+      });
+      });
+      xdescribe('invoices', function () {
+        it('sync', function (done) {
+          vars['QuickBookService']
+          .findAndSync('qb_invoice')
+          .then((report) => {
+            done()
+            // vars['QBCustomerModel'].findAll().then((classes) => {
+            //   assert.equal(27, classes.length)
+            //   done()
+            // })
+          })
+        });
       });
     });
     // describe('general ledger', function () {

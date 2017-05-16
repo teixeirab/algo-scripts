@@ -5,24 +5,46 @@ const moment = require('moment')
 const _ = require('lodash')
 const QuickBooks = require('node-quickbooks')
 
-module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, Sequelize) {
+module.exports = function(
+  Configs,
+  Sequelize,
+  QBTransactionListModel,
+  QBAccountListModel,
+  QBItemModel,
+  QBCustomerModel,
+  QBAccountModel,
+  QBInvoiceModel,
+  QBClassModel,
+  QBInvoicesMaintenanceModel,
+  TheoremIncomeStatementModel,
+  SeriesNamesModel,
+  SeriesFeesTermsModel
+) {
   const that = this
 
   const mappings = {
     'qb_transaction_list': syncTransactionList,
     'qb_account_list': syncAccountList,
-    'qb_general_ledger': syncGeneralLedger
+    'qb_account': syncAccounts,
+    'qb_class': syncClasses,
+    'qb_item': syncItems,
+    'qb_customer': syncCustomers,
+    'qb_invoice': syncInvoices,
+    'qb_general_ledger': syncGeneralLedger,
+    'qb_invoices_maintenance': generateInvoicesMaintenanceFees
   }
 
-  const qbo = new QuickBooks(
-    Configs.quickbooks.consumerKey,
-    Configs.quickbooks.consumerSecret,
-    Configs.quickbooks.token,
-    Configs.quickbooks.tokenSecret,
-    Configs.quickbooks.realmId,
-    Configs.quickbooks.useSandbox,
-    Configs.quickbooks.debug
-  )
+  this.getQBO = (config) => {
+    return new QuickBooks(
+      config.consumerKey,
+      config.consumerSecret,
+      config.token,
+      config.tokenSecret,
+      config.realmId,
+      config.useSandbox,
+      config.debug
+    )
+  }
 
   this.findAndSync = (table, path, from) => {
     let to = new Date()
@@ -39,18 +61,26 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
       "columns": Object.keys(QBTransactionListModel.attributes)
     }
     return new Promise((resolve, reject) => {
-      qbo.reportTransactionList(opts, (err, report) => {
-        if(err) {
-          return reject(err)
-        }
-        let rows = that.transform(report)
-        async.eachSeries(rows, (row, cb) => {
-          QBTransactionListModel.upsert(row).then(() => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.reportTransactionList(opts, (err, report) => {
+          if(err) {
+            return cb()
+          }
+          let rows = that.transformReport(report)
+          console.info(`loaded ${rows.length} reports @${config.account}`)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            console.info(`insert report name:${row.name}`)
+            QBTransactionListModel.upsert(row).then(() => {
+              _cb()
+            })
+          }, () => {
             cb()
           })
-        }, () => {
-          resolve()
         })
+      }, () => {
+        resolve()
       })
     })
   }
@@ -60,21 +90,29 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
       // "transaction_type": "Invoice",
       "start_date": moment(from).format('YYYY-MM-DD'),
       "end_date": moment(to).format('YYYY-MM-DD'),
-      "columns": Object.keys(QBAccountListModel.attributes)
+      "columns": Object.keys(QBTransactionListModel.attributes)
     }
     return new Promise((resolve, reject) => {
-      qbo.reportAccountListDetail(opts, (err, report) => {
-        if(err) {
-          return reject(err)
-        }
-        let rows = that.transform(report)
-        async.eachSeries(rows, (row, cb) => {
-          QBAccountListModel.upsert(row).then(() => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.reportAccountListDetail(opts, (err, report) => {
+          if(err) {
+            return cb()
+          }
+          let rows = that.transformReport(report)
+          console.info(`loaded ${rows.length} reports @${config.account}`)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            console.info(`insert report name:${row.account_name}`)
+            QBAccountListModel.upsert(row).then(() => {
+              _cb()
+            })
+          }, () => {
             cb()
           })
-        }, () => {
-          resolve()
         })
+      }, () => {
+        resolve()
       })
     })
   }
@@ -111,27 +149,324 @@ module.exports = function(Configs, QBTransactionListModel, QBAccountListModel, S
       ]
     }
     return new Promise((resolve, reject) => {
-      qbo.reportGeneralLedgerDetail(opts, (err, report) => {
-        resolve(report)
-        // if(err) {
-        //   return reject(err)
-        // }
-        // let rows = that.transform(report)
-        // async.eachSeries(rows, (row, cb) => {
-        //   QBAccountListModel.upsert(row).then(() => {
-        //     cb()
-        //   })
-        // }, () => {
-        //   resolve()
-        // })
+      const fs = require('fs')
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.reportGeneralLedgerDetail(opts, (err, report) => {
+          fs.writeFile(config.account, JSON.stringify(report, undefined, 2), (err) => {
+            cb()
+          })
+        })
       })
     })
   }
 
-  this.transform = (data) => {
+  function syncAccounts (from, to) {
+    return new Promise((resolve, reject) => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.findAccounts({fetchall: true}, (err, data) => {
+          let accounts = data.QueryResponse.Account
+          if(err || !accounts) {
+            return cb()
+          }
+          let rows = accounts.map((account) => {
+            return {
+              id                               : account.Id,
+              name                             : account.Name,
+              description                      : account.Description,
+              fully_qualified_name             : account.FullyQualifiedName,
+              classification                   : account.Classification,
+              account_type                     : account.AccountType,
+              account_sub_type                 : account.AccountSubType,
+              current_balance                  : account.CurrentBalance,
+              current_balance_with_sub_accounts: account.CurrentBalanceWithSubAccounts,
+              currency_code                    : _.get(account, 'CurrencyRef.value'),
+              active                           : account.Active
+            }
+          })
+          console.info(`loaded ${rows.length} account @${config.account}`)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            console.info(`insert account name:${row.name}`)
+            QBAccountModel.upsert(row).then(() => {
+              _cb()
+            }).catch((err) => {
+              console.error(err)
+              _cb()
+            })
+          }, () => {
+            cb()
+          })
+        })
+      }, () => {
+        resolve()
+      })
+    })
+  }
+
+  function syncClasses (from, to) {
+    return new Promise((resolve, reject) => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.findClasses({fetchall: true}, (err, data) => {
+          let classes = data.QueryResponse.Class
+          if(err || !classes) {
+            return cb()
+          }
+          let rows = classes.map((cls) => {
+            return {
+              id: cls.Id,
+              qb_account: config.account,
+              name: cls.Name,
+              fully_qualified_name: cls.FullyQualifiedName,
+              active: cls.Active
+            }
+          })
+          console.info(`loaded ${rows.length} class @${config.account}`)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            console.info(`insert class name:${row.name}`)
+            QBClassModel.upsert(row).then(() => {
+              _cb()
+            }).catch((err) => {
+              console.error(err)
+              _cb()
+            })
+          }, () => {
+            cb()
+          })
+        })
+      }, () => {
+        resolve()
+      })
+    })
+  }
+
+  function syncItems (from, to) {
+    return new Promise((resolve, reject) => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.findItems({fetchall: true}, (err, data) => {
+          let items = data.QueryResponse.Item
+          if(err || !items) {
+            return cb()
+          }
+          let rows = items.map((item) => {
+            return {
+              id: item.Id,
+              qb_account: config.account,
+              name: item.Name,
+              description: item.Description,
+              type: item.Type,
+              parent_id: item.ParentRef? item.ParentRef.value : null,
+              income_account_id: item.IncomeAccountRef? item.IncomeAccountRef.value : null,
+              expense_account_id: item.ExpenseAccountRef? item.ExpenseAccountRef.value : null,
+              asset_account_id: item.AssetAccountRef? item.AssetAccountRef.value : null,
+              active: item.Active
+            }
+          })
+          console.info(`loaded ${rows.length} item @${config.account}`)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            console.info(`insert item name:${row.name}`)
+            QBItemModel.upsert(row).then(() => {
+              _cb()
+            }).catch((err) => {
+              console.error(err)
+              _cb()
+            })
+          }, () => {
+            cb()
+          })
+        })
+      }, () => {
+        resolve()
+      })
+    })
+  }
+
+  function syncCustomers (from, to) {
+    return new Promise((resolve, reject) => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.findCustomers({fetchall: true}, (err, data) => {
+          let customers = data.QueryResponse.Customer
+          if(err || !customers) {
+            return cb()
+          }
+          let rows = customers.map((customer) => {
+            return {
+              id: customer.Id,
+              qb_account: config.account,
+              email: customer.PrimaryEmailAddr? customer.PrimaryEmailAddr.Address : null,
+              given_name: customer.GivenName,
+              middle_name: customer.MiddleName,
+              family_name: customer.FamilyName,
+              fully_qualified_name: customer.FullyQualifiedName,
+              company_name: customer.CompanyName,
+              display_name: customer.DisplayName,
+              print_on_check_name: customer.PrintOnCheckName,
+              bill_addr_line1: customer.BillAddr? customer.BillAddr.Line1: null,
+              bill_addr_city: customer.BillAddr? customer.BillAddr.City: null,
+              bill_addr_country_sub_division_code: customer.BillAddr? customer.BillAddr.CountrySubDivisionCode: null,
+              bill_addr_postal_code: customer.BillAddr? customer.BillAddr.BillAddrPostalCode: null,
+              currency_code: _.get(customer, 'CurrencyRef.value'),
+              active: customer.Active
+            }
+          })
+          console.info(`loaded ${rows.length} customer @${config.account}`)
+          async.eachSeries(rows, (row, _cb) => {
+            row.qb_account = config.account
+            console.info(`insert customer name:${row.display_name}`)
+            QBCustomerModel.upsert(row).then(() => {
+              _cb()
+            }).catch((err) => {
+              console.error(err)
+              _cb()
+            })
+          }, () => {
+            cb()
+          })
+        })
+      }, () => {
+        resolve()
+      })
+    })
+  }
+
+  function syncInvoices (from, to) {
+    return new Promise((resolve, reject) => {
+      async.eachSeries(Configs.quickbooks, (config, cb) => {
+        let qbo = that.getQBO(config)
+        qbo.findInvoices({fetchall: true}, (err, data) => {
+          let invoices = _.get(data, 'QueryResponse.Invoice')
+          if (!invoices) {
+            return cb()
+          }
+          invoices = invoices.map((invoice) => {
+            return {
+              qb_account: config.account,
+              id: invoice.Id,
+              customer_id: _.get(invoice, 'CustomerRef.value'),
+              doc_num: invoice.DocNumber,
+              total_amount: invoice.TotalAmt,
+              currency_code: _.get(invoice, 'CurrencyRef.value'),
+              exchange_rate: invoice.ExchangeRate,
+              due_date: invoice.DueDate,
+              txn_date: invoice.TxnDate,
+              email_status: invoice.EmailStatus,
+              balance: invoice.Balance,
+              einvoice_status: invoice.EInvoiceStatus
+            }
+          })
+          async.eachSeries(invoices, (invoice, _cb) => {
+            QBInvoiceModel.upsert(invoice).then(() => {
+              _cb()
+            }).catch((err) => {
+              console.log(err)
+              _cb()
+            })
+          }, () => {
+            cb()
+          })
+        })
+      }, () => {
+        resolve()
+      })
+    })
+  }
+
+  function generateInvoicesMaintenanceFees (from, to) {
+    from = moment(from).toDate()
+    return new Promise((resolve, reject) => {
+      async.waterfall([
+        (cb) => {
+          SeriesFeesTermsModel.findAll({
+            where: {
+              external_offset: 'Yes'
+            }
+          }).then((feesTerms) => {
+            SeriesNamesModel.findAll({
+              where: {
+                status: 'A'
+              }
+            }).then((seriesNames) => {
+              let validSeries = []
+              feesTerms.forEach((feesTerm) => {
+                seriesNames.forEach((seriesName) => {
+                  if (feesTerm.series_number === seriesName.series_number &&
+                      validSeries.indexOf(seriesName.series_number) === -1) {
+                    validSeries.push(seriesName.series_number)
+                  }
+                })
+              })
+              cb(undefined, validSeries)
+            })
+          })
+        },
+        (validSeries, cb) => {
+          let rows = []
+          async.eachSeries(validSeries, (seriesNumber, _cb) => {
+            TheoremIncomeStatementModel.findAll({
+              where: {
+                series_number: seriesNumber,
+                period: {
+                  $gte: from,
+                  $lte: to
+                }
+              }
+            }).then((incomeStatements) => {
+              let row = {series_number: seriesNumber, from: from, to: to}
+              Object.keys(QBInvoicesMaintenanceModel.attributes).forEach((colName) => {
+                if (QBInvoicesMaintenanceModel.attributes[colName].type instanceof Sequelize.DOUBLE ||
+                    QBInvoicesMaintenanceModel.attributes[colName].type instanceof Sequelize.DECIMAL) {
+
+                  row[colName] = _.reduce(incomeStatements, (sum, incomeStatement) => {
+                    let value = incomeStatement[colName]
+                    if (!value) {
+                      return sum
+                    }
+                    return sum + value
+                  }, 0)
+                }
+              })
+              rows.push(row)
+              _cb()
+            })
+          }, () => {
+            cb(undefined, rows)
+          })
+        },
+        (rows, cb) => {
+          async.eachSeries(rows, (row, _cb) => {
+            QBInvoicesMaintenanceModel.create(row).then(() => {
+              console.info(`Record inserted, series_number: ${row.series_number}, from: ${from}, to: ${to}`)
+              _cb()
+            }).catch(() => {
+              console.info(`Record already exist, series_number: ${row.series_number}, from: ${from}, to: ${to}`)
+              _cb()
+            })
+          }, () => {
+            cb()
+          })
+        }
+      ])
+    }, (err) => {
+      if (err) {
+        return reject(err)
+      }
+      resolve()
+    })
+  }
+
+  this.transformReport = (data) => {
     let columns = data.Columns.Column.map((col) => {
       return col.MetaData[0].Value
     })
+    if (!data.Rows.Row) {
+      return []
+    }
     let rows = data.Rows.Row.map((row) => {
       let transformedRow = {}
       for(let i = 0; i < row.ColData.length; i++){

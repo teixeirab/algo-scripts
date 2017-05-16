@@ -9,16 +9,16 @@
         <hudson.model.StringParameterDefinition>
           <name>table</name>
           <description>mysql table to update</description>
-          <defaultValue>qb_transaction_list</defaultValue>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>dir</name>
-          <description>path of the data source files</description>
-          <defaultValue>/usr/src/data/</defaultValue>
+          <defaultValue>qb_invoices_maintenance</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>from</name>
           <description>date, from which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>to</name>
+          <description>date, to which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.</description>
           <defaultValue></defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>

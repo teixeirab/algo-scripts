@@ -34,8 +34,8 @@ module.exports = function(
         extractFn: this.extractActivityFileNameInfo,
         assignDataFn: (data) => {
           if ((!data.trade_id || data.trade_id === '') &&
-              ['DIV', 'CORP'].indexOf(data.transaction_type) > -1) {
-            data.trade_id = data.symbol + data.settle_date
+              ['DIV', 'CORP', 'DEL', 'DVPOUT', 'DVPIN'].indexOf(data.transaction_type) > -1) {
+            data.trade_id = data.con_id + data.settle_date + data.account_id
           }
           return data
         }
@@ -89,7 +89,18 @@ module.exports = function(
 
   this.filterPositionCsvRows = function(csvObject) {
     return _.filter(csvObject, (row) => {
-      return row.Type !== 'T' && moment(row.ReportDate, 'YYYYMMDD').weekday() === 5
+      if (row.Type === 'T') {
+        return false
+      }
+      if (moment(row.ReportDate, 'YYYYMMDD').weekday() === 5) {
+        return true
+      }
+
+      let date = moment(row.ReportDate, 'YYYYMMDD')
+      let monthEnd = moment(date).endOf('month')
+      if (date.diff(monthEnd, 'day') === 0) {
+        return true
+      }
     })
   }
 

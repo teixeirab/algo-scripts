@@ -9,7 +9,7 @@
         <hudson.model.StringParameterDefinition>
           <name>table</name>
           <description>mysql table to update</description>
-          <defaultValue>qb_transaction_list</defaultValue>
+          <defaultValue>qb_invoice</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>dir</name>
