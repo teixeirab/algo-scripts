@@ -8,4 +8,11 @@ else
   from=$from
 fi
 
-node app -t $table -p $dir -f $from -v
+if [ $to == ""]
+then
+  to=$(date "+%Y-%m-%d")
+else
+  to=$to
+fi
+
+node app -t $table -p $dir --from $from --to $to -v

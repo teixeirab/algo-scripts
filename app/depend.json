@@ -20,6 +20,7 @@
         "PershingPositionsModel": "./models/pershing_positions",
         "PershingTradesModel": "./models/pershing_trades",
         "SeriesNamesModel": "./models/series_names",
+        "SeriesFeesTermsModel": "./models/series_fees_terms",
         "QBTransactionListModel": "./models/qb_transaction_list",
         "QBAccountListModel": "./models/qb_account_list",
         "QBClassModel": "./models/qb_class",
@@ -28,6 +29,7 @@
         "QBInvoiceModel": "./models/qb_invoice",
         "QBAccountModel": "./models/qb_account",
         "QBInvoiceTypeItemModel": "./models/invoice_type_item",
+        "QBInvoicesMaintenanceModel": "./models/qb_invoices_maintenance",
 
         "CommonService": "./services/common",
         "FileService": "./services/file",

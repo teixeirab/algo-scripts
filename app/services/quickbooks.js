@@ -7,13 +7,18 @@ const QuickBooks = require('node-quickbooks')
 
 module.exports = function(
   Configs,
+  Sequelize,
   QBTransactionListModel,
   QBAccountListModel,
   QBItemModel,
   QBCustomerModel,
   QBAccountModel,
   QBInvoiceModel,
-  QBClassModel
+  QBClassModel,
+  QBInvoicesMaintenanceModel,
+  TheoremIncomeStatementModel,
+  SeriesNamesModel,
+  SeriesFeesTermsModel
 ) {
   const that = this
 
@@ -25,7 +30,8 @@ module.exports = function(
     'qb_item': syncItems,
     'qb_customer': syncCustomers,
     'qb_invoice': syncInvoices,
-    'qb_general_ledger': syncGeneralLedger
+    'qb_general_ledger': syncGeneralLedger,
+    'qb_invoices_maintenance': generateInvoicesMaintenanceFees
   }
 
   this.getQBO = (config) => {
@@ -368,6 +374,89 @@ module.exports = function(
       }, () => {
         resolve()
       })
+    })
+  }
+
+  function generateInvoicesMaintenanceFees (from, to) {
+    from = moment(from).toDate()
+    return new Promise((resolve, reject) => {
+      async.waterfall([
+        (cb) => {
+          SeriesFeesTermsModel.findAll({
+            where: {
+              external_offset: 'Yes'
+            }
+          }).then((feesTerms) => {
+            SeriesNamesModel.findAll({
+              where: {
+                status: 'A'
+              }
+            }).then((seriesNames) => {
+              let validSeries = []
+              feesTerms.forEach((feesTerm) => {
+                seriesNames.forEach((seriesName) => {
+                  if (feesTerm.series_number === seriesName.series_number &&
+                      validSeries.indexOf(seriesName.series_number) === -1) {
+                    validSeries.push(seriesName.series_number)
+                  }
+                })
+              })
+              cb(undefined, validSeries)
+            })
+          })
+        },
+        (validSeries, cb) => {
+          let rows = []
+          async.eachSeries(validSeries, (seriesNumber, _cb) => {
+            TheoremIncomeStatementModel.findAll({
+              where: {
+                series_number: seriesNumber,
+                period: {
+                  $gte: from,
+                  $lte: to
+                }
+              }
+            }).then((incomeStatements) => {
+              let row = {series_number: seriesNumber, from: from, to: to}
+              Object.keys(QBInvoicesMaintenanceModel.attributes).forEach((colName) => {
+                if (QBInvoicesMaintenanceModel.attributes[colName].type instanceof Sequelize.DOUBLE ||
+                    QBInvoicesMaintenanceModel.attributes[colName].type instanceof Sequelize.DECIMAL) {
+
+                  row[colName] = _.reduce(incomeStatements, (sum, incomeStatement) => {
+                    let value = incomeStatement[colName]
+                    if (!value) {
+                      return sum
+                    }
+                    return sum + value
+                  }, 0)
+                }
+              })
+              rows.push(row)
+              _cb()
+            })
+          }, () => {
+            cb(undefined, rows)
+          })
+        },
+        (rows, cb) => {
+          async.eachSeries(rows, (row, _cb) => {
+            QBInvoicesMaintenanceModel.create(row).then(() => {
+              console.info(`Record inserted, series_number: ${row.series_number}, from: ${from}, to: ${to}`)
+              _cb()
+            }).catch(() => {
+              console.info(`Record already exist, series_number: ${row.series_number}, from: ${from}, to: ${to}`)
+              _cb()
+            })
+          }, () => {
+            cb()
+          })
+        }
+      ])
+    }, (err) => {
+      if (err) {
+        return reject(err)
+      }
+      resolve()
     })
   }
 
