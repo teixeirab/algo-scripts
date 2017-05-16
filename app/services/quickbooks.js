@@ -46,8 +46,8 @@ module.exports = function(
     )
   }
 
-  this.findAndSync = (table, path, from) => {
-    let to = new Date()
+  this.findAndSync = (table, path, from, to) => {
+    to = to || new Date()
     return new Promise((resolve, reject) => {
       mappings[table](from, to).then(resolve)
     })

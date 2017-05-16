@@ -56,7 +56,6 @@ app.run = function() {
       describe: 'Date, from which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.'
     })
     .option('to', {
-      alias: 'to',
       describe: 'Date, to which to search data source files, YYYY-MM-DD; If not specified, it defaults to current date.'
     })
     .option('verbose', {
