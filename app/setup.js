@@ -65,11 +65,11 @@ app.run = function() {
     })
     .argv
 
-  let target = argv.target,
-      path = argv.path || '/',
+  let target   = argv.target,
+      path     = argv.path || '/',
       fromDate = argv.from || moment().format('YYYY-MM-DD'),
-      toDate = argv.to || moment().format('YYYY-MM-DD'),
-      verbose = argv.verbose
+      toDate   = argv.to || moment().format('YYYY-MM-DD'),
+      verbose  = argv.verbose
 
   const serviceName = serviceMappings[target]
   if (!serviceName) {
