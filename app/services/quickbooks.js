@@ -418,6 +418,7 @@ module.exports = function(
               }
             }).then((incomeStatements) => {
               let row = {series_number: seriesNumber, from: from, to: to}
+              let totalCheck = 0
               Object.keys(QBInvoicesMaintenanceModel.attributes).forEach((colName) => {
                 if (QBInvoicesMaintenanceModel.attributes[colName].type instanceof Sequelize.DOUBLE ||
                     QBInvoicesMaintenanceModel.attributes[colName].type instanceof Sequelize.DECIMAL) {
@@ -427,11 +428,16 @@ module.exports = function(
                     if (!value) {
                       return sum
                     }
-                    return sum + value
+
+                    let newVal = sum + value
+                    totalCheck += newVal
+                    return newVal
                   }, 0)
                 }
               })
-              rows.push(row)
+              if (totalCheck > 0) {
+                rows.push(row)
+              }
               _cb()
             })
           }, () => {
