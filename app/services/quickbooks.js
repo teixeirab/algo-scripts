@@ -433,9 +433,11 @@ module.exports = function(
                     totalCheck += newVal
                     return newVal
                   }, 0)
+                  //flip the value for QuickBooks invoice
+                  row[colName] = -row[colName]
                 }
               })
-              if (totalCheck > 0) {
+              if (totalCheck !== 0) {
                 rows.push(row)
               }
               _cb()

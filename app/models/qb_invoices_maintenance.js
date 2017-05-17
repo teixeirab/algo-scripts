@@ -33,10 +33,6 @@ module.exports = function(FlexFundsDB, Sequelize) {
       type: Sequelize.DECIMAL(12, 2),
       allowNull: true
     },
-    external_expense_offset: {
-      type: Sequelize.DECIMAL(12, 2),
-      allowNull: true
-    },
     administrator_fees: {
       type: Sequelize.DECIMAL(12, 2),
       allowNull: true
