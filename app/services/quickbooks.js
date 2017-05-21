@@ -31,7 +31,8 @@ module.exports = function(
     'qb_customer': syncCustomers,
     'qb_invoice': syncInvoices,
     'qb_general_ledger': syncGeneralLedger,
-    'qb_invoices_maintenance': generateInvoicesMaintenanceFees
+    'qb_invoices_maintenance': generateInvoicesMaintenanceFees,
+    'qb_invoices_maintenance_send': sendMaintenanceInvoices
   }
 
   this.getQBO = (config) => {
@@ -457,6 +458,38 @@ module.exports = function(
         return reject(err)
       }
       resolve()
+    })
+  }
+
+  this.sendMaintenanceInvoices = function() {
+    return new Promise((resolve, reject) => {
+      QBInvoicesMaintenanceModel.findAll({
+        where: {
+          invoice_sent_date: null
+        }
+      }).then((maintenanceInvoices) => {
+        async.eachSeries(maintenanceInvoices, (maintenanceInvoice, cb) => {
+          if (maintenanceInvoice.invoice_sent_date) {
+            console.info(`skipped invoice as it has sent - series number: ${maintenanceInvoice.series_number}, from: ${maintenanceInvoice.from}, to: ${maintenanceInvoice.to}`)
+            return cb()
+          }
+          var options = {
+            url: Configs.panelAPI.url + '/api/panel/qb/maintenance-invoice/' + maintenanceInvoice.series_number,
+            headers: {
+              'internal-key': Configs.panelAPI.internalKey
+            },
+            method: 'POST'
+          };
+          request(options, (error, response, body) => {
+            if(error) {
+              console.error(error)
+            }
+            cb()
+          })
+        }, () => {
+          resolve()
+        })
+      })
     })
   }
 
