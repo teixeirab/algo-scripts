@@ -27,6 +27,7 @@ const serviceMappings = {
   'citi_cash_balances': 'CitiService',
   'citi_positions_valuations': 'CitiService',
   'qb_invoices_maintenance': 'QuickBookService',
+  'qb_invoices_maintenance_send': 'QuickBookService',
   'qb_transaction_list': 'QuickBookService',
   'qb_account_list': 'QuickBookService',
   'qb_class': 'QuickBookService',
