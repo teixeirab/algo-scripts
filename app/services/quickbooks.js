@@ -4,6 +4,7 @@ const  async = require('async')
 const moment = require('moment')
 const _ = require('lodash')
 const QuickBooks = require('node-quickbooks')
+const request = require('request')
 
 module.exports = function(
   Configs,
