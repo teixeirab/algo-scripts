@@ -8,6 +8,7 @@ const QuickBooks = require('node-quickbooks')
 module.exports = function(
   Configs,
   Sequelize,
+  QBAPIAccountModel,
   QBTransactionListModel,
   QBAccountListModel,
   QBItemModel,
@@ -31,7 +32,8 @@ module.exports = function(
     'qb_customer': syncCustomers,
     'qb_invoice': syncInvoices,
     'qb_general_ledger': syncGeneralLedger,
-    'qb_invoices_maintenance': generateInvoicesMaintenanceFees
+    'qb_invoices_maintenance': generateInvoicesMaintenanceFees,
+    'qb_invoices_maintenance_send': sendMaintenanceFeeInvoices
   }
 
   this.getQBO = (config) => {
@@ -245,43 +247,53 @@ module.exports = function(
 
   function syncItems (from, to) {
     return new Promise((resolve, reject) => {
-      async.eachSeries(Configs.quickbooks, (config, cb) => {
-        let qbo = that.getQBO(config)
-        qbo.findItems({fetchall: true}, (err, data) => {
-          let items = data.QueryResponse.Item
-          if(err || !items) {
-            return cb()
-          }
-          let rows = items.map((item) => {
-            return {
-              id: item.Id,
-              qb_account: config.account,
-              name: item.Name,
-              description: item.Description,
-              type: item.Type,
-              parent_id: item.ParentRef? item.ParentRef.value : null,
-              income_account_id: item.IncomeAccountRef? item.IncomeAccountRef.value : null,
-              expense_account_id: item.ExpenseAccountRef? item.ExpenseAccountRef.value : null,
-              asset_account_id: item.AssetAccountRef? item.AssetAccountRef.value : null,
-              active: item.Active
+      QBAPIAccountModel.findAll().then((qbConfigs) => {
+        async.eachSeries(qbConfigs, (config, cb) => {
+          let qbo = that.getQBO({
+            consumerKey: config.consumer_key,
+            consumerSecret: config.consumer_secret,
+            token: config.token,
+            tokenSecret: config.token_secret,
+            realmId: config.realm_id,
+            useSandbox: config.use_sandbox,
+            debug: config.debug
+          })
+          qbo.findItems({fetchall: true}, (err, data) => {
+            let items = data.QueryResponse.Item
+            if(err || !items) {
+              return cb()
             }
-          })
-          console.info(`loaded ${rows.length} item @${config.account}`)
-          async.eachSeries(rows, (row, _cb) => {
-            row.qb_account = config.account
-            console.info(`insert item name:${row.name}`)
-            QBItemModel.upsert(row).then(() => {
-              _cb()
-            }).catch((err) => {
-              console.error(err)
-              _cb()
+            let rows = items.map((item) => {
+              return {
+                id: item.Id,
+                qb_account: config.account,
+                name: item.Name,
+                description: item.Description,
+                type: item.Type,
+                parent_id: item.ParentRef? item.ParentRef.value : null,
+                income_account_id: item.IncomeAccountRef? item.IncomeAccountRef.value : null,
+                expense_account_id: item.ExpenseAccountRef? item.ExpenseAccountRef.value : null,
+                asset_account_id: item.AssetAccountRef? item.AssetAccountRef.value : null,
+                active: item.Active
+              }
             })
-          }, () => {
-            cb()
+            console.info(`loaded ${rows.length} item @${config.account}`)
+            async.eachSeries(rows, (row, _cb) => {
+              row.qb_account = config.account
+              console.info(`insert item name:${row.name}`)
+              QBItemModel.upsert(row).then(() => {
+                _cb()
+              }).catch((err) => {
+                console.error(err)
+                _cb()
+              })
+            }, () => {
+              cb()
+            })
           })
+        }, () => {
+          resolve()
         })
-      }, () => {
-        resolve()
       })
     })
   }
@@ -468,6 +480,16 @@ module.exports = function(
     })
   }
 
+  function sendMaintenanceFeeInvoices () {
+    QBInvoicesMaintenanceModel.findAll({
+      where: {
+        invoice_sent_date: null
+      }
+    }).then((maintenanceFees) => {
+
+    })
+  }
+
   this.transformReport = (data) => {
     let columns = data.Columns.Column.map((col) => {
       return col.MetaData[0].Value
@@ -484,5 +506,6 @@ module.exports = function(
     })
     return rows
   }
+
   return this;
 };
