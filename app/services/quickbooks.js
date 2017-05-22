@@ -33,7 +33,11 @@ module.exports = function(
     'qb_invoice': syncInvoices,
     'qb_general_ledger': syncGeneralLedger,
     'qb_invoices_maintenance': generateInvoicesMaintenanceFees,
+<<<<<<< HEAD
     'qb_invoices_maintenance_send': sendMaintenanceFeeInvoices
+=======
+    'qb_invoices_maintenance_send': sendMaintenanceInvoices
+>>>>>>> 15c22437ed5559cb9a22b2022c560f298a15a2d0
   }
 
   this.getQBO = (config) => {
@@ -463,7 +467,8 @@ module.exports = function(
             QBInvoicesMaintenanceModel.create(row).then(() => {
               console.info(`Record inserted, series_number: ${row.series_number}, from: ${from}, to: ${to}`)
               _cb()
-            }).catch(() => {
+            }).catch((ex) => {
+              console.error(ex)
               console.info(`Record already exist, series_number: ${row.series_number}, from: ${from}, to: ${to}`)
               _cb()
             })
@@ -480,15 +485,37 @@ module.exports = function(
     })
   }
 
-  function sendMaintenanceFeeInvoices () {
-    QBInvoicesMaintenanceModel.findAll({
-      where: {
-        invoice_sent_date: null
-      }
-    }).then((maintenanceFees) => {
-
-    })
-  }
+  // this.sendMaintenanceInvoices = function() {
+  //   return new Promise((resolve, reject) => {
+  //     QBInvoicesMaintenanceModel.findAll({
+  //       where: {
+  //         invoice_sent_date: null
+  //       }
+  //     }).then((maintenanceInvoices) => {
+  //       async.eachSeries(maintenanceInvoices, (maintenanceInvoice, cb) => {
+  //         if (maintenanceInvoice.invoice_sent_date) {
+  //           console.info(`skipped invoice as it has sent - series number: ${maintenanceInvoice.series_number}, from: ${maintenanceInvoice.from}, to: ${maintenanceInvoice.to}`)
+  //           return cb()
+  //         }
+  //         var options = {
+  //           url: Configs.panelAPI.url + '/api/panel/qb/maintenance-invoice/' + maintenanceInvoice.series_number,
+  //           headers: {
+  //             'internal-key': Configs.panelAPI.internalKey
+  //           },
+  //           method: 'POST'
+  //         };
+  //         request(options, (error, response, body) => {
+  //           if(error) {
+  //             console.error(error)
+  //           }
+  //           cb()
+  //         })
+  //       }, () => {
+  //         resolve()
+  //       })
+  //     })
+  //   })
+  // }
 
   this.transformReport = (data) => {
     let columns = data.Columns.Column.map((col) => {
