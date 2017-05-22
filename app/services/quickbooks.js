@@ -491,7 +491,7 @@ module.exports = function(
       }).then((maintenanceInvoices) => {
         async.eachSeries(maintenanceInvoices, (maintenanceInvoice, cb) => {
           if (maintenanceInvoice.invoice_sent_date) {
-            console.info(`skipped invoice as it has sent - series number: ${maintenanceInvoice.series_number}, from: ${maintenanceInvoice.from}, to: ${maintenanceInvoice.to}`)
+            console.log(`skipped invoice as it has sent - series number: ${maintenanceInvoice.series_number}, from: ${maintenanceInvoice.from}, to: ${maintenanceInvoice.to}`)
             return cb()
           }
           var options = {
