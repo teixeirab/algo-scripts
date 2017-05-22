@@ -481,7 +481,7 @@ module.exports = function(
     })
   }
 
-  this.sendMaintenanceFeeInvoices = function() {
+  function sendMaintenanceFeeInvoices (){
     return new Promise((resolve, reject) => {
       QBInvoicesMaintenanceModel.findAll({
         where: {
