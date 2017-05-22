@@ -33,11 +33,7 @@ module.exports = function(
     'qb_invoice': syncInvoices,
     'qb_general_ledger': syncGeneralLedger,
     'qb_invoices_maintenance': generateInvoicesMaintenanceFees,
-<<<<<<< HEAD
     'qb_invoices_maintenance_send': sendMaintenanceFeeInvoices
-=======
-    'qb_invoices_maintenance_send': sendMaintenanceInvoices
->>>>>>> 15c22437ed5559cb9a22b2022c560f298a15a2d0
   }
 
   this.getQBO = (config) => {
