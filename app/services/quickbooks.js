@@ -39,13 +39,13 @@ module.exports = function(
 
   this.getQBO = (config) => {
     return new QuickBooks(
-      config.consumerKey,
-      config.consumerSecret,
-      config.token,
-      config.tokenSecret,
-      config.realmId,
-      config.useSandbox,
-      config.debug
+      config.consumerKey || config.consumer_key,
+      config.consumerSecret || config.consumer_secret,
+      config.token || config.token,
+      config.tokenSecret || config.token_secret,
+      config.realmId || config.realm_id,
+      config.useSandbox || config.use_sandbox,
+      config.debug || config.debug
     )
   }
 
@@ -210,38 +210,40 @@ module.exports = function(
 
   function syncClasses (from, to) {
     return new Promise((resolve, reject) => {
-      async.eachSeries(Configs.quickbooks, (config, cb) => {
-        let qbo = that.getQBO(config)
-        qbo.findClasses({fetchall: true}, (err, data) => {
-          let classes = data.QueryResponse.Class
-          if(err || !classes) {
-            return cb()
-          }
-          let rows = classes.map((cls) => {
-            return {
-              id: cls.Id,
-              qb_account: config.account,
-              name: cls.Name,
-              fully_qualified_name: cls.FullyQualifiedName,
-              active: cls.Active
+      QBAPIAccountModel.findAll().then((qbConfigs) => {
+        async.eachSeries(qbConfigs, (config, cb) => {
+          let qbo = that.getQBO(config)
+          qbo.findClasses({fetchall: true}, (err, data) => {
+            let classes = data.QueryResponse.Class
+            if(err || !classes) {
+              return cb()
             }
-          })
-          console.info(`loaded ${rows.length} class @${config.account}`)
-          async.eachSeries(rows, (row, _cb) => {
-            row.qb_account = config.account
-            console.info(`insert class name:${row.name}`)
-            QBClassModel.upsert(row).then(() => {
-              _cb()
-            }).catch((err) => {
-              console.error(err)
-              _cb()
+            let rows = classes.map((cls) => {
+              return {
+                id: cls.Id,
+                qb_account: config.account,
+                name: cls.Name,
+                fully_qualified_name: cls.FullyQualifiedName,
+                active: cls.Active
+              }
             })
-          }, () => {
-            cb()
+            console.info(`loaded ${rows.length} class @${config.account}`)
+            async.eachSeries(rows, (row, _cb) => {
+              row.qb_account = config.account
+              console.info(`insert class name:${row.name}`)
+              QBClassModel.upsert(row).then(() => {
+                _cb()
+              }).catch((err) => {
+                console.error(err)
+                _cb()
+              })
+            }, () => {
+              cb()
+            })
           })
+        }, () => {
+          resolve()
         })
-      }, () => {
-        resolve()
       })
     })
   }
