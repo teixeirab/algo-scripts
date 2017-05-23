@@ -35,7 +35,8 @@ const serviceMappings = {
   'qb_customer': 'QuickBookService',
   'qb_account': 'QuickBookService',
   'qb_invoice': 'QuickBookService',
-  'qb_general_ledger': 'QuickBookService'
+  'qb_general_ledger': 'QuickBookService',
+  'qb_api_account': 'QuickBookService'
 }
 
 app.run = function() {

@@ -34,7 +34,8 @@ module.exports = function(
     'qb_invoice': syncInvoices,
     'qb_general_ledger': syncGeneralLedger,
     'qb_invoices_maintenance': generateInvoicesMaintenanceFees,
-    'qb_invoices_maintenance_send': sendMaintenanceFeeInvoices
+    'qb_invoices_maintenance_send': sendMaintenanceFeeInvoices,
+    'qb_api_account': refreshQBToken
   }
 
   this.getQBO = (config) => {
@@ -515,6 +516,20 @@ module.exports = function(
           })
         }, () => {
           resolve()
+        })
+      })
+    })
+  }
+
+  function refreshQBToken () {
+    return new Promise((resolve, reject) => {
+      QBAPIAccountModel.findOne({
+        where: {
+          account: 'kata.choi@gmail.com'
+        }
+      }).then((qbConfig) => {
+        that.getQBO(qbConfig).reconnect((err, res) => {
+          console.log(err, res)
         })
       })
     })
