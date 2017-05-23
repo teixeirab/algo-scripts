@@ -304,49 +304,51 @@ module.exports = function(
 
   function syncCustomers (from, to) {
     return new Promise((resolve, reject) => {
-      async.eachSeries(Configs.quickbooks, (config, cb) => {
-        let qbo = that.getQBO(config)
-        qbo.findCustomers({fetchall: true}, (err, data) => {
-          let customers = data.QueryResponse.Customer
-          if(err || !customers) {
-            return cb()
-          }
-          let rows = customers.map((customer) => {
-            return {
-              id: customer.Id,
-              qb_account: config.account,
-              email: customer.PrimaryEmailAddr? customer.PrimaryEmailAddr.Address : null,
-              given_name: customer.GivenName,
-              middle_name: customer.MiddleName,
-              family_name: customer.FamilyName,
-              fully_qualified_name: customer.FullyQualifiedName,
-              company_name: customer.CompanyName,
-              display_name: customer.DisplayName,
-              print_on_check_name: customer.PrintOnCheckName,
-              bill_addr_line1: customer.BillAddr? customer.BillAddr.Line1: null,
-              bill_addr_city: customer.BillAddr? customer.BillAddr.City: null,
-              bill_addr_country_sub_division_code: customer.BillAddr? customer.BillAddr.CountrySubDivisionCode: null,
-              bill_addr_postal_code: customer.BillAddr? customer.BillAddr.BillAddrPostalCode: null,
-              currency_code: _.get(customer, 'CurrencyRef.value'),
-              active: customer.Active
+      QBAPIAccountModel.findAll().then((qbConfigs) => {
+        async.eachSeries(qbConfigs, (config, cb) => {
+          let qbo = that.getQBO(config)
+          qbo.findCustomers({fetchall: true}, (err, data) => {
+            let customers = data.QueryResponse.Customer
+            if(err || !customers) {
+              return cb()
             }
-          })
-          console.info(`loaded ${rows.length} customer @${config.account}`)
-          async.eachSeries(rows, (row, _cb) => {
-            row.qb_account = config.account
-            console.info(`insert customer name:${row.display_name}`)
-            QBCustomerModel.upsert(row).then(() => {
-              _cb()
-            }).catch((err) => {
-              console.error(err)
-              _cb()
+            let rows = customers.map((customer) => {
+              return {
+                id: customer.Id,
+                qb_account: config.account,
+                email: customer.PrimaryEmailAddr? customer.PrimaryEmailAddr.Address : null,
+                given_name: customer.GivenName,
+                middle_name: customer.MiddleName,
+                family_name: customer.FamilyName,
+                fully_qualified_name: customer.FullyQualifiedName,
+                company_name: customer.CompanyName,
+                display_name: customer.DisplayName,
+                print_on_check_name: customer.PrintOnCheckName,
+                bill_addr_line1: customer.BillAddr? customer.BillAddr.Line1: null,
+                bill_addr_city: customer.BillAddr? customer.BillAddr.City: null,
+                bill_addr_country_sub_division_code: customer.BillAddr? customer.BillAddr.CountrySubDivisionCode: null,
+                bill_addr_postal_code: customer.BillAddr? customer.BillAddr.BillAddrPostalCode: null,
+                currency_code: _.get(customer, 'CurrencyRef.value'),
+                active: customer.Active
+              }
             })
-          }, () => {
-            cb()
+            console.info(`loaded ${rows.length} customer @${config.account}`)
+            async.eachSeries(rows, (row, _cb) => {
+              row.qb_account = config.account
+              console.info(`insert customer name:${row.display_name}`)
+              QBCustomerModel.upsert(row).then(() => {
+                _cb()
+              }).catch((err) => {
+                console.error(err)
+                _cb()
+              })
+            }, () => {
+              cb()
+            })
           })
+        }, () => {
+          resolve()
         })
-      }, () => {
-        resolve()
       })
     })
   }
