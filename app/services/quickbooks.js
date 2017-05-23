@@ -355,42 +355,44 @@ module.exports = function(
 
   function syncInvoices (from, to) {
     return new Promise((resolve, reject) => {
-      async.eachSeries(Configs.quickbooks, (config, cb) => {
-        let qbo = that.getQBO(config)
-        qbo.findInvoices({fetchall: true}, (err, data) => {
-          let invoices = _.get(data, 'QueryResponse.Invoice')
-          if (!invoices) {
-            return cb()
-          }
-          invoices = invoices.map((invoice) => {
-            return {
-              qb_account: config.account,
-              id: invoice.Id,
-              customer_id: _.get(invoice, 'CustomerRef.value'),
-              doc_num: invoice.DocNumber,
-              total_amount: invoice.TotalAmt,
-              currency_code: _.get(invoice, 'CurrencyRef.value'),
-              exchange_rate: invoice.ExchangeRate,
-              due_date: invoice.DueDate,
-              txn_date: invoice.TxnDate,
-              email_status: invoice.EmailStatus,
-              balance: invoice.Balance,
-              einvoice_status: invoice.EInvoiceStatus
+      QBAPIAccountModel.findAll().then((qbConfigs) => {
+        async.eachSeries(qbConfigs, (config, cb) => {
+          let qbo = that.getQBO(config)
+          qbo.findInvoices({fetchall: true}, (err, data) => {
+            let invoices = _.get(data, 'QueryResponse.Invoice')
+            if (!invoices) {
+              return cb()
             }
-          })
-          async.eachSeries(invoices, (invoice, _cb) => {
-            QBInvoiceModel.upsert(invoice).then(() => {
-              _cb()
-            }).catch((err) => {
-              console.log(err)
-              _cb()
+            invoices = invoices.map((invoice) => {
+              return {
+                qb_account: config.account,
+                id: invoice.Id,
+                customer_id: _.get(invoice, 'CustomerRef.value'),
+                doc_num: invoice.DocNumber,
+                total_amount: invoice.TotalAmt,
+                currency_code: _.get(invoice, 'CurrencyRef.value'),
+                exchange_rate: invoice.ExchangeRate,
+                due_date: invoice.DueDate,
+                txn_date: invoice.TxnDate,
+                email_status: invoice.EmailStatus,
+                balance: invoice.Balance,
+                einvoice_status: invoice.EInvoiceStatus
+              }
             })
-          }, () => {
-            cb()
+            async.eachSeries(invoices, (invoice, _cb) => {
+              QBInvoiceModel.upsert(invoice).then(() => {
+                _cb()
+              }).catch((err) => {
+                console.log(err)
+                _cb()
+              })
+            }, () => {
+              cb()
+            })
           })
+        }, () => {
+          resolve()
         })
-      }, () => {
-        resolve()
       })
     })
   }
